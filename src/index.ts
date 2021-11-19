@@ -22,6 +22,7 @@ import publisher from "./lib/publisher";
     /**
      * Start Pulling Message
      * ? timer ? restful catch? socket catch?
+     * ! timer로 설계를 안세울 수도 있어서, cron job은 따로 안쓴 상태
      */
     await intervalPullingMessage();
     
