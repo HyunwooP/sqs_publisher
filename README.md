@@ -1,6 +1,7 @@
 # SQS_PUBLISHER
 #### Publishing Message -> SQS Queue
 ##### Author 박현우
+##### Create Date 2021.11.19
 #
 ### 개발 환경
 * node 14+
