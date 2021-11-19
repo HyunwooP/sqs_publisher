@@ -15,11 +15,13 @@ import publisher from "./lib/publisher";
     /**
      * Message Queue에 샘플 메세지 넣어줌.
      * 따로 넣어주는 publisher가 없어서 해당 프로젝트에 테스트 겸 넣어둠.
+     * 나중에는 뺄 예정.
      */
     await publisher();
     
     /**
      * Start Pulling Message
+     * timer ? restful catch? socket catch?
      */
     await intervalPullingMessage();
     
