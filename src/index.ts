@@ -15,7 +15,7 @@ import publisher from "./lib/publisher";
     /**
      * Message Queue에 샘플 메세지 넣어줌.
      * 따로 넣어주는 publisher가 없어서 해당 프로젝트에 테스트 겸 넣어둠.
-     * ! 나중에는 뺄 예정. -> repository 이름 바꾸기.
+     * ! 나중에는 뺄 예정. -> repository, package 이름 / 설정 바꾸기.
      */
     await publisher();
     
