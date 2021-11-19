@@ -1,0 +1,39 @@
+{
+  "name": "sqs_publisher",
+  "version": "0.0.1",
+  "description": "study message queue, sqs & publisher / subscribe pattern",
+  "scripts": {
+    "test": "",
+    "start": "nodemon src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HyunwooP/sqs_publisher.git"
+  },
+  "keywords": [
+    "sqs",
+    "publisher",
+    "message queue",
+    "queue",
+    "message"
+  ],
+  "author": "Hyunwoo.Park",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HyunwooP/sqs_publisher/issues"
+  },
+  "homepage": "https://github.com/HyunwooP/sqs_publisher#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1032.0",
+    "dotenv": "^10.0.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/aws-sdk": "^2.7.0",
+    "@types/dotenv": "^8.2.0",
+    "@types/lodash": "^4.14.177",
+    "@types/node": "^16.11.8",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.2"
+  }
+}
