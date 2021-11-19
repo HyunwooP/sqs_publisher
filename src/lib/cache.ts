@@ -10,6 +10,6 @@ const caches: CacheIE = {
 export const getCacheItem = (
   key: CacheKeyStatus | number,
   defaultValue?: string | number | null | []
-) => _.get(caches, key, defaultValue);
+): any => _.get(caches, key, defaultValue);
 
 export default caches;

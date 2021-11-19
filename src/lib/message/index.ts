@@ -8,16 +8,16 @@ import { ReceiveMessageResponse, MessageItems } from "../../lib/sqs/type";
 import cache from "../../lib/cache";
 import constant from '../../lib/const';
 
-const messageController = async () => {
+const messageController = async (): Promise<void> => {
   
-  const queueUrls = getCacheQueueUrls();
+  const queueUrls: string[] = getCacheQueueUrls();
 
   if (!_.isEmpty(queueUrls)) {
     
     let queueMessages: QueueMessageIE = {};
     
     if (queueUrls.length < 2) {
-      const queueUrl = _.get(queueUrls, 0, "");
+      const queueUrl: string = _.get(queueUrls, 0, "");
       queueMessages = { ...await singleQueueController(queueUrl) };
     } else {
       queueMessages = { ...await multipleQueueController(queueUrls) };
@@ -65,7 +65,7 @@ export const getMessageItems = async (queueUrl: string): Promise<MessageItems> =
   return _.get(messageItems, MessageResponseStatus.MESSAGES, []);
 };
 
-export const intervalPullingMessage = () => {
+export const intervalPullingMessage = (): void => {
   try {
     messageController();
     cache.intervalPullingMessageId = setInterval(() => {

@@ -3,7 +3,7 @@ import queueController from "./lib/queue";
 import errorController from "./lib/error";
 import publisher from "./lib/publisher";
 
-(async () => {
+(async (): Promise<void> => {
   try {
     /**
      * @description

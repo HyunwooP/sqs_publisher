@@ -5,7 +5,7 @@ import { QueueResponseStatus } from "../../lib/enum/queue";
 import MessageQueue from "../sqs/MessageQueue";
 import caches, { getCacheItem } from "../cache";
 
-const queueController = async () => {
+const queueController = async (): Promise<void> => {
   
   if (_.isEmpty(caches[CacheKeyStatus.QUEUE_URLS])) {
     // 기존에 생성되어 있는 Message Queue들을 캐싱한다.
@@ -30,7 +30,7 @@ export const getCacheQueueUrls = (): string[] => {
   return getCacheItem(CacheKeyStatus.QUEUE_URLS, []);
 };
 
-export const getCacheQueueUrl = (queueUrl: string) => {
+export const getCacheQueueUrl = (queueUrl: string): string => {
   const queuesUrls = getCacheQueueUrls().filter(
     (cacheQueueUrl: string) => cacheQueueUrl === queueUrl
   );
