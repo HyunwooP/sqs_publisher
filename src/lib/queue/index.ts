@@ -31,7 +31,9 @@ export const getCacheQueueUrls = (): string[] => {
 };
 
 export const getCacheQueueUrl = (queueUrl: string) => {
-  const queuesUrls = getCacheQueueUrls().filter((cacheQueueUrl: string) => cacheQueueUrl === queueUrl);
+  const queuesUrls = getCacheQueueUrls().filter(
+    (cacheQueueUrl: string) => cacheQueueUrl === queueUrl
+  );
   return _.get(queuesUrls, 0, "");
 };
 
