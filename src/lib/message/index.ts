@@ -23,7 +23,8 @@ const messageController = async () => {
     }
 
     // todo: stateless & statefull 둘 다 로직 짜서 환경변수에 따라 적용하게 하여,
-    // todo: substribe 만들기
+    // todo: subscribe 만들기
+    // todo: 메세지를 쏘면, message queue에 지워버리기. MessageQueue.deleteMessage
     console.log('========================')
     console.log(queueMessages);
     console.log(`time ====> ${new Date().getTime()}`);
