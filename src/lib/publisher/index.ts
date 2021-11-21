@@ -1,11 +1,7 @@
 import _ from "lodash";
 import MessageQueue from "../../lib/sqs/MessageQueue";
-import { getCacheQueueUrls } from "../../lib/queue";
 
-const publisher = (): void => {
-  
-  const queueUrls: string[] = getCacheQueueUrls();
-
+const publisher = (queueUrls: string[]): void => {
   if (!_.isEmpty(queueUrls)) {
     // 등록되어있는 Message Queue에 Message Publishing
     _.forEach(queueUrls, async (queueUrl: string): Promise<void> => {

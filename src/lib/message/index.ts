@@ -2,16 +2,12 @@ import _ from "lodash";
 import MessageQueue from "../sqs/MessageQueue";
 import { ErrorStatus } from "../enum";
 import { MessageResponseStatus } from "../enum/message";
-import { getCacheQueueUrls } from "../../lib/queue";
 import { QueueMessageIE } from "../../lib/interface";
 import { ReceiveMessageResponse, MessageItems } from "../../lib/sqs/type";
 import cache from "../../lib/cache";
 import constant from '../../lib/const';
 
-const messageController = async (): Promise<void> => {
-  
-  const queueUrls: string[] = getCacheQueueUrls();
-
+const messageController = async (queueUrls: string[]): Promise<void> => {
   if (!_.isEmpty(queueUrls)) {
     
     let queueMessages: QueueMessageIE = {};
@@ -65,10 +61,10 @@ export const getMessageItems = async (queueUrl: string): Promise<MessageItems> =
   return _.get(messageItems, MessageResponseStatus.MESSAGES, []);
 };
 
-export const intervalPullingMessage = (): void => {
+export const intervalPullingMessage = (queueUrls: string[]): void => {
   try {
     cache.intervalPullingMessageId = setInterval(() => {
-      messageController();
+      messageController(queueUrls);
     }, constant.MESSAGE_PULLING_TIME);
   } catch(error) {
     console.error(`============ intervalPullingMessage Error ============ ${error}`);
