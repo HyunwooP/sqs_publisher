@@ -10,19 +10,12 @@ import constant from '../../lib/const';
 
 // todo: return interface 만들기.
 const messageController = async (queueUrls: string[]): Promise<void> => {
-  let queueMessages: QueueMessageIE = {};
-
   if (!_.isEmpty(queueUrls)) {
     // todo: stateless & statefull 둘 다 로직 짜서 환경변수에 따라 적용하게 하여,
     // todo: subscribe 만들기
     // todo: 메세지를 쏘면, message queue에 지워버리기. MessageQueue.deleteMessage
-    queueMessages = await getMessages(queueUrls);
+    intervalPullingMessage(queueUrls);
   }
-
-  console.log('========================')
-  console.log(queueMessages);
-  console.log(`time ====> ${new Date().getTime()}`);
-  console.log('========================')
 };
 
 const getMessages = async (queueUrls: string[]) => {
@@ -34,6 +27,11 @@ const getMessages = async (queueUrls: string[]) => {
   } else {
     queueMessages = { ...await getMultipleMessageQueueInMessages(queueUrls) };
   }
+
+  console.log('========================')
+  console.log(queueMessages);
+  console.log(`time ====> ${new Date().getTime()}`);
+  console.log('========================')
 
   return queueMessages;
 };
@@ -70,10 +68,14 @@ export const getMessageItems = async (queueUrl: string): Promise<MessageItems> =
   return _.get(messageItems, MessageResponseStatus.MESSAGES, []);
 };
 
-export const intervalPullingMessage = (queueUrls: string[]) => {
+export const intervalPullingMessage = async (queueUrls: string[]) => {
   try {
-    const intervalPullingMessageId: NodeJS.Timer = setInterval(() => {
-      messageController(queueUrls);
+    // first shot
+    await getMessages(queueUrls);
+
+    const intervalPullingMessageId: NodeJS.Timer = setInterval(
+      async() => {
+        await getMessages(queueUrls);
     }, constant.MESSAGE_PULLING_TIME);
 
     setCacheItem(CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID, intervalPullingMessageId);

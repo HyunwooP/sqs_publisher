@@ -1,6 +1,6 @@
-import { intervalPullingMessage } from "../../lib/message";
 import publisher from "../../lib/publisher";
 import queueController from "../../lib/queue";
+import messageController from "../../lib/message";
 
 const worker = async () => {
   /**
@@ -22,7 +22,7 @@ const worker = async () => {
    * ? timer ? restful catch? socket catch?
    * ! timer로 설계를 안세울 수도 있어서, cron job은 따로 안쓴 상태
    */
-  await intervalPullingMessage(queueUrls);
+  await messageController(queueUrls);
 };
 
 export default worker;
