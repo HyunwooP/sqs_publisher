@@ -25,12 +25,12 @@ export type MessageItems = MessageList;
 
 export type MessageItem = Message;
 
-export type CreateQueueResponse = Request<AWS.SQS.Types.CreateQueueResult, AWSError>;
+export type CreateQueueResponse = PromiseResult<CreateQueueResult, AWSError>;
 
-export type GetQueueResponse = PromiseResult<AWS.SQS.ListQueuesResult, AWSError>;
+export type GetQueueResponse = PromiseResult<ListQueuesResult, AWSError>;
 
-export type ReceiveMessageResponse = PromiseResult<AWS.SQS.Types.ReceiveMessageResult, AWSError>;
+export type ReceiveMessageResponse = PromiseResult<ReceiveMessageResult, AWSError>;
 
-export type SendMessageResponse = Request<AWS.SQS.Types.SendMessageResult, AWSError>;
+export type SendMessageResponse = PromiseResult<SendMessageResult, AWSError>;
 
 export type VoidResponse = Request<{}, AWSError>;

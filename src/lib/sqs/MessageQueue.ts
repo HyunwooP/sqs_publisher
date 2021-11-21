@@ -28,7 +28,7 @@ class MessageQueue {
       error: AWSError,
       data: CreateQueueResult
     ) => void
-  ): Promise<CreateQueueResponse> => await this.sqs.createQueue(params, callback);
+  ): Promise<CreateQueueResponse> => await this.sqs.createQueue(params, callback).promise();
 
   deleteQueue = async (
     params: DeleteQueueRequest,
@@ -52,7 +52,7 @@ class MessageQueue {
       error: AWSError,
       data: SendMessageResult
     ) => void
-  ): Promise<SendMessageResponse> => await this.sqs.sendMessage(params, callback);
+  ): Promise<SendMessageResponse> => await this.sqs.sendMessage(params, callback).promise();
 
   deleteMessage = async (
     params: DeleteMessageRequest,
