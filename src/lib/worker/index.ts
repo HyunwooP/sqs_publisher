@@ -2,7 +2,7 @@ import publisher from "../../lib/publisher";
 import queueController from "../../lib/queue";
 import messageController from "../../lib/message";
 
-const worker = async () => {
+const worker = async (): Promise<void> => {
   /**
    * @description
    * Message Queue 관리 컨트롤러

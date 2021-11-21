@@ -18,7 +18,7 @@ const queueController = async () => {
   };
 };
 
-const getQueueUrls = async () => {
+const getQueueUrls = async (): Promise<string[]> => {
   const queueResponse: QueueResponse = await getQueueResponse();
   const queueUrls: string[] = createQueueUrls(queueResponse);
 

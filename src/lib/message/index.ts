@@ -18,7 +18,7 @@ const messageController = async (queueUrls: string[]): Promise<void> => {
   }
 };
 
-const getMessages = async (queueUrls: string[]) => {
+const getMessages = async (queueUrls: string[]): Promise<QueueMessageIE> => {
   let queueMessages: QueueMessageIE = {};
     
   if (queueUrls.length < 2) {
@@ -68,7 +68,7 @@ export const getMessageItems = async (queueUrl: string): Promise<MessageItems> =
   return _.get(messageItems, MessageResponseStatus.MESSAGES, []);
 };
 
-export const intervalPullingMessage = async (queueUrls: string[]) => {
+export const intervalPullingMessage = async (queueUrls: string[]): Promise<void> => {
   try {
     // first shot
     await getMessages(queueUrls);
