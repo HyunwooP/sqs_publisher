@@ -1,10 +1,11 @@
 import _ from "lodash";
 import MessageQueue from "../sqs/MessageQueue";
-import { ErrorStatus } from "../enum";
+import { CacheKeyStatus, ErrorStatus } from "../enum";
 import { MessageResponseStatus } from "../enum/message";
 import { QueueMessageIE } from "../../lib/interface";
 import { ReceiveMessageResponse, MessageItems } from "../../lib/sqs/type";
-import cache from "../../lib/cache";
+import worker from "../../lib/worker";
+import { getCacheItem, setCacheItem } from "../../lib/cache";
 import constant from '../../lib/const';
 
 // todo: return interface 만들기.
@@ -71,13 +72,29 @@ export const getMessageItems = async (queueUrl: string): Promise<MessageItems> =
 
 export const intervalPullingMessage = (queueUrls: string[]) => {
   try {
-    cache.intervalPullingMessageId = setInterval(() => {
-      return messageController(queueUrls);
+    const intervalPullingMessageId: NodeJS.Timer = setInterval(() => {
+      messageController(queueUrls);
     }, constant.MESSAGE_PULLING_TIME);
+
+    setCacheItem(CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID, intervalPullingMessageId);
   } catch(error) {
     console.error(`============ intervalPullingMessage Error ============ ${error}`);
+    // todo: restart인지, clear인지 에러 로직에 대해서 고민해보기...
     throw new Error(ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE);
   }
+};
+
+export const clearIntervalPullingMessage = (): void => {
+  const intervalPullingMessageId = getCacheItem(CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID, null);
+  if (!_.isNull(intervalPullingMessageId)) {
+    clearInterval(intervalPullingMessageId);
+    setCacheItem(CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID, null);
+  }
+};
+
+export const reStartIntervalPullingMessage = (): void => {
+  clearIntervalPullingMessage();
+  worker();
 };
 
 export default messageController;
