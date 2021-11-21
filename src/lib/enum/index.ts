@@ -1,5 +1,6 @@
 export enum CacheKeyStatus {
   QUEUE_URLS = "queueUrls",
+  INTERVAL_PULLING_MESSAGE_ID = "intervalPullingMessageId",
 };
 
 export enum ErrorStatus {

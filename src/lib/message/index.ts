@@ -18,9 +18,9 @@ const messageController = async (): Promise<void> => {
     
     if (queueUrls.length < 2) {
       const queueUrl: string = _.get(queueUrls, 0, "");
-      queueMessages = { ...await singleQueueController(queueUrl) };
+      queueMessages = { ...await getSingleMessageQueueInMessages(queueUrl) };
     } else {
-      queueMessages = { ...await multipleQueueController(queueUrls) };
+      queueMessages = { ...await getMultipleMessageQueueInMessages(queueUrls) };
     }
 
     // todo: stateless & statefull 둘 다 로직 짜서 환경변수에 따라 적용하게 하여,
@@ -34,7 +34,7 @@ const messageController = async (): Promise<void> => {
 };
 
 // 여러개의 Message Queue 처리
-const multipleQueueController = async (queueUrls: string[]): Promise<QueueMessageIE> => {
+const getMultipleMessageQueueInMessages = async (queueUrls: string[]): Promise<QueueMessageIE> => {
   const queueMessages: QueueMessageIE = {};
 
   for (const queueUrl of queueUrls) {
@@ -47,7 +47,7 @@ const multipleQueueController = async (queueUrls: string[]): Promise<QueueMessag
 };
 
 // 단일 Message Queue 처리
-const singleQueueController = async (queueUrl: string): Promise<QueueMessageIE> => {
+const getSingleMessageQueueInMessages = async (queueUrl: string): Promise<QueueMessageIE> => {
   const queueMessage: QueueMessageIE = {};
 
   const messages = await getMessageItems(queueUrl);
@@ -67,7 +67,6 @@ export const getMessageItems = async (queueUrl: string): Promise<MessageItems> =
 
 export const intervalPullingMessage = (): void => {
   try {
-    messageController();
     cache.intervalPullingMessageId = setInterval(() => {
       messageController();
     }, constant.MESSAGE_PULLING_TIME);
