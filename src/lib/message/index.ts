@@ -7,26 +7,34 @@ import { ReceiveMessageResponse, MessageItems } from "../../lib/sqs/type";
 import cache from "../../lib/cache";
 import constant from '../../lib/const';
 
+// todo: return interface 만들기.
 const messageController = async (queueUrls: string[]): Promise<void> => {
-  if (!_.isEmpty(queueUrls)) {
-    
-    let queueMessages: QueueMessageIE = {};
-    
-    if (queueUrls.length < 2) {
-      const queueUrl: string = _.get(queueUrls, 0, "");
-      queueMessages = { ...await getSingleMessageQueueInMessages(queueUrl) };
-    } else {
-      queueMessages = { ...await getMultipleMessageQueueInMessages(queueUrls) };
-    }
+  let queueMessages: QueueMessageIE = {};
 
+  if (!_.isEmpty(queueUrls)) {
     // todo: stateless & statefull 둘 다 로직 짜서 환경변수에 따라 적용하게 하여,
     // todo: subscribe 만들기
     // todo: 메세지를 쏘면, message queue에 지워버리기. MessageQueue.deleteMessage
-    console.log('========================')
-    console.log(queueMessages);
-    console.log(`time ====> ${new Date().getTime()}`);
-    console.log('========================')
+    queueMessages = await getMessages(queueUrls);
   }
+
+  console.log('========================')
+  console.log(queueMessages);
+  console.log(`time ====> ${new Date().getTime()}`);
+  console.log('========================')
+};
+
+const getMessages = async (queueUrls: string[]) => {
+  let queueMessages: QueueMessageIE = {};
+    
+  if (queueUrls.length < 2) {
+    const queueUrl: string = _.get(queueUrls, 0, "");
+    queueMessages = { ...await getSingleMessageQueueInMessages(queueUrl) };
+  } else {
+    queueMessages = { ...await getMultipleMessageQueueInMessages(queueUrls) };
+  }
+
+  return queueMessages;
 };
 
 // 여러개의 Message Queue 처리
@@ -61,10 +69,10 @@ export const getMessageItems = async (queueUrl: string): Promise<MessageItems> =
   return _.get(messageItems, MessageResponseStatus.MESSAGES, []);
 };
 
-export const intervalPullingMessage = (queueUrls: string[]): void => {
+export const intervalPullingMessage = (queueUrls: string[]) => {
   try {
     cache.intervalPullingMessageId = setInterval(() => {
-      messageController(queueUrls);
+      return messageController(queueUrls);
     }, constant.MESSAGE_PULLING_TIME);
   } catch(error) {
     console.error(`============ intervalPullingMessage Error ============ ${error}`);

@@ -3,7 +3,6 @@ import { CacheKeyStatus } from "./enum";
 import { CacheIE } from "./interface";
 
 const caches: CacheIE = {
-  queueUrls: [],
   intervalPullingMessageId: null,
 };
 
@@ -17,6 +16,6 @@ export const setCacheItem = (
   value: any
 ): void => {
   caches[key] = value;
-}
+};
 
 export default caches;

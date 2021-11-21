@@ -16,7 +16,7 @@ const setMessage = (queueUrl: string): void => {
     '지우시오!',
     '생성하시오!',
     '변경하시오!',
-  ]
+  ];
 
   _.forEach(sampleMessages, (sampleMessage: string) => {
     MessageQueue.sendMessage({
