@@ -17,7 +17,7 @@
     "queue",
     "message"
   ],
-  "author": "Hyunwoo.Park",
+  "author": "HyunwooPark",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/awakelife93/sqs_publisher/issues"
