@@ -1,39 +1,17 @@
 import _ from "lodash";
 import MessageQueue from "../sqs/MessageQueue";
-import { CacheKeyStatus, ErrorStatus } from "../enum";
 import { MessageResponseStatus } from "../enum/message";
 import { QueueMessageIE } from "../../lib/interface";
 import { ReceiveMessageResponse, MessageItems } from "../../lib/sqs/type";
-import worker from "../../lib/worker";
-import { getCacheItem, setCacheItem } from "../../lib/cache";
-import constant from '../../lib/const';
+import intervalController from "./interval";
 
-// todo: return interface 만들기.
 const messageController = async (queueUrls: string[]): Promise<void> => {
   if (!_.isEmpty(queueUrls)) {
     // todo: stateless & statefull 둘 다 로직 짜서 환경변수에 따라 적용하게 하여,
     // todo: subscribe 만들기
     // todo: 메세지를 쏘면, message queue에 지워버리기. MessageQueue.deleteMessage
-    intervalPullingMessage(queueUrls);
+    intervalController.intervalPullingMessage(queueUrls);
   }
-};
-
-const getMessages = async (queueUrls: string[]): Promise<QueueMessageIE> => {
-  let queueMessages: QueueMessageIE = {};
-    
-  if (queueUrls.length < 2) {
-    const queueUrl: string = _.get(queueUrls, 0, "");
-    queueMessages = { ...await getSingleMessageQueueInMessages(queueUrl) };
-  } else {
-    queueMessages = { ...await getMultipleMessageQueueInMessages(queueUrls) };
-  }
-
-  console.log('========================')
-  console.log(queueMessages);
-  console.log(`time ====> ${new Date().getTime()}`);
-  console.log('========================')
-
-  return queueMessages;
 };
 
 // 여러개의 Message Queue 처리
@@ -59,7 +37,7 @@ const getSingleMessageQueueInMessages = async (queueUrl: string): Promise<QueueM
   return queueMessage;
 };
 
-export const getMessageItems = async (queueUrl: string): Promise<MessageItems> => {
+const getMessageItems = async (queueUrl: string): Promise<MessageItems> => {
   const messageItems: ReceiveMessageResponse = await MessageQueue.getMessage({
     QueueUrl: queueUrl,
     MaxNumberOfMessages: 10
@@ -68,35 +46,22 @@ export const getMessageItems = async (queueUrl: string): Promise<MessageItems> =
   return _.get(messageItems, MessageResponseStatus.MESSAGES, []);
 };
 
-export const intervalPullingMessage = async (queueUrls: string[]): Promise<void> => {
-  try {
-    // first shot
-    await getMessages(queueUrls);
-
-    const intervalPullingMessageId: NodeJS.Timer = setInterval(
-      async() => {
-        await getMessages(queueUrls);
-    }, constant.MESSAGE_PULLING_TIME);
-
-    setCacheItem(CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID, intervalPullingMessageId);
-  } catch(error) {
-    console.error(`============ intervalPullingMessage Error ============ ${error}`);
-    // todo: restart인지, clear인지 에러 로직에 대해서 고민해보기...
-    throw new Error(ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE);
+export const getMessageQueueInMessages = async (queueUrls: string[]): Promise<QueueMessageIE> => {
+  let queueMessages: QueueMessageIE = {};
+    
+  if (queueUrls.length < 2) {
+    const queueUrl: string = _.get(queueUrls, 0, "");
+    queueMessages = { ...await getSingleMessageQueueInMessages(queueUrl) };
+  } else {
+    queueMessages = { ...await getMultipleMessageQueueInMessages(queueUrls) };
   }
-};
 
-export const clearIntervalPullingMessage = (): void => {
-  const intervalPullingMessageId = getCacheItem(CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID, null);
-  if (!_.isNull(intervalPullingMessageId)) {
-    clearInterval(intervalPullingMessageId);
-    setCacheItem(CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID, null);
-  }
-};
+  console.log('========================')
+  console.log(queueMessages);
+  console.log(`time ====> ${new Date().getTime()}`);
+  console.log('========================')
 
-export const reStartIntervalPullingMessage = (): void => {
-  clearIntervalPullingMessage();
-  worker();
+  return queueMessages;
 };
 
 export default messageController;

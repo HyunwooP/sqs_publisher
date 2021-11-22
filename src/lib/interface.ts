@@ -7,3 +7,9 @@ export interface CacheIE {
 export interface QueueMessageIE {
   [index: string]: MessageItems;
 };
+
+export interface QueueControllerIE {
+  queueUrls: string[];
+};
+
+export interface MessageControllerIE {};
