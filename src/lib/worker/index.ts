@@ -1,6 +1,6 @@
+import messageController from "../../lib/message";
 import publisher from "../../lib/publisher";
 import queueController from "../../lib/queue";
-import messageController from "../../lib/message";
 
 const worker = async (): Promise<void> => {
   /**

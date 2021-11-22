@@ -7,7 +7,7 @@ class SQSInstance {
       accessKeyId: env.AWS_ACCESS_KEY,
       secretAccessKey: env.AWS_SECRET_KEY,
     });
-  };
+  }
 
   readonly getSQSInstance = (): AWS.SQS => {
     return new AWS.SQS({
@@ -15,6 +15,6 @@ class SQSInstance {
       region: env.SQS_REGION,
     });
   };
-};
+}
 
 export default new SQSInstance();

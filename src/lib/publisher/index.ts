@@ -12,10 +12,10 @@ const publisher = (queueUrls: string[]): void => {
 
 const sendMessage = async (queueUrl: string): Promise<void> => {
   // todo: Action Message Template 정하기.
-  const sampleMessage = 'deleteAction';
+  const sampleMessage = "deleteAction";
   await MessageQueue.sendMessage({
     QueueUrl: queueUrl,
-    MessageBody: sampleMessage
+    MessageBody: sampleMessage,
   });
 };
 

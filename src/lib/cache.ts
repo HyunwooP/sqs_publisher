@@ -8,13 +8,10 @@ const caches: CacheIE = {
 
 export const getCacheItem = (
   key: CacheKeyStatus | number,
-  defaultValue?: string | number | null | []
+  defaultValue?: string | number | null | [],
 ): any => _.get(caches, key, defaultValue);
 
-export const setCacheItem = (
-  key: CacheKeyStatus,
-  value: any
-): void => {
+export const setCacheItem = (key: CacheKeyStatus, value: any): void => {
   caches[key] = value;
 };
 

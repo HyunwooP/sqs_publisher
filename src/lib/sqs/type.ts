@@ -1,7 +1,7 @@
-import { PromiseResult, Request } from "aws-sdk/lib/request";
 import { ListQueuesResult, Message, MessageList } from "aws-sdk/clients/sqs";
+import { PromiseResult, Request } from "aws-sdk/lib/request";
 
-export type ReceiveMessageRequest= AWS.SQS.Types.ReceiveMessageRequest;
+export type ReceiveMessageRequest = AWS.SQS.Types.ReceiveMessageRequest;
 
 export type ReceiveMessageResult = AWS.SQS.Types.ReceiveMessageResult;
 
@@ -29,7 +29,10 @@ export type CreateQueueResponse = PromiseResult<CreateQueueResult, AWSError>;
 
 export type GetQueueResponse = PromiseResult<ListQueuesResult, AWSError>;
 
-export type ReceiveMessageResponse = PromiseResult<ReceiveMessageResult, AWSError>;
+export type ReceiveMessageResponse = PromiseResult<
+  ReceiveMessageResult,
+  AWSError
+>;
 
 export type SendMessageResponse = PromiseResult<SendMessageResult, AWSError>;
 

@@ -7,5 +7,5 @@ export default {
   AWS_SECRET_KEY: process.env.AWS_SECRET_KEY ?? null,
   // * true = socket, false = restful
   IS_SEND_TO_SOCKET_SUBSCRIBE:
-    (process.env.IS_SEND_TO_SOCKET_SUBSCRIBE === "true") ?? true,
-}
+    process.env.IS_SEND_TO_SOCKET_SUBSCRIBE === "true" ?? true,
+};
