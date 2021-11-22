@@ -15,7 +15,3 @@ export interface QueueControllerIE {
 }
 
 export interface MessageControllerIE {}
-
-export interface SubScribeRequestIE {
-  [index: string]: string[];
-}

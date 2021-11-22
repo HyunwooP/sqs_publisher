@@ -1,7 +1,13 @@
 import _ from "lodash";
 import { ErrorStatus } from "../../lib/enum";
-import { QueueMessagesIE, SubScribeRequestIE } from "../../lib/interface";
-import { MessageItems, ReceiveMessageResponse } from "../../lib/sqs/type";
+import { QueueMessageIE, QueueMessagesIE } from "../../lib/interface";
+import {
+  BatchResultErrorEntry,
+  DeleteMessageBatchResult,
+  DeleteMessageBatchResultEntry,
+  MessageItems,
+  ReceiveMessageResult,
+} from "../../lib/sqs/type";
 import { MessageItemStatus, MessageResponseStatus } from "../enum/message";
 import MessageQueue from "../sqs/MessageQueue";
 import intervalController from "./interval";
@@ -12,6 +18,22 @@ const messageController = async (queueUrls: string[]): Promise<void> => {
     // todo: subscribe 만들기
     intervalController.intervalPullingMessage(queueUrls);
   }
+};
+
+const createDeleteEntry = (queueMessage: QueueMessageIE) => {
+  const receiptHandle: string = _.get(
+    queueMessage,
+    MessageItemStatus.RECEIPT_HANDLE,
+    "",
+  );
+  const body: string = _.get(queueMessage, MessageItemStatus.BODY, "");
+  const id: string = _.get(queueMessage, MessageItemStatus.MESSAGE_ID, "");
+
+  return {
+    receiptHandle,
+    body,
+    id,
+  };
 };
 
 // 여러개의 Message Queue 처리
@@ -42,7 +64,7 @@ const getSingleMessageQueueMessages = async (
 };
 
 const getMessageItems = async (queueUrl: string): Promise<MessageItems> => {
-  const messageItems: ReceiveMessageResponse = await MessageQueue.getMessage({
+  const messageItems: ReceiveMessageResult = await MessageQueue.getMessage({
     QueueUrl: queueUrl,
     MaxNumberOfMessages: 10,
   });
@@ -50,17 +72,39 @@ const getMessageItems = async (queueUrl: string): Promise<MessageItems> => {
   return _.get(messageItems, MessageResponseStatus.MESSAGES, []);
 };
 
-const deleteMessage = async (
-  queueUrl: string,
-  receiptHandle: string,
-): Promise<void> => {
-  try {
-    await MessageQueue.deleteMessage({
+const deleteMessage = async ({
+  queueUrl,
+  id,
+  receiptHandle,
+}: {
+  queueUrl: string;
+  id: string;
+  receiptHandle: string;
+}): Promise<void> => {
+  const deleteResponse: DeleteMessageBatchResult =
+    await MessageQueue.deleteMessageBatch({
       QueueUrl: queueUrl,
-      ReceiptHandle: receiptHandle,
+      Entries: [
+        {
+          Id: id,
+          ReceiptHandle: receiptHandle,
+        },
+      ],
     });
-  } catch (error: unknown) {
-    throw new Error(ErrorStatus.MESSAGE_DELETE_FAILED);
+
+  if (!_.isEmpty(deleteResponse.Failed)) {
+    _.forEach(deleteResponse.Failed, (deleteEntry: BatchResultErrorEntry) => {
+      console.log(`Delete Failed Response ===========>`, deleteEntry);
+    });
+  }
+
+  if (!_.isEmpty(deleteResponse.Successful)) {
+    _.forEach(
+      deleteResponse.Successful,
+      (deleteEntry: DeleteMessageBatchResultEntry) => {
+        console.log(`Delete Successful Response ===========>`, deleteEntry);
+      },
+    );
   }
 };
 
@@ -84,25 +128,20 @@ export const getMessageToDeleteWorker = async (
 ): Promise<any> => {
   const multipleQueueMessages: QueueMessagesIE =
     await getMessageQueueInMessages(queueUrls);
-  const messageItem: SubScribeRequestIE = {};
+  const messageItem: string[] = [];
 
+  // Message Queue들을 순회...
   for (const queueUrl of queueUrls) {
     const queueMessages = multipleQueueMessages[queueUrl];
-    messageItem[queueUrl] = [];
 
+    // Message Queue안에 Message들을 순회...
     for (const queueMessage of queueMessages) {
-      const receiptHandle: string = _.get(
-        queueMessage,
-        MessageItemStatus.RECEIPT_HANDLE,
-        "",
-      );
-      const body: string = _.get(queueMessage, MessageItemStatus.BODY, "");
+      const { receiptHandle, body, id } = createDeleteEntry(queueMessage);
 
       if (receiptHandle !== "") {
-        await deleteMessage(queueUrl, receiptHandle);
-        messageItem[queueUrl].push(body);
+        await deleteMessage({ queueUrl, id, receiptHandle });
+        messageItem.push(body);
       } else {
-        // SQS 필수 파라메터 누락 - 지우기 위해선 receiptHandle이 필요한데,
         throw new Error(ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS);
       }
     }
