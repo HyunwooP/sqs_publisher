@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HyunwooP/sqs_publisher.git"
+    "url": "git+https://github.com/awakelife93/sqs_publisher.git"
   },
   "keywords": [
     "sqs",
@@ -20,9 +20,9 @@
   "author": "Hyunwoo.Park",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/HyunwooP/sqs_publisher/issues"
+    "url": "https://github.com/awakelife93/sqs_publisher/issues"
   },
-  "homepage": "https://github.com/HyunwooP/sqs_publisher#readme",
+  "homepage": "https://github.com/awakelife93/sqs_publisher#readme",
   "dependencies": {
     "aws-sdk": "^2.1032.0",
     "dotenv": "^10.0.0",
