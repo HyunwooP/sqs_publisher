@@ -6,13 +6,13 @@ class SQSInstance {
     AWS.config.update({
       accessKeyId: env.AWS_ACCESS_KEY,
       secretAccessKey: env.AWS_SECRET_KEY,
-      region: env.SQS_REGION
     });
   };
 
-  getSQSInstance = (endpoint: string): any => {
+  readonly getSQSInstance = (): AWS.SQS => {
     return new AWS.SQS({
-      endpoint
+      endpoint: env.SQS_END_POINT,
+      region: env.SQS_REGION,
     });
   };
 };

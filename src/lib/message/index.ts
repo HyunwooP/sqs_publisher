@@ -2,7 +2,7 @@ import _ from "lodash";
 import MessageQueue from "../sqs/MessageQueue";
 import { MessageItemStatus, MessageResponseStatus } from "../enum/message";
 import { QueueMessagesIE, SubScribeRequestIE } from "../../lib/interface";
-import { ReceiveMessageResponse, MessageItems } from "../../lib/sqs/type";
+import { ReceiveMessageResponse, MessageItems, AWSError } from "../../lib/sqs/type";
 import { ErrorStatus } from "../../lib/enum";
 import intervalController from "./interval";
 
@@ -47,10 +47,14 @@ const getMessageItems = async (queueUrl: string): Promise<MessageItems> => {
 };
 
 const deleteMessage = async (queueUrl: string, receiptHandle: string): Promise<void> => {
-  await MessageQueue.deleteMessage({
-    QueueUrl: queueUrl,
-    ReceiptHandle: receiptHandle
-  });
+  try {
+    await MessageQueue.deleteMessage({
+      QueueUrl: queueUrl,
+      ReceiptHandle: receiptHandle
+    });
+  } catch(error: unknown) {
+    throw new Error(ErrorStatus.MESSAGE_DELETE_FAILED);
+  }
 };
 
 const getMessageQueueInMessages = async (queueUrls: string[]): Promise<QueueMessagesIE> => {
@@ -71,18 +75,18 @@ export const getMessageToDeleteWorker = async (queueUrls: string[]): Promise<any
   const messageItem: SubScribeRequestIE = {};
 
   for (const queueUrl of queueUrls) {
-    const singleQueueMessages = multipleQueueMessages[queueUrl];
+    const queueMessages = multipleQueueMessages[queueUrl];
     messageItem[queueUrl] = [];
 
-    for (const singleQueueMessage of singleQueueMessages) {
-      const receiptHandle: string = _.get(singleQueueMessage, MessageItemStatus.RECEIPT_HANDLE, "");
-      const body: string = _.get(singleQueueMessage, MessageItemStatus.BODY, "");
+    for (const queueMessage of queueMessages) {
+      const receiptHandle: string = _.get(queueMessage, MessageItemStatus.RECEIPT_HANDLE, "");
+      const body: string = _.get(queueMessage, MessageItemStatus.BODY, "");
 
       if (receiptHandle !== "") {
-        deleteMessage(queueUrl, receiptHandle);
+        await deleteMessage(queueUrl, receiptHandle);
         messageItem[queueUrl].push(body);
       } else {
-        // SQS 필수 파라메터 누락
+        // SQS 필수 파라메터 누락 - 지우기 위해선 receiptHandle이 필요한데, 
         throw new Error(ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS);
       }
     }

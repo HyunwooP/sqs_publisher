@@ -1,5 +1,4 @@
 import SQSInstance from "./SQSInstance";
-import env from "../../env";
 import {
   ReceiveMessageRequest,
   ReceiveMessageResult,
@@ -18,7 +17,7 @@ import {
 } from "./type";
 
 class MessageQueue {
-  private readonly sqs: AWS.SQS = SQSInstance.getSQSInstance(env.SQS_END_POINT);
+  private readonly sqs: AWS.SQS = SQSInstance.getSQSInstance();
 
   getQueues = async (): Promise<GetQueueResponse> => await this.sqs.listQueues().promise();
 

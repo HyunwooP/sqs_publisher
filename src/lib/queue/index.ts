@@ -9,7 +9,7 @@ const queueController = async (): Promise<QueueControllerIE> => {
   let queueUrls: string[] = await getQueueUrls();
 
   if (_.isEmpty(queueUrls)) {
-    const queueResponse = await createQueue({ QueueName: "TEST_MESSAGE_QUEUE" });
+    const queueResponse = await createQueue({ QueueName: "http://localhost:3000/" });
     queueUrls = [ createQueueUrl(queueResponse) ];
   }
   
@@ -29,7 +29,15 @@ const getQueueUrls = async (): Promise<string[]> => {
   return queueUrls;
 };
 
-const createQueue = async ({
+const createQueueUrls = (queues: QueueResponse | CreateQueueResponse): string[] => {
+  return _.get(queues, QueueResponseStatus.QUEUE_URLS, []);
+};
+
+const createQueueUrl = (queues: QueueResponse | CreateQueueResponse): string => {
+  return _.get(queues, QueueResponseStatus.QUEUE_URL, "");
+};
+
+export const createQueue = async ({
   QueueName,
   Attributes
 }: CreateQueueRequest) : Promise<CreateQueueResponse> => {
@@ -37,14 +45,6 @@ const createQueue = async ({
     QueueName,
     Attributes
   });
-};
-
-const createQueueUrls = (queues: QueueResponse | CreateQueueResponse): string[] => {
-  return _.get(queues, QueueResponseStatus.QUEUE_URLS, []);
-};
-
-const createQueueUrl = (queues: QueueResponse | CreateQueueResponse): string => {
-  return _.get(queues, QueueResponseStatus.QUEUE_URL, "");
 };
 
 export default queueController;
