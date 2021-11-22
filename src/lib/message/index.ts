@@ -10,7 +10,6 @@ const messageController = async (queueUrls: string[]): Promise<void> => {
   if (!_.isEmpty(queueUrls)) {
     // todo: stateless & statefull 둘 다 로직 짜서 환경변수에 따라 적용하게 하여,
     // todo: subscribe 만들기
-    // todo: 메세지를 쏘면, message queue에 지워버리기. MessageQueue.deleteMessage
     intervalController.intervalPullingMessage(queueUrls);
   }
 };
