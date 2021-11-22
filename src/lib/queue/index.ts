@@ -4,7 +4,6 @@ import { QueueResponseStatus } from "../../lib/enum/queue";
 import { QueueControllerIE } from "../../lib/interface";
 import MessageQueue from "../sqs/MessageQueue";
 
-// todo: return interface 만들기.
 const queueController = async (): Promise<QueueControllerIE> => {
   // process...
   let queueUrls: string[] = await getQueueUrls();

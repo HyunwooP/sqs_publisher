@@ -1,8 +1,9 @@
 import _ from "lodash";
 import MessageQueue from "../sqs/MessageQueue";
-import { MessageResponseStatus } from "../enum/message";
-import { QueueMessageIE } from "../../lib/interface";
+import { MessageItemStatus, MessageResponseStatus } from "../enum/message";
+import { QueueMessagesIE, SubScribeRequestIE } from "../../lib/interface";
 import { ReceiveMessageResponse, MessageItems } from "../../lib/sqs/type";
+import { ErrorStatus } from "../../lib/enum";
 import intervalController from "./interval";
 
 const messageController = async (queueUrls: string[]): Promise<void> => {
@@ -15,8 +16,8 @@ const messageController = async (queueUrls: string[]): Promise<void> => {
 };
 
 // 여러개의 Message Queue 처리
-const getMultipleMessageQueueInMessages = async (queueUrls: string[]): Promise<QueueMessageIE> => {
-  const queueMessages: QueueMessageIE = {};
+const getMultipleMessageQueueMessages = async (queueUrls: string[]): Promise<QueueMessagesIE> => {
+  const queueMessages: QueueMessagesIE = {};
 
   for (const queueUrl of queueUrls) {
     // 한개의 Message Queue당 담고 있는 Message를 담는다.
@@ -28,8 +29,8 @@ const getMultipleMessageQueueInMessages = async (queueUrls: string[]): Promise<Q
 };
 
 // 단일 Message Queue 처리
-const getSingleMessageQueueInMessages = async (queueUrl: string): Promise<QueueMessageIE> => {
-  const queueMessage: QueueMessageIE = {};
+const getSingleMessageQueueMessages = async (queueUrl: string): Promise<QueueMessagesIE> => {
+  const queueMessage: QueueMessagesIE = {};
 
   const messages = await getMessageItems(queueUrl);
   queueMessage[queueUrl] = messages;
@@ -46,22 +47,49 @@ const getMessageItems = async (queueUrl: string): Promise<MessageItems> => {
   return _.get(messageItems, MessageResponseStatus.MESSAGES, []);
 };
 
-export const getMessageQueueInMessages = async (queueUrls: string[]): Promise<QueueMessageIE> => {
-  let queueMessages: QueueMessageIE = {};
-    
+const deleteMessage = async (queueUrl: string, receiptHandle: string): Promise<void> => {
+  await MessageQueue.deleteMessage({
+    QueueUrl: queueUrl,
+    ReceiptHandle: receiptHandle
+  });
+};
+
+const getMessageQueueInMessages = async (queueUrls: string[]): Promise<QueueMessagesIE> => {
+  let queueMessages: QueueMessagesIE = {};
+  
   if (queueUrls.length < 2) {
     const queueUrl: string = _.get(queueUrls, 0, "");
-    queueMessages = { ...await getSingleMessageQueueInMessages(queueUrl) };
+    queueMessages = { ...await getSingleMessageQueueMessages(queueUrl) };
   } else {
-    queueMessages = { ...await getMultipleMessageQueueInMessages(queueUrls) };
+    queueMessages = { ...await getMultipleMessageQueueMessages(queueUrls) };
   }
 
-  console.log('========================')
-  console.log(queueMessages);
-  console.log(`time ====> ${new Date().getTime()}`);
-  console.log('========================')
-
   return queueMessages;
+};
+
+export const getMessageToDeleteWorker = async (queueUrls: string[]): Promise<any> => {
+  const multipleQueueMessages: QueueMessagesIE = await getMessageQueueInMessages(queueUrls);
+  const messageItem: SubScribeRequestIE = {};
+
+  for (const queueUrl of queueUrls) {
+    const singleQueueMessages = multipleQueueMessages[queueUrl];
+    messageItem[queueUrl] = [];
+
+    for (const singleQueueMessage of singleQueueMessages) {
+      const receiptHandle: string = _.get(singleQueueMessage, MessageItemStatus.RECEIPT_HANDLE, "");
+      const body: string = _.get(singleQueueMessage, MessageItemStatus.BODY, "");
+
+      if (receiptHandle !== "") {
+        deleteMessage(queueUrl, receiptHandle);
+        messageItem[queueUrl].push(body);
+      } else {
+        // SQS 필수 파라메터 누락
+        throw new Error(ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS);
+      }
+    }
+  }
+
+  return messageItem;
 };
 
 export default messageController;
