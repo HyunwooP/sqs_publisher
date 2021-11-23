@@ -4,7 +4,6 @@ import intervalController from "../message/interval";
 import { AWSError } from "../sqs/type";
 
 const errorController = (error: AWSError | any): void => {
-  console.log('errorController로 들어오니?????????????');
   try {
     if (!_.isUndefined(error.code)) {
       awsErrorController(error);
