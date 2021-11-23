@@ -11,7 +11,7 @@ const expressController = (): http.Server => {
 
 const createExpress = (): express.Application => {
   const corsConfig = {
-    // * subscribe server origin
+    // * subscribe servers origin
     origin: [ env.SUB_SCRIBE_A_SERVER_ORIGIN ],
     credentials: true,
   };
