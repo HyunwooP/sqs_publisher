@@ -8,4 +8,8 @@ export default {
   // * true = socket, false = restful
   IS_SEND_TO_SOCKET_SUBSCRIBE:
     process.env.IS_SEND_TO_SOCKET_SUBSCRIBE === "true" ?? true,
+  SUB_SCRIBE_A_SERVER_ORIGIN: process.env.subscribeDomain && process.env.subscribePort
+  ? `http://${process.env.subscribeDomain}:${process.env.subscribePort}`
+  : "http://localhost:8080",
+  SQS_SERVER_PORT: process.env.SQS_SERVER_PORT ?? 3000,
 };

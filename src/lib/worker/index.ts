@@ -1,8 +1,13 @@
+import webSocketController from "./ws";
 import messageController from "../message";
 import publisher from "../publisher";
 import queueController from "../queue";
 
 const worker = async (): Promise<void> => {
+  if (process.env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
+    webSocketController();
+  }
+
   /**
    * @description
    * Message Queue 관리 컨트롤러
