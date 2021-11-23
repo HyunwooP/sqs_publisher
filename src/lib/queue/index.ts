@@ -1,15 +1,14 @@
 import _ from "lodash";
-import { QueueResponseStatus } from "../../lib/enum/queue";
-import { QueueControllerIE } from "../../lib/interface";
+import { QueueControllerIE } from "../common/interface";
 import {
   CreateQueueRequest,
   CreateQueueResult,
   QueueResponse,
-} from "../../lib/sqs/type";
+} from "../sqs/type";
 import MessageQueue from "../sqs/MessageQueue";
+import { createQueueUrl, getQueueUrls } from "./preprocessor";
 
 const queueController = async (): Promise<QueueControllerIE> => {
-  // process...
   let queueUrls: string[] = await getQueueUrls();
 
   if (_.isEmpty(queueUrls)) {
@@ -24,25 +23,8 @@ const queueController = async (): Promise<QueueControllerIE> => {
   };
 };
 
-const getQueueResponse = async (): Promise<QueueResponse> => {
+export const getQueueResponse = async (): Promise<QueueResponse> => {
   return await MessageQueue.getQueues();
-};
-
-const getQueueUrls = async (): Promise<string[]> => {
-  const queueResponse: QueueResponse = await getQueueResponse();
-  const queueUrls: string[] = createQueueUrls(queueResponse);
-
-  return queueUrls;
-};
-
-const createQueueUrls = (
-  queues: QueueResponse | CreateQueueResult,
-): string[] => {
-  return _.get(queues, QueueResponseStatus.QUEUE_URLS, []);
-};
-
-const createQueueUrl = (queues: QueueResponse | CreateQueueResult): string => {
-  return _.get(queues, QueueResponseStatus.QUEUE_URL, "");
 };
 
 export const createQueue = async ({

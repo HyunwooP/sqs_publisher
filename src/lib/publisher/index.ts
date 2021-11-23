@@ -1,5 +1,5 @@
 import _ from "lodash";
-import MessageQueue from "../../lib/sqs/MessageQueue";
+import MessageQueue from "../sqs/MessageQueue";
 
 const publisher = (queueUrls: string[]): void => {
   if (!_.isEmpty(queueUrls)) {

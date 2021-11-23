@@ -1,16 +1,20 @@
 import _ from "lodash";
-import { ErrorStatus } from "../../lib/enum";
-import { QueueMessageIE, QueueMessagesIE } from "../../lib/interface";
+import CommonEnum from "../enum";
+import { QueueMessagesIE } from "../common/interface";
 import {
-  BatchResultErrorEntry,
   DeleteMessageBatchResult,
-  DeleteMessageBatchResultEntry,
   MessageItems,
   ReceiveMessageResult,
-} from "../../lib/sqs/type";
-import { MessageItemStatus, MessageResponseStatus } from "../enum/message";
+} from "../sqs/type";
 import MessageQueue from "../sqs/MessageQueue";
 import intervalController from "./interval";
+import {
+  createDeleteEntry,
+  failedDeleteMessage,
+  getMultipleMessageQueueMessages,
+  getSingleMessageQueueMessages,
+  successDeleteMessage
+} from "./preprocessor";
 
 const messageController = async (queueUrls: string[]): Promise<void> => {
   if (!_.isEmpty(queueUrls)) {
@@ -18,58 +22,6 @@ const messageController = async (queueUrls: string[]): Promise<void> => {
     // todo: subscribe 만들기
     intervalController.intervalPullingMessage(queueUrls);
   }
-};
-
-const createDeleteEntry = (queueMessage: QueueMessageIE) => {
-  const receiptHandle: string = _.get(
-    queueMessage,
-    MessageItemStatus.RECEIPT_HANDLE,
-    "",
-  );
-  const body: string = _.get(queueMessage, MessageItemStatus.BODY, "");
-  const id: string = _.get(queueMessage, MessageItemStatus.MESSAGE_ID, "");
-
-  return {
-    receiptHandle,
-    body,
-    id,
-  };
-};
-
-// 여러개의 Message Queue 처리
-const getMultipleMessageQueueMessages = async (
-  queueUrls: string[],
-): Promise<QueueMessagesIE> => {
-  const queueMessages: QueueMessagesIE = {};
-
-  for (const queueUrl of queueUrls) {
-    // 한개의 Message Queue당 담고 있는 Message를 담는다.
-    const messages = await getMessageItems(queueUrl);
-    queueMessages[queueUrl] = messages;
-  }
-
-  return queueMessages;
-};
-
-// 단일 Message Queue 처리
-const getSingleMessageQueueMessages = async (
-  queueUrl: string,
-): Promise<QueueMessagesIE> => {
-  const queueMessage: QueueMessagesIE = {};
-
-  const messages = await getMessageItems(queueUrl);
-  queueMessage[queueUrl] = messages;
-
-  return queueMessage;
-};
-
-const getMessageItems = async (queueUrl: string): Promise<MessageItems> => {
-  const messageItems: ReceiveMessageResult = await MessageQueue.getMessage({
-    QueueUrl: queueUrl,
-    MaxNumberOfMessages: 10,
-  });
-
-  return _.get(messageItems, MessageResponseStatus.MESSAGES, []);
 };
 
 const deleteMessage = async ({
@@ -93,19 +45,21 @@ const deleteMessage = async ({
     });
 
   if (!_.isEmpty(deleteResponse.Failed)) {
-    _.forEach(deleteResponse.Failed, (deleteEntry: BatchResultErrorEntry) => {
-      console.log(`Delete Failed Response ===========>`, deleteEntry);
-    });
+    failedDeleteMessage(deleteResponse.Failed);
   }
 
   if (!_.isEmpty(deleteResponse.Successful)) {
-    _.forEach(
-      deleteResponse.Successful,
-      (deleteEntry: DeleteMessageBatchResultEntry) => {
-        console.log(`Delete Successful Response ===========>`, deleteEntry);
-      },
-    );
+    successDeleteMessage(deleteResponse.Successful);
   }
+};
+
+export const getMessageItems = async (queueUrl: string): Promise<MessageItems> => {
+  const messageItems: ReceiveMessageResult = await MessageQueue.getMessage({
+    QueueUrl: queueUrl,
+    MaxNumberOfMessages: 10,
+  });
+
+  return _.get(messageItems, CommonEnum.MessageResponseStatus.MESSAGES, []);
 };
 
 const getMessageQueueInMessages = async (
@@ -138,11 +92,11 @@ export const getMessageToDeleteWorker = async (
     for (const queueMessage of queueMessages) {
       const { receiptHandle, body, id } = createDeleteEntry(queueMessage);
 
-      if (receiptHandle !== "") {
+      if (!_.isEmpty(receiptHandle)) {
         await deleteMessage({ queueUrl, id, receiptHandle });
         messageItem.push(body);
       } else {
-        throw new Error(ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS);
+        throw new Error(CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS);
       }
     }
   }

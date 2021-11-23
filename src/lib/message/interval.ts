@@ -1,9 +1,9 @@
 import _ from "lodash";
 import { getMessageToDeleteWorker } from ".";
-import { getCacheItem, setCacheItem } from "../../lib/cache";
-import { CacheKeyStatus, ErrorStatus } from "../../lib/enum";
-import worker from "../../lib/worker";
-import constant from "../constant";
+import { getCacheItem, setCacheItem } from "../common/cache";
+import constant from "../common/constant";
+import CommonEnum from "../enum";
+import worker from "../worker";
 
 const intervalPullingMessage = async (queueUrls: string[]): Promise<void> => {
   try {
@@ -13,7 +13,7 @@ const intervalPullingMessage = async (queueUrls: string[]): Promise<void> => {
     }, constant.MESSAGE_PULLING_TIME);
 
     setCacheItem(
-      CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
+      CommonEnum.CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
       intervalPullingMessageId,
     );
   } catch (error: unknown) {
@@ -21,19 +21,19 @@ const intervalPullingMessage = async (queueUrls: string[]): Promise<void> => {
       `============ intervalPullingMessage Error ============ ${error}`,
     );
     // todo: restart인지, clear인지 에러 로직에 대해서 고민해보기...
-    throw new Error(ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE);
+    throw new Error(CommonEnum.ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE);
   }
 };
 
 const clearIntervalPullingMessage = (): void => {
   const intervalPullingMessageId = getCacheItem(
-    CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
+    CommonEnum.CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
     null,
   );
 
   if (!_.isNull(intervalPullingMessageId)) {
     clearInterval(intervalPullingMessageId);
-    setCacheItem(CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID, null);
+    setCacheItem(CommonEnum.CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID, null);
   }
 };
 

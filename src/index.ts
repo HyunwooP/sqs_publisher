@@ -1,4 +1,4 @@
-import errorController from "./lib/error";
+import errorController from "./lib/common/error";
 import worker from "./lib/worker";
 
 (async (): Promise<void> => {
@@ -6,6 +6,5 @@ import worker from "./lib/worker";
     await worker();
   } catch (error: unknown) {
     errorController(error);
-    throw error;
   }
 })();

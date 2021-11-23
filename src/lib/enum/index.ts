@@ -1,9 +1,11 @@
-export enum CacheKeyStatus {
-  INTERVAL_PULLING_MESSAGE_ID = "intervalPullingMessageId",
-}
+import * as Cache from "./cache";
+import * as Error from "./error";
+import * as Message from "./message";
+import * as Queue from "./queue";
 
-export enum ErrorStatus {
-  STOP_INTERVAL_PULLING_MESSAGE = "STOP_INTERVAL_PULLING_MESSAGE",
-  IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS = "IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS",
-  MESSAGE_DELETE_FAILED = "MESSAGE_DELETE_FAILED",
-}
+export default {
+  ...Cache,
+  ...Error,
+  ...Message,
+  ...Queue
+};
