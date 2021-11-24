@@ -2,6 +2,7 @@ import WebSocket from "../protocol/ws";
 import messageController from "../message";
 import publisher from "../publisher";
 import queueController from "../queue";
+import { clearIntervalPullingMessage } from "../message/interval";
 
 const worker = async (): Promise<void> => {
   
@@ -36,5 +37,10 @@ const worker = async (): Promise<void> => {
    */
   await messageController(queueUrls);
 };
+
+export const restartWorker = (): void => {
+  clearIntervalPullingMessage();
+  worker();
+}
 
 export default worker;

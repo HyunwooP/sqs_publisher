@@ -3,7 +3,7 @@ import { getMessageToDeleteWorker, sendSubScribeToMessage } from ".";
 import { getCacheItem, setCacheItem } from "../common/cache";
 import constant from "../common/constant";
 import CommonEnum from "../enum";
-import worker from "../worker";
+import { restartWorker } from "../worker";
 
 const intervalPullingMessage = async (queueUrls: string[]): Promise<void> => {
   try {
@@ -25,7 +25,7 @@ const intervalPullingMessage = async (queueUrls: string[]): Promise<void> => {
   }
 };
 
-const clearIntervalPullingMessage = (): void => {
+export const clearIntervalPullingMessage = (): void => {
   const intervalPullingMessageId = getCacheItem(
     CommonEnum.CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
     null,
@@ -35,11 +35,6 @@ const clearIntervalPullingMessage = (): void => {
     clearInterval(intervalPullingMessageId);
     setCacheItem(CommonEnum.CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID, null);
   }
-};
-
-const reStartIntervalPullingMessage = (): void => {
-  clearIntervalPullingMessage();
-  worker();
 };
 
 const intervalWorker = async (queueUrls: string[]): Promise<void> => {
@@ -55,7 +50,6 @@ const intervalWorker = async (queueUrls: string[]): Promise<void> => {
 const intervalController = {
   intervalPullingMessage,
   clearIntervalPullingMessage,
-  reStartIntervalPullingMessage,
 };
 
 export default intervalController;

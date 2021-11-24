@@ -2,6 +2,7 @@ import _ from "lodash";
 import CommonEnum from "../enum";
 import intervalController from "../message/interval";
 import { AWSError } from "../sqs/type";
+import { restartWorker } from "../worker";
 
 const errorController = (error: AWSError | any): void => {
   try {
@@ -29,7 +30,7 @@ const awsErrorSelector = (error:AWSError): void => {
         errorMessage = "MQ 서버를 확인 해주시기 바랍니다.";
         break;
       default:
-        intervalController.reStartIntervalPullingMessage();
+        restartWorker();
         break;
     }
 
@@ -57,9 +58,9 @@ const appErrorSelector = (error: unknown): void => {
         break;
       case CommonEnum.ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE:
         errorMessage = "풀링이 실패했습니다.";
-        intervalController.reStartIntervalPullingMessage();
+        restartWorker();
       default:
-        intervalController.reStartIntervalPullingMessage();
+        restartWorker();
         break;
     }
 
