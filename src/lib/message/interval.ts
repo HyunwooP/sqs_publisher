@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { getMessageToDeleteWorker, sendSubScribeToMessage } from ".";
-import { getCacheItem, setCacheItem } from "../common/cache";
+import { CacheKeyStatus, getCacheItem, setCacheItem } from "../common/cache";
 import constant from "../common/constant";
 import CommonEnum from "../enum";
 import queueController from "../queue";
@@ -12,24 +12,27 @@ const intervalPullingMessage = (queueUrls: string[]): void => {
         await intervalWorker(queueUrls);
       },constant.MESSAGE_PULLING_TIME);
 
-    setCacheItem(
-      CommonEnum.CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
-      intervalPullingMessageId,
-    );
+    setCacheItem({
+      key: CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
+      value: intervalPullingMessageId
+    });
   } catch (error: unknown) {
     throw new Error(CommonEnum.ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE);
   }
 };
 
 const clearIntervalPullingMessage = (): void => {
-  const intervalPullingMessageId = getCacheItem(
-    CommonEnum.CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
-    null,
-  );
+  const intervalPullingMessageId = getCacheItem({
+    key: CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
+    defaultValue: null
+  });
 
   if (!_.isNull(intervalPullingMessageId)) {
     clearInterval(intervalPullingMessageId);
-    setCacheItem(CommonEnum.CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID, null);
+    setCacheItem({
+      key: CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
+      value: null
+    });
   }
 };
 

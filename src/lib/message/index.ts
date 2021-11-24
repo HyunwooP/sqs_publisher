@@ -26,7 +26,7 @@ const messageController = (queueUrls: string[]): void => {
   }
 };
 
-const deleteMessage = async ({
+export const deleteMessage = async ({
   queueUrl,
   id,
   receiptHandle,
@@ -47,7 +47,12 @@ const deleteMessage = async ({
     });
 
   if (!_.isEmpty(deleteResponse.Failed)) {
-    failedDeleteMessage(deleteResponse.Failed);
+    failedDeleteMessage({
+      failed: deleteResponse.Failed,
+      queueUrl,
+      id,
+      receiptHandle
+    });
   }
 
   if (!_.isEmpty(deleteResponse.Successful)) {

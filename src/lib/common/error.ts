@@ -43,7 +43,7 @@ const appErrorController = (error: unknown): void => {
 
 const appErrorSelector = (error: unknown): void => {
   let errorMessage = error ?? "서비스 장애입니다.";
-
+  
   switch(error) {
     case CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS:
       errorMessage = "Message 객체에 필수 파라메터가 부족합니다.";
@@ -54,6 +54,10 @@ const appErrorSelector = (error: unknown): void => {
     case CommonEnum.ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE:
       errorMessage = "풀링이 실패했습니다.";
       intervalController.restartIntervalPullingMessage();
+      break;
+    case CommonEnum.ErrorStatus.MAXIMUM_DELETE_COUNT_OVER:
+      errorMessage = "삭제가 되지 않는 메세지가 있습니다.";
+      break;
     default:
       restartWorker();
       break;

@@ -11,7 +11,9 @@ import {
   DeleteMessageBatchResultEntryList
 } from "../sqs/type";
 import CommonEnum from "../enum";
-import { getMessageItems } from ".";
+import { CacheKeyStatus, getCacheItem, setCacheItem } from "../common/cache";
+import constant from "../common/constant";
+import { deleteMessage, getMessageItems } from ".";
 
 // 여러개의 Message Queue 처리
 export const getMultipleMessageQueueMessages = async (
@@ -65,9 +67,56 @@ export const successDeleteMessage = (successful: DeleteMessageBatchResultEntryLi
   );
 };
 
-export const failedDeleteMessage = (failed: BatchResultErrorEntryList): void => {
-  // todo: 실패 했을 시, 다시 삭제를 재요청하는 로직을...
+const messageFailedCountController = (messageId: string) => {
+  let deleteMessageFailedCount = getCacheItem({
+    objectName: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
+    objectKey: messageId
+  });
+
+  if (_.isUndefined(deleteMessageFailedCount)) {
+    setCacheItem({
+      objectName: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
+      objectKey: messageId,
+      value: 0
+    });
+  } else {
+    setCacheItem({
+      objectName: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
+      objectKey: messageId,
+      value: ++deleteMessageFailedCount
+    });
+  }
+};
+
+export const failedDeleteMessage = ({
+  failed,
+  queueUrl,
+  id,
+  receiptHandle
+} : {
+  failed: BatchResultErrorEntryList;
+  queueUrl: string;
+  id: string;
+  receiptHandle: string;
+}): void => {
   _.forEach(failed, (deleteEntry: BatchResultErrorEntry) => {
-    console.log(`Delete Failed Response ===========>`, deleteEntry);
+    const deleteMessageFailedCount = getCacheItem({
+      objectName: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
+      objectKey: id
+    });
+
+    console.log(`${queueUrl} Delete Failed Response ===========> message id: ${id} / count = ${deleteMessageFailedCount}`);
+    if (deleteMessageFailedCount < constant.MAXIMUM_DELETE_COUNT) {
+      messageFailedCountController(id);
+      setTimeout(() => {
+        deleteMessage({
+          queueUrl,
+          id,
+          receiptHandle
+        })
+      }, constant.DELAY_DELETE_MESSAGE_TIME);
+    } else {
+      throw new Error(CommonEnum.ErrorStatus.MAXIMUM_DELETE_COUNT_OVER);
+    }
   });
 };
