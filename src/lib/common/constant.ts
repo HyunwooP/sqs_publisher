@@ -14,7 +14,7 @@ const constant = {
    * @description
    * 메세지가 없을 때 지연 시간
    */
-  DELAY_INTERVAL_TIME: 6000 * 10,
+  DELAY_START_INTERVAL_TIME: 6000 * 10,
   /**
    * @description
    * 메세지 삭제 실패 시 지연 시간
