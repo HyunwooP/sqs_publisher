@@ -3,11 +3,10 @@ import { getMessageToDeleteWorker, sendSubScribeToMessage } from ".";
 import { getCacheItem, setCacheItem } from "../common/cache";
 import constant from "../common/constant";
 import CommonEnum from "../enum";
-import { restartWorker } from "../worker";
+import queueController from "../queue";
 
 const intervalPullingMessage = async (queueUrls: string[]): Promise<void> => {
   try {
-    // first shot
     const intervalPullingMessageId: NodeJS.Timer = setInterval(async () => {
       await intervalWorker(queueUrls);
     }, constant.MESSAGE_PULLING_TIME);
@@ -41,10 +40,20 @@ const intervalWorker = async (queueUrls: string[]): Promise<void> => {
   const message: string = await getMessageToDeleteWorker(queueUrls);
 
   if (_.isEmpty(message)) {
-    // todo: 없을 경우 1분 뒤에 다시 가져오는 프로세스로...
+    console.log(`Message Queue has Non Message So, Set Delay ${constant.DELAY_INTERVAL_TIME} seconds`);
+    delayStartIntervalPullingMessage();
+  } else {
+    sendSubScribeToMessage(message);
   }
-  
-  sendSubScribeToMessage(message);
+};
+
+const delayStartIntervalPullingMessage = async () => {
+  const { queueUrls } = await queueController();
+
+  clearIntervalPullingMessage();
+  setTimeout(async () => {
+    await intervalPullingMessage(queueUrls)
+  }, constant.DELAY_INTERVAL_TIME);
 };
 
 const intervalController = {

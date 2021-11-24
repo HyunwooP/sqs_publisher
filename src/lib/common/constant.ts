@@ -2,6 +2,7 @@ const constant = {
   MESSAGE_PULLING_TIME: 3000 * 10,
   START_WORKER_TIME: 3000 * 10,
   RECEIVE_MAX_NUMBER_OF_MESSAGES: 1,
+  DELAY_INTERVAL_TIME: 6000 * 10
 };
 
 export default constant;
