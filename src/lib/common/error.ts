@@ -1,6 +1,5 @@
 import _ from "lodash";
 import CommonEnum from "../enum";
-import intervalController from "../message/interval";
 import { AWSError } from "../sqs/type";
 import { restartWorker } from "../worker";
 
