@@ -82,6 +82,7 @@ const messageFailedCountController = (messageId: string) => {
     objectKey: messageId,
   });
 
+  // todo: cache module에 isNonCacheItem 만들기
   if (_.isUndefined(deleteMessageFailedCount)) {
     setCacheItem({
       objectName: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
