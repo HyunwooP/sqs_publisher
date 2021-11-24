@@ -1,8 +1,8 @@
 import _ from "lodash";
 import CommonEnum from "../enum";
+import intervalController from "../message/interval";
 import { AWSError } from "../sqs/type";
 import { restartWorker } from "../worker";
-import intervalController from "../message/interval";
 
 const errorController = (error: AWSError | any): void => {
   try {
@@ -11,7 +11,7 @@ const errorController = (error: AWSError | any): void => {
     } else {
       appErrorController(error);
     }
-  } catch(error: unknown) {
+  } catch (error: unknown) {
     console.error(`=========> throw Error!!! => ${error}`);
   }
 };
@@ -21,11 +21,11 @@ const awsErrorController = (error: AWSError): void => {
   awsErrorSelector(error);
 };
 
-const awsErrorSelector = (error:AWSError): void => {
+const awsErrorSelector = (error: AWSError): void => {
   let errorMessage = error.message ?? "AWS SDK 에러입니다.";
 
-  switch(error.code) {
-    case CommonEnum.AWSErrorStatus.UN_KNOWN_ENDPOINT :
+  switch (error.code) {
+    case CommonEnum.AWSErrorStatus.UN_KNOWN_ENDPOINT:
       errorMessage = "MQ 서버를 확인 해주시기 바랍니다.";
       break;
     default:
@@ -43,8 +43,8 @@ const appErrorController = (error: unknown): void => {
 
 const appErrorSelector = (error: unknown): void => {
   let errorMessage = error ?? "서비스 장애입니다.";
-  
-  switch(error) {
+
+  switch (error) {
     case CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS:
       errorMessage = "Message 객체에 필수 파라메터가 부족합니다.";
       break;

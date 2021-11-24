@@ -2,13 +2,13 @@ import _ from "lodash";
 
 export enum CacheKeyStatus {
   INTERVAL_PULLING_MESSAGE_ID = "intervalPullingMessageId",
-  DELETE_MESSAGE_FAILED_COUNT_GROUP = "deleteMessageFailedCountGroup"
+  DELETE_MESSAGE_FAILED_COUNT_GROUP = "deleteMessageFailedCountGroup",
 }
 
 export interface CacheIE {
   deleteMessageFailedCountGroup: {
     [index: string]: number;
-  },
+  };
   intervalPullingMessageId: null | NodeJS.Timer;
 }
 
@@ -18,7 +18,7 @@ const defaultCacheItem: CacheIE = {
 };
 
 let cacheItem: CacheIE = {
-  ...defaultCacheItem
+  ...defaultCacheItem,
 };
 
 // todo: object prototype은 따로 함수 빼내기
@@ -27,13 +27,12 @@ export const getCacheItem = ({
   objectKey,
   objectName,
   defaultValue,
-} : {
+}: {
   key?: CacheKeyStatus | number;
   objectName?: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP;
   objectKey?: string;
   defaultValue?: string | number | null | [];
-}
-): any => {
+}): any => {
   if (_.isEmpty(objectName) && _.isEmpty(objectKey)) {
     return _.get(cacheItem, key, defaultValue);
   } else {
@@ -46,8 +45,8 @@ export const setCacheItem = ({
   key,
   objectKey,
   objectName,
-  value
-} : {
+  value,
+}: {
   key?: CacheKeyStatus;
   objectName?: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP;
   objectKey?: string;
@@ -62,6 +61,6 @@ export const setCacheItem = ({
 
 export const clearCacheItem = (): void => {
   cacheItem = {
-    ...defaultCacheItem
+    ...defaultCacheItem,
   };
 };

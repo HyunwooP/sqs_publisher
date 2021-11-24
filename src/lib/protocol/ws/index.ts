@@ -3,14 +3,16 @@ import ws from "ws";
 import httpController from "./httpServer";
 
 class WebSocket {
-  private readonly wss: ws.WebSocketServer = new ws.Server({ server: httpController() });
+  private readonly wss: ws.WebSocketServer = new ws.Server({
+    server: httpController(),
+  });
   private ws: ws.WebSocket;
 
   connect = (): void => {
     if (!_.isEmpty(this.wss)) {
       this.wss.on("connection", (ws: ws.WebSocket): void => {
         this.ws = ws;
-        
+
         // connection하면, 소켓별로 listener 등록.
         this.onMessage();
         this.onError();
@@ -27,7 +29,7 @@ class WebSocket {
   onMessage = (): void => {
     if (!_.isEmpty(this.ws)) {
       this.ws.on("message", (message: string): void => {
-        console.log(`SubScribe Message: ${message}`);
+        console.log(`Subscribe Message: ${message}`);
       });
     }
   };
@@ -36,11 +38,11 @@ class WebSocket {
     if (!_.isEmpty(this.ws)) {
       this.ws.on("error", (error: Error): void => {
         console.log(`WebSocket Error ${error}`);
-        
+
         if (_.isFunction(callback)) {
           callback(error);
         }
-  
+
         throw error;
       });
     }

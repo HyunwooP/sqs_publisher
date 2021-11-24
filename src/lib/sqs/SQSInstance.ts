@@ -17,7 +17,9 @@ class SQSInstance {
 
   readonly getSQSInstance = (): AWS.SQS => {
     if (_.isEmpty(env.SQS_END_POINT) || _.isEmpty(env.SQS_REGION)) {
-      throw new Error(CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_AWS_ENDPOINT_INFO);
+      throw new Error(
+        CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_AWS_ENDPOINT_INFO,
+      );
     }
 
     return new AWS.SQS({

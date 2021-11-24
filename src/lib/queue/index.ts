@@ -1,11 +1,11 @@
 import _ from "lodash";
 import { QueueControllerIE } from "../common/interface";
+import MessageQueue from "../sqs/MessageQueue";
 import {
   CreateQueueRequest,
   CreateQueueResult,
   QueueResponse,
 } from "../sqs/type";
-import MessageQueue from "../sqs/MessageQueue";
 import { createQueueUrl, getQueueUrls } from "./preprocessor";
 
 const queueController = async (): Promise<QueueControllerIE> => {

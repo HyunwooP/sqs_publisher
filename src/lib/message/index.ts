@@ -1,24 +1,24 @@
 import _ from "lodash";
 import env from "../../env";
-import CommonEnum from "../enum";
-import WebSocket from "../protocol/ws";
-import { postAPI } from "../protocol/http";
+import constant from "../../lib/common/constant";
 import { QueueMessagesIE } from "../common/interface";
+import CommonEnum from "../enum";
+import { postAPI } from "../protocol/http";
+import WebSocket from "../protocol/ws";
+import MessageQueue from "../sqs/MessageQueue";
 import {
   DeleteMessageBatchResult,
   MessageItems,
   ReceiveMessageResult,
 } from "../sqs/type";
-import MessageQueue from "../sqs/MessageQueue";
 import intervalController from "./interval";
 import {
   createDeleteEntry,
   failedDeleteMessage,
   getMultipleMessageQueueMessages,
   getSingleMessageQueueMessages,
-  successDeleteMessage
+  successDeleteMessage,
 } from "./preprocessor";
-import constant from "../../lib/common/constant";
 
 const messageController = (queueUrls: string[]): void => {
   if (!_.isEmpty(queueUrls)) {
@@ -51,7 +51,7 @@ export const deleteMessage = async ({
       failed: deleteResponse.Failed,
       queueUrl,
       id,
-      receiptHandle
+      receiptHandle,
     });
   }
 
@@ -60,7 +60,9 @@ export const deleteMessage = async ({
   }
 };
 
-export const getMessageItems = async (queueUrl: string): Promise<MessageItems> => {
+export const getMessageItems = async (
+  queueUrl: string,
+): Promise<MessageItems> => {
   const messageItems: ReceiveMessageResult = await MessageQueue.getMessage({
     QueueUrl: queueUrl,
     MaxNumberOfMessages: constant.RECEIVE_MAX_NUMBER_OF_MESSAGES,
@@ -103,7 +105,9 @@ export const getMessageToDeleteWorker = async (
         await deleteMessage({ queueUrl, id, receiptHandle });
         messageBody.push(body);
       } else {
-        throw new Error(CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS);
+        throw new Error(
+          CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS,
+        );
       }
     }
   }
@@ -111,14 +115,16 @@ export const getMessageToDeleteWorker = async (
   return messageBody;
 };
 
-export const sendSubScribeToMessage = async (message: string): Promise<void> => {
+export const sendSubScribeToMessage = async (
+  message: string,
+): Promise<void> => {
   console.log(`go subscribe ==============> ${message}`);
 
   if (env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
     WebSocket.sendMessage(message);
   } else {
     await postAPI(env.SUB_SCRIBE_A_SERVER_ORIGIN, {
-      message
+      message,
     });
   }
 };

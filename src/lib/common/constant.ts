@@ -24,7 +24,7 @@ const constant = {
    * @description
    * 최대 메세지 삭제 시도 횟수
    */
-  MAXIMUM_DELETE_COUNT: 5
+  MAXIMUM_DELETE_COUNT: 5,
 };
 
 export default constant;

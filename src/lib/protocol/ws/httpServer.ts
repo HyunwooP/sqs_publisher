@@ -1,7 +1,7 @@
-import express from "express";
-import path from "path";
-import http from "http";
 import cors from "cors";
+import express from "express";
+import http from "http";
+import path from "path";
 import env from "../../../env";
 
 const httpController = (): http.Server => {
@@ -12,7 +12,7 @@ const httpController = (): http.Server => {
 const createExpress = (): express.Application => {
   const corsConfig = {
     // * subscribe servers origin
-    origin: [ env.SUB_SCRIBE_A_SERVER_ORIGIN ],
+    origin: [env.SUB_SCRIBE_A_SERVER_ORIGIN],
     credentials: true,
   };
 

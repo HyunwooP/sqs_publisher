@@ -18,7 +18,7 @@ const generateQueryEndPoint = (endPoint: string, params: any): string => {
 export const getAPI = async (
   endPoint: string = "",
   params = {},
-  axiosOption = {}
+  axiosOption = {},
 ): Promise<unknown> => {
   const getEndPoint = _.isEmpty(params)
     ? endPoint
@@ -30,7 +30,7 @@ export const getAPI = async (
 export const deleteAPI = async (
   endPoint: string = "",
   params = {},
-  axiosOption = {}
+  axiosOption = {},
 ): Promise<unknown> => {
   const deleteEndPoint = _.isEmpty(params)
     ? endPoint
@@ -44,7 +44,7 @@ export const postAPI = async (
   data = {},
   axiosOption = {
     timeout: 2000,
-  }
+  },
 ): Promise<unknown> => {
   const result: AxiosResponse = await axios.post(endPoint, data, axiosOption);
   return await generateAPIData(result);
@@ -55,7 +55,7 @@ export const putAPI = async (
   data = {},
   axiosOption = {
     timeout: 2000,
-  }
+  },
 ): Promise<unknown> => {
   const result: AxiosResponse = await axios.put(endPoint, data, axiosOption);
   return await generateAPIData(result);
@@ -66,7 +66,7 @@ export const patchAPI = async (
   data = {},
   axiosOption = {
     timeout: 2000,
-  }
+  },
 ): Promise<unknown> => {
   const result: AxiosResponse = await axios.patch(endPoint, data, axiosOption);
   return await generateAPIData(result);

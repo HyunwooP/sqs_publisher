@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { getQueueResponse } from ".";
-import { CreateQueueResult, QueueResponse } from "../sqs/type";
 import CommonEnum from "../enum";
+import { CreateQueueResult, QueueResponse } from "../sqs/type";
 
 export const getQueueUrls = async (): Promise<string[]> => {
   const queueResponse: QueueResponse = await getQueueResponse();
@@ -16,6 +16,8 @@ export const createQueueUrls = (
   return _.get(queues, CommonEnum.QueueResponseStatus.QUEUE_URLS, []);
 };
 
-export const createQueueUrl = (queues: QueueResponse | CreateQueueResult): string => {
+export const createQueueUrl = (
+  queues: QueueResponse | CreateQueueResult,
+): string => {
   return _.get(queues, CommonEnum.QueueResponseStatus.QUEUE_URL, "");
 };

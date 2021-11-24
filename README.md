@@ -1,5 +1,5 @@
 # SQS_PUBLISHER
-#### Publishing Message -> SQS Queue -> SubScribe Server to Message
+#### Publishing Message -> SQS Queue -> Subscribe Server to Message
 ##### Author 박현우
 ##### Create Date 2021.11.19
 #

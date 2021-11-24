@@ -1,8 +1,8 @@
-import WebSocket from "../protocol/ws";
 import messageController from "../message";
+import intervalController from "../message/interval";
+import WebSocket from "../protocol/ws";
 import publishController from "../publisher";
 import queueController from "../queue";
-import intervalController from "../message/interval";
 
 const worker = async (): Promise<void> => {
   /**
@@ -40,6 +40,6 @@ const worker = async (): Promise<void> => {
 export const restartWorker = (): void => {
   intervalController.clearIntervalPullingMessage();
   worker();
-}
+};
 
 export default worker;

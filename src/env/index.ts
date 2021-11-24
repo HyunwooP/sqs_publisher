@@ -8,9 +8,11 @@ export default {
   // * true = socket, false = restful
   IS_SEND_TO_SOCKET_SUBSCRIBE:
     process.env.IS_SEND_TO_SOCKET_SUBSCRIBE === "true" ?? true,
-  // ! A는 일종의 서버 네임을 부여한 것이다.
-  SUB_SCRIBE_A_SERVER_ORIGIN: process.env.subscribeDomain && process.env.subscribePort
-  ? `http://${process.env.subscribeDomain}:${process.env.subscribePort}`
-  : "http://localhost:3001",
+  // * 바라보는 Subscribe A 서버 Origin
+  SUB_SCRIBE_A_SERVER_ORIGIN:
+    process.env.subscribeDomain && process.env.subscribePort
+      ? `http://${process.env.subscribeDomain}:${process.env.subscribePort}`
+      : "http://localhost:3001",
+  // * 해당 서버 PORT
   SQS_SERVER_PORT: process.env.SQS_SERVER_PORT ?? 3000,
 };
