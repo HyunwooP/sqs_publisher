@@ -1,3 +1,4 @@
+import env from "../env";
 import messageController from "../message";
 import intervalController from "../message/interval";
 import WebSocket from "../protocol/ws";
@@ -9,7 +10,7 @@ const worker = async (): Promise<void> => {
    * @description
    * Subscribe Server들에게 socket방식으로 message를 내려줄지에 대한 클래스 정의
    */
-  if (process.env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
+  if (env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
     WebSocket.connect();
   }
 
