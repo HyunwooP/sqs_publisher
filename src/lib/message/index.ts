@@ -93,11 +93,11 @@ export const getMessageToDeleteWorker = async (
     await getMessageQueueInMessages(queueUrls);
   let messageBody: string[] = [];
 
-  // Message Queue들을 순회...
+  // * Message Queue들을 순회...
   for (const queueUrl of queueUrls) {
     const queueMessages = multipleQueueMessages[queueUrl];
 
-    // Message Queue안에 Message들을 순회...
+    // * Message Queue안에 Message들을 순회...
     for (const queueMessage of queueMessages) {
       const { receiptHandle, body, id } = createDeleteEntry(queueMessage);
 

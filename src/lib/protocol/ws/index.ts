@@ -13,7 +13,7 @@ class WebSocket {
       this.wss.on("connection", (ws: ws.WebSocket): void => {
         this.ws = ws;
 
-        // connection하면 listener 등록.
+        // * connection하면 listener 등록.
         this.onMessage();
         this.onError();
       });

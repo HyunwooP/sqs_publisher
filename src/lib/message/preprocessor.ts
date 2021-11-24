@@ -15,14 +15,12 @@ import {
   DeleteMessageBatchResultEntryList,
 } from "../sqs/type";
 
-// 여러개의 Message Queue 처리
 export const getMultipleMessageQueueMessages = async (
   queueUrls: string[],
 ): Promise<QueueMessagesIE> => {
   const queueMessages: QueueMessagesIE = {};
 
   for (const queueUrl of queueUrls) {
-    // 한개의 Message Queue당 담고 있는 Message를 담는다.
     const messages = await getMessageItems(queueUrl);
     queueMessages[queueUrl] = messages;
   }
@@ -30,7 +28,6 @@ export const getMultipleMessageQueueMessages = async (
   return queueMessages;
 };
 
-// 단일 Message Queue 처리
 export const getSingleMessageQueueMessages = async (
   queueUrl: string,
 ): Promise<QueueMessagesIE> => {
