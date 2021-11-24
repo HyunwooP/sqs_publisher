@@ -3,7 +3,6 @@ import MessageQueue from "../sqs/MessageQueue";
 
 const publishController = (queueUrls: string[]): void => {
   if (!_.isEmpty(queueUrls)) {
-    // 등록되어있는 Message Queue에 Message Publishing
     _.forEach(queueUrls, async (queueUrl: string): Promise<void> => {
       await sendMessage(queueUrl);
     });

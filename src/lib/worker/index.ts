@@ -2,10 +2,9 @@ import WebSocket from "../protocol/ws";
 import messageController from "../message";
 import publishController from "../publisher";
 import queueController from "../queue";
-import { clearIntervalPullingMessage } from "../message/interval";
+import intervalController from "../message/interval";
 
 const worker = async (): Promise<void> => {
-  
   /**
    * @description
    * Subscribe Server들에게 socket방식으로 message를 내려줄지에 대한 클래스 정의
@@ -39,7 +38,7 @@ const worker = async (): Promise<void> => {
 };
 
 export const restartWorker = (): void => {
-  clearIntervalPullingMessage();
+  intervalController.clearIntervalPullingMessage();
   worker();
 }
 

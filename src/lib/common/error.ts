@@ -2,6 +2,7 @@ import _ from "lodash";
 import CommonEnum from "../enum";
 import { AWSError } from "../sqs/type";
 import { restartWorker } from "../worker";
+import intervalController from "../message/interval";
 
 const errorController = (error: AWSError | any): void => {
   try {
@@ -52,7 +53,7 @@ const appErrorSelector = (error: unknown): void => {
       break;
     case CommonEnum.ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE:
       errorMessage = "풀링이 실패했습니다.";
-      restartWorker();
+      intervalController.restartIntervalPullingMessage();
     default:
       restartWorker();
       break;

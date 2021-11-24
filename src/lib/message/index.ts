@@ -20,7 +20,7 @@ import {
 } from "./preprocessor";
 import constant from "../../lib/common/constant";
 
-const messageController = async (queueUrls: string[]): Promise<void> => {
+const messageController = (queueUrls: string[]): void => {
   if (!_.isEmpty(queueUrls)) {
     intervalController.intervalPullingMessage(queueUrls);
   }
