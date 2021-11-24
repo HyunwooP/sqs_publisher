@@ -4,7 +4,7 @@ import http from "http";
 import cors from "cors";
 import env from "../../../env";
 
-const expressController = (): http.Server => {
+const httpController = (): http.Server => {
   const app: express.Application = createExpress();
   return createExpressServer(app);
 };
@@ -33,4 +33,4 @@ const createExpressServer = (app: express.Application): http.Server => {
   });
 };
 
-export default expressController;
+export default httpController;

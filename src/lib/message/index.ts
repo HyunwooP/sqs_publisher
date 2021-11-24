@@ -1,5 +1,8 @@
 import _ from "lodash";
+import env from "../../env";
 import CommonEnum from "../enum";
+import WebSocket from "../protocol/ws";
+import { postAPI } from "../protocol/http";
 import { QueueMessagesIE } from "../common/interface";
 import {
   DeleteMessageBatchResult,
@@ -15,11 +18,10 @@ import {
   getSingleMessageQueueMessages,
   successDeleteMessage
 } from "./preprocessor";
+import constant from "../../lib/common/constant";
 
 const messageController = async (queueUrls: string[]): Promise<void> => {
   if (!_.isEmpty(queueUrls)) {
-    // todo: stateless & statefull 둘 다 로직 짜서 환경변수에 따라 적용하게 하여,
-    // todo: subscribe 만들기
     intervalController.intervalPullingMessage(queueUrls);
   }
 };
@@ -56,7 +58,7 @@ const deleteMessage = async ({
 export const getMessageItems = async (queueUrl: string): Promise<MessageItems> => {
   const messageItems: ReceiveMessageResult = await MessageQueue.getMessage({
     QueueUrl: queueUrl,
-    MaxNumberOfMessages: 10,
+    MaxNumberOfMessages: constant.RECEIVE_MAX_NUMBER_OF_MESSAGES,
   });
 
   return _.get(messageItems, CommonEnum.MessageResponseStatus.MESSAGES, []);
@@ -82,7 +84,7 @@ export const getMessageToDeleteWorker = async (
 ): Promise<any> => {
   const multipleQueueMessages: QueueMessagesIE =
     await getMessageQueueInMessages(queueUrls);
-  const messageItem: string[] = [];
+  let messageBody: string = "";
 
   // Message Queue들을 순회...
   for (const queueUrl of queueUrls) {
@@ -94,14 +96,26 @@ export const getMessageToDeleteWorker = async (
 
       if (!_.isEmpty(receiptHandle)) {
         await deleteMessage({ queueUrl, id, receiptHandle });
-        messageItem.push(body);
+        messageBody = body;
       } else {
         throw new Error(CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS);
       }
     }
   }
 
-  return messageItem;
+  return messageBody;
+};
+
+export const sendSubScribeToMessage = async (message: string): Promise<void> => {
+  console.log(`go subscribe ==============> ${message}`);
+
+  if (env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
+    WebSocket.sendMessage(message);
+  } else {
+    await postAPI(env.SUB_SCRIBE_A_SERVER_ORIGIN, {
+      message
+    });
+  }
 };
 
 export default messageController;

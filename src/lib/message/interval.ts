@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { getMessageToDeleteWorker } from ".";
+import { getMessageToDeleteWorker, sendSubScribeToMessage } from ".";
 import { getCacheItem, setCacheItem } from "../common/cache";
 import constant from "../common/constant";
 import CommonEnum from "../enum";
@@ -43,15 +43,13 @@ const reStartIntervalPullingMessage = (): void => {
 };
 
 const intervalWorker = async (queueUrls: string[]): Promise<void> => {
-  // todo: 얻어오고 지워냈으므로, 애네들을 SubScribe Server로 보내야함.
-  const messageItem: string[] = await getMessageToDeleteWorker(queueUrls);
+  const message: string = await getMessageToDeleteWorker(queueUrls);
 
-  if (_.isEmpty(messageItem)) {
+  if (_.isEmpty(message)) {
     // todo: 없을 경우 1분 뒤에 다시 가져오는 프로세스로...
   }
-
-  console.log(`go subscribe ==============>`);
-  console.log(messageItem);
+  
+  sendSubScribeToMessage(message);
 };
 
 const intervalController = {

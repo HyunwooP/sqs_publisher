@@ -1,11 +1,16 @@
-import webSocketController from "./ws";
+import WebSocket from "../protocol/ws";
 import messageController from "../message";
 import publisher from "../publisher";
 import queueController from "../queue";
 
 const worker = async (): Promise<void> => {
+  
+  /**
+   * @description
+   * Subscribe Server들에게 socket방식으로 message를 내려줄지에 대한 클래스 정의
+   */
   if (process.env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
-    webSocketController();
+    WebSocket.connect();
   }
 
   /**
@@ -16,6 +21,7 @@ const worker = async (): Promise<void> => {
   const { queueUrls } = await queueController();
 
   /**
+   * @description
    * Message Queue에 샘플 메세지 넣어줌.
    * 따로 넣어주는 publisher가 없어서 해당 프로젝트에 테스트 겸 넣어둠.
    * ! 나중에는 뺄 예정. -> repository, package 이름 / 설정 바꾸기.
@@ -23,6 +29,7 @@ const worker = async (): Promise<void> => {
   await publisher(queueUrls);
 
   /**
+   * @description
    * Start Pulling Message
    * ? timer ? restful catch? socket catch?
    * ! timer로 설계를 안세울 수도 있어서, cron job은 따로 안쓴 상태
