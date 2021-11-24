@@ -21,52 +21,44 @@ const awsErrorController = (error: AWSError): void => {
 };
 
 const awsErrorSelector = (error:AWSError): void => {
-  try {
-    let errorMessage = error.message ?? "AWS SDK 에러입니다.";
+  let errorMessage = error.message ?? "AWS SDK 에러입니다.";
 
-    switch(error.code) {
-      case CommonEnum.AWSErrorStatus.UN_KNOWN_ENDPOINT :
-        errorMessage = "MQ 서버를 확인 해주시기 바랍니다.";
-        break;
-      default:
-        restartWorker();
-        break;
-    }
-
-    throw errorMessage;
-  } catch(errorMessage: unknown) {
-    throw errorMessage;
+  switch(error.code) {
+    case CommonEnum.AWSErrorStatus.UN_KNOWN_ENDPOINT :
+      errorMessage = "MQ 서버를 확인 해주시기 바랍니다.";
+      break;
+    default:
+      restartWorker();
+      break;
   }
+
+  throw errorMessage;
 };
 
 const appErrorController = (error: unknown): void => {
   console.log(`appErrorController ${error}`);
-  appErrorSelector(appErrorSelector);
+  appErrorSelector(error);
 };
 
 const appErrorSelector = (error: unknown): void => {
-  try {
-    let errorMessage = error ?? "서비스 장애입니다.";
+  let errorMessage = error ?? "서비스 장애입니다.";
 
-    switch(error) {
-      case CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS:
-        errorMessage = "Message 객체에 필수 파라메터가 부족합니다.";
-        break;
-      case CommonEnum.ErrorStatus.MESSAGE_DELETE_FAILED:
-        errorMessage = "메세지 삭제가 실패 했습니다.";
-        break;
-      case CommonEnum.ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE:
-        errorMessage = "풀링이 실패했습니다.";
-        restartWorker();
-      default:
-        restartWorker();
-        break;
-    }
-
-    throw errorMessage;
-  } catch(errorMessage: unknown) {
-    throw errorMessage;
+  switch(error) {
+    case CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS:
+      errorMessage = "Message 객체에 필수 파라메터가 부족합니다.";
+      break;
+    case CommonEnum.ErrorStatus.MESSAGE_DELETE_FAILED:
+      errorMessage = "메세지 삭제가 실패 했습니다.";
+      break;
+    case CommonEnum.ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE:
+      errorMessage = "풀링이 실패했습니다.";
+      restartWorker();
+    default:
+      restartWorker();
+      break;
   }
+
+  throw errorMessage;
 };
 
 export default errorController;
