@@ -1,6 +1,6 @@
 import WebSocket from "../protocol/ws";
 import messageController from "../message";
-import publisher from "../publisher";
+import publishController from "../publisher";
 import queueController from "../queue";
 import { clearIntervalPullingMessage } from "../message/interval";
 
@@ -27,7 +27,7 @@ const worker = async (): Promise<void> => {
    * 따로 넣어주는 publisher가 없어서 해당 프로젝트에 테스트 겸 넣어둠.
    * ! 나중에는 뺄 예정. -> repository, package 이름 / 설정 바꾸기.
    */
-  await publisher(queueUrls);
+  await publishController(queueUrls);
 
   /**
    * @description
