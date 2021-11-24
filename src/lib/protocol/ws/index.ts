@@ -8,7 +8,7 @@ class WebSocket {
 
   connect = (): void => {
     if (!_.isEmpty(this.wss)) {
-      this.wss.on("connection", (ws: ws.WebSocket) => {
+      this.wss.on("connection", (ws: ws.WebSocket): void => {
         this.ws = ws;
         // connection하면, 소켓별로 message listener 등록.
         this.onMessage();
@@ -16,7 +16,7 @@ class WebSocket {
     }
   };
 
-  close = (callback?: (error: Error) => void) => {
+  close = (callback?: (error: Error) => void): void => {
     if (!_.isEmpty(this.wss)) {
       this.wss.close(callback);
     }
@@ -24,7 +24,7 @@ class WebSocket {
 
   onMessage = (): void => {
     if (!_.isEmpty(this.ws)) {
-      this.ws.on("message", (message: string) => {
+      this.ws.on("message", (message: string): void => {
         console.log(`SubScribe Message: ${message}`);
       });
     }
