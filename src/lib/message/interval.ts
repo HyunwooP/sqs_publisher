@@ -37,13 +37,21 @@ export const clearIntervalPullingMessage = (): void => {
 };
 
 const intervalWorker = async (queueUrls: string[]): Promise<void> => {
-  const message: string = await getMessageToDeleteWorker(queueUrls);
+  const messageQueuesInMessage: string[] = await getMessageToDeleteWorker(queueUrls);
 
-  if (_.isEmpty(message)) {
-    console.log(`Message Queue has Non Message So, Set Delay ${constant.DELAY_INTERVAL_TIME} seconds`);
+  if (_.isEmpty(messageQueuesInMessage)) {
+    const convertMSecondToSecond = Math.floor(constant.DELAY_INTERVAL_TIME / 1000);
+    console.log(`Message Queue has Non Message So, Set Delay ${convertMSecondToSecond} second`);
     delayStartIntervalPullingMessage();
   } else {
-    sendSubScribeToMessage(message);
+    /**
+     * @description
+     * SQS에 등록된 모든 Message Queue들의 메세지를 꺼내서 전송하기 때문에,
+     * 각각에 맞는 Subscribe Server가 존재한다면, 메세지 설계를 잘해야한다.
+     */
+    _.forEach(messageQueuesInMessage, (message: string) => {
+      sendSubScribeToMessage(message);
+    });
   }
 };
 

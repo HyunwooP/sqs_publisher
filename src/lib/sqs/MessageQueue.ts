@@ -20,7 +20,7 @@ class MessageQueue {
 
   /**
    * @description
-   * * Get Queue List
+   * Get Queue List
    * @returns {Promise<GetQueueResponse>}
    */
   getQueues = async (): Promise<GetQueueResponse> =>
@@ -28,7 +28,7 @@ class MessageQueue {
 
   /**
    * @description
-   * * Create Queue
+   * Create Queue
    * @param {CreateQueueRequest} params
    * @param {(AWSError, CreateQueueResult) => void} callback
    * @returns {Promise<CreateQueueResult>}
@@ -41,7 +41,7 @@ class MessageQueue {
 
   /**
    * @description
-   * * Delete Queue
+   * Delete Queue
    * @param {DeleteQueueRequest} params
    * @param {(AWSError, VoidResponse) => void} callback
    * @returns {Promise<VoidResponse>}
@@ -53,7 +53,7 @@ class MessageQueue {
 
   /**
    * @description
-   * * Get Message
+   * Get Message
    * @param {ReceiveMessageRequest} params
    * @param {(AWSError, ReceiveMessageResult) => void} callback
    * @returns {Promise<ReceiveMessageResult>}
@@ -66,7 +66,7 @@ class MessageQueue {
 
   /**
    * @description
-   * * Message Queue안에 Message Insert
+   * Message Queue안에 Message Insert
    * @param {SendMessageRequest} params
    * @param {(AWSError, SendMessageResult) => void} callback
    * @returns {Promise<SendMessageResult>}
@@ -79,7 +79,7 @@ class MessageQueue {
 
   /**
    * @description
-   * * 해당 Delete는 가시성 (time)을 계산하여 지운다. 즉각적인 삭제처리가 안됨.
+   * 해당 Delete는 가시성 (time)을 계산하여 지운다. 즉각적인 삭제처리가 안됨.
    * @param {DeleteMessageRequest} params
    * @param {(AWSError, VoidResponse) => void} callback
    * @returns {Promise<VoidResponse>}
@@ -91,7 +91,7 @@ class MessageQueue {
 
   /**
    * @description
-   * * 바로 삭제 처리
+   * 바로 삭제 처리
    * @param {DeleteMessageBatchRequest} params
    * @param {(AWSError, DeleteMessageBatchResult) => void} callback
    * @returns {Promise<DeleteMessageBatchResult>}

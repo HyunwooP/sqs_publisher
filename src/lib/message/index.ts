@@ -84,7 +84,7 @@ export const getMessageToDeleteWorker = async (
 ): Promise<any> => {
   const multipleQueueMessages: QueueMessagesIE =
     await getMessageQueueInMessages(queueUrls);
-  let messageBody: string = "";
+  let messageBody: string[] = [];
 
   // Message Queue들을 순회...
   for (const queueUrl of queueUrls) {
@@ -96,7 +96,7 @@ export const getMessageToDeleteWorker = async (
 
       if (!_.isEmpty(receiptHandle)) {
         await deleteMessage({ queueUrl, id, receiptHandle });
-        messageBody = body;
+        messageBody.push(body);
       } else {
         throw new Error(CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS);
       }
