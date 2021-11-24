@@ -23,7 +23,7 @@
 * 그 때 message를 꺼내서 전처리하여 subscribe로 보내는 프로세스를 시작하는 건 어떨지...
 #
 ### 실행
-* (please confirm .env file / .env configuration is same src/env file)
+* (please confirm .env file / .env configuration is same src/lib/env file)
 * docker build
 * run docker
 * npm install

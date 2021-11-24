@@ -1,7 +1,7 @@
 import * as AWS from "aws-sdk";
 import _ from "lodash";
-import env from "../../env";
 import CommonEnum from "../enum";
+import env from "../env";
 
 class SQSInstance {
   constructor() {

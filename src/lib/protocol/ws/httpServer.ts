@@ -2,7 +2,7 @@ import cors from "cors";
 import express from "express";
 import http from "http";
 import path from "path";
-import env from "../../../env";
+import env from "../../env";
 
 const httpController = (): http.Server => {
   const app: express.Application = createExpress();

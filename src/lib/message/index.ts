@@ -1,8 +1,8 @@
 import _ from "lodash";
-import env from "../../env";
 import constant from "../../lib/common/constant";
 import { QueueMessagesIE } from "../common/interface";
 import CommonEnum from "../enum";
+import env from "../env";
 import { postAPI } from "../protocol/http";
 import WebSocket from "../protocol/ws";
 import MessageQueue from "../sqs/MessageQueue";
