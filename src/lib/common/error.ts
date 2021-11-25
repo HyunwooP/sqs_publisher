@@ -63,7 +63,6 @@ const appErrorSelector = (error: unknown): void => {
       errorMessage = "삭제가 되지 않는 메세지가 있습니다.";
       break;
     default:
-      action = processReStart;
       break;
   }
 
