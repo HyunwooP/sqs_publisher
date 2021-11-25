@@ -28,11 +28,11 @@ const messageController = (queueUrls: string[]): void => {
 
 export const deleteMessage = async ({
   queueUrl,
-  id,
+  messageId,
   receiptHandle,
 }: {
   queueUrl: string;
-  id: string;
+  messageId: string;
   receiptHandle: string;
 }): Promise<void> => {
   const deleteResponse: DeleteMessageBatchResult =
@@ -40,7 +40,7 @@ export const deleteMessage = async ({
       QueueUrl: queueUrl,
       Entries: [
         {
-          Id: id,
+          Id: messageId,
           ReceiptHandle: receiptHandle,
         },
       ],
@@ -50,7 +50,7 @@ export const deleteMessage = async ({
     failedDeleteMessage({
       failed: deleteResponse.Failed,
       queueUrl,
-      messageId: id,
+      messageId,
       receiptHandle,
     });
   }
@@ -58,7 +58,7 @@ export const deleteMessage = async ({
   if (!_.isEmpty(deleteResponse.Successful)) {
     successDeleteMessage({
       successful: deleteResponse.Successful,
-      messageId: id
+      messageId
     });
   }
 };
@@ -104,8 +104,8 @@ export const getMessageToDeleteWorker = async (
     for (const queueMessage of queueMessages) {
       const { receiptHandle, body, id } = createDeleteEntry(queueMessage);
 
-      if (!_.isEmpty(receiptHandle)) {
-        await deleteMessage({ queueUrl, id, receiptHandle });
+      if (!_.isEmpty(receiptHandle) && !_.isEmpty(body) && !_.isEmpty(id)) {
+        await deleteMessage({ queueUrl, messageId: id, receiptHandle });
         messageBody.push(body);
       } else {
         throw new Error(

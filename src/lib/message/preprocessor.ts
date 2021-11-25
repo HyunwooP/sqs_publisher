@@ -125,7 +125,7 @@ export const failedDeleteMessage = ({
         setTimeout(() => {
           deleteMessage({
             queueUrl,
-            id: messageId,
+            messageId,
             receiptHandle
           })
         }, CommonConstant.DELAY_DELETE_MESSAGE_TIME);
@@ -141,21 +141,21 @@ const getMaximumDeleteCountOverMessages = (): string[] => {
     key: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP
   });
 
-  const messageKeys = Object.keys(messageObject).filter((messageKey: string) => {
-    return messageObject[messageKey] >= CommonConstant.MAXIMUM_DELETE_COUNT;
+  const messageIds = Object.keys(messageObject).filter((messageId: string) => {
+    return messageObject[messageId] >= CommonConstant.MAXIMUM_DELETE_COUNT;
   });
 
-  return messageKeys;
+  return messageIds;
 };
 
 export const showMaximumDeleteCountOverMessages = (): void => {
-  const messageKeys = getMaximumDeleteCountOverMessages();
+  const messageIds = getMaximumDeleteCountOverMessages();
 
-  if (!_.isEmpty(messageKeys)) {
+  if (!_.isEmpty(messageIds)) {
     console.log(`${CommonConstant.MAXIMUM_DELETE_COUNT}회 삭제 실패한 메세지가 있습니다.`);
     
-    _.forEach(messageKeys, (messageKey: string) => {
-      console.log(`message key = ${messageKey}`);
+    _.forEach(messageIds, (messageId: string) => {
+      console.log(`message id = ${messageId}`);
     });
   }
 };
