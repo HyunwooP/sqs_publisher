@@ -11,7 +11,14 @@ import {
   DeleteMessageBatchResultEntryList
 } from "../sqs/type";
 import CommonEnum from "../enum";
-import { CacheKeyStatus, deleteCacheObjectItem, getCacheObjectItem, isCacheObjectItem, setCacheObjectItem } from "../common/cache";
+import {
+  CacheKeyStatus,
+  deleteCacheObjectItem,
+  getCacheItem,
+  getCacheObjectItem,
+  isCacheObjectItem,
+  setCacheObjectItem
+} from "../common/cache";
 import CommonConstant from "../common/constant";
 import { deleteMessage, getMessageItems } from ".";
 
@@ -127,4 +134,28 @@ export const failedDeleteMessage = ({
       }
     },
   );
+};
+
+const getMaximumDeleteCountOverMessages = (): string[] => {
+  const messageObject = getCacheItem({
+    key: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP
+  });
+
+  const messageKeys = Object.keys(messageObject).filter((messageKey: string) => {
+    return messageObject[messageKey] >= CommonConstant.MAXIMUM_DELETE_COUNT;
+  });
+
+  return messageKeys;
+};
+
+export const showMaximumDeleteCountOverMessages = (): void => {
+  const messageKeys = getMaximumDeleteCountOverMessages();
+
+  if (!_.isEmpty(messageKeys)) {
+    console.log(`${CommonConstant.MAXIMUM_DELETE_COUNT}회 삭제 실패한 메세지가 있습니다.`);
+    
+    _.forEach(messageKeys, (messageKey: string) => {
+      console.log(`message key = ${messageKey}`);
+    });
+  }
 };

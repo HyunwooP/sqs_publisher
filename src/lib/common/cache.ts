@@ -5,14 +5,15 @@ export enum CacheKeyStatus {
   DELETE_MESSAGE_FAILED_COUNT_GROUP = "deleteMessageFailedCountGroup"
 }
 
-type CacheKeyType = CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID;
-type CacheObjectNameType = CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP;
 export interface CacheIE {
   deleteMessageFailedCountGroup: {
     [index: string]: number;
   },
   intervalPullingMessageId: null | NodeJS.Timer;
 }
+
+type CacheKeyType = CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID | CacheObjectNameType;
+type CacheObjectNameType = CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP;
 
 const defaultCacheItem: CacheIE = {
   deleteMessageFailedCountGroup: {},

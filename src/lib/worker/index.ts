@@ -1,3 +1,4 @@
+import { showMaximumDeleteCountOverMessages } from "../message/preprocessor";
 import env from "../env";
 import messageController from "../message";
 import WebSocket from "../protocol/ws";
@@ -15,6 +16,8 @@ const worker = async (): Promise<void> => {
   await publishController(queueUrls);
   
   await messageController(queueUrls);
+
+  await showMaximumDeleteCountOverMessages();
 };
 
 export default worker;
