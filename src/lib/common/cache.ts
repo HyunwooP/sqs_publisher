@@ -2,13 +2,15 @@ import _ from "lodash";
 
 export enum CacheKeyStatus {
   INTERVAL_PULLING_MESSAGE_ID = "intervalPullingMessageId",
-  DELETE_MESSAGE_FAILED_COUNT_GROUP = "deleteMessageFailedCountGroup",
+  DELETE_MESSAGE_FAILED_COUNT_GROUP = "deleteMessageFailedCountGroup"
 }
 
+type CacheKeyType = CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID;
+type CacheObjectNameType = CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP;
 export interface CacheIE {
   deleteMessageFailedCountGroup: {
     [index: string]: number;
-  };
+  },
   intervalPullingMessageId: null | NodeJS.Timer;
 }
 
@@ -18,49 +20,86 @@ const defaultCacheItem: CacheIE = {
 };
 
 let cacheItem: CacheIE = {
-  ...defaultCacheItem,
+  ...defaultCacheItem
 };
 
-// todo: object prototype은 따로 함수 빼내기
 export const getCacheItem = ({
   key,
-  objectKey,
-  objectName,
   defaultValue,
-}: {
-  key?: CacheKeyStatus | number;
-  objectName?: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP;
-  objectKey?: string;
+} : {
+  key: CacheKeyType;
   defaultValue?: string | number | null | [];
 }): any => {
-  if (_.isEmpty(objectName) && _.isEmpty(objectKey)) {
-    return _.get(cacheItem, key, defaultValue);
-  } else {
-    return _.get(cacheItem[objectName], objectKey, defaultValue);
-  }
+  return _.get(cacheItem, key, defaultValue);
 };
 
-// todo: object prototype은 따로 함수 빼내기
+export const  getCacheObjectItem = ({
+  objectName,
+  objectKey,
+  defaultValue
+} : {
+  objectName: CacheObjectNameType;
+  objectKey: string;
+  defaultValue?: string | number | null | [];
+}): any => {
+  return _.get(cacheItem[objectName], objectKey, defaultValue);
+};
+
 export const setCacheItem = ({
   key,
-  objectKey,
-  objectName,
-  value,
-}: {
-  key?: CacheKeyStatus;
-  objectName?: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP;
-  objectKey?: string;
+  value
+} : {
+  key: CacheKeyType;
   value: any;
 }): void => {
-  if (_.isEmpty(objectName) && _.isEmpty(objectKey)) {
-    cacheItem[key] = value;
-  } else {
-    cacheItem[objectName][objectKey] = value;
-  }
+  cacheItem[key] = value;
+};
+
+export const  setCacheObjectItem = ({
+  objectName,
+  objectKey,
+  value
+} : {
+  objectName: CacheObjectNameType;
+  objectKey: string;
+  value: any;
+}): void => {
+  cacheItem[objectName][objectKey] = value;
+};
+
+export const isCacheItem = (key: CacheKeyType): boolean => {
+  return !_.isEmpty(
+    getCacheItem({
+      key
+    })
+  );
+};
+
+export const isCacheObjectItem = (
+  objectName: CacheObjectNameType,
+  objectKey: string
+): boolean => {
+  return !_.isEmpty(
+    getCacheObjectItem({
+      objectName,
+      objectKey
+    })
+  );
+}
+
+export const deleteCacheItem = (key: CacheKeyType): void => {
+  delete cacheItem[key];
+};
+
+export const deleteCacheObjectItem = (
+  objectName: CacheObjectNameType,
+  objectKey: string
+): void => {
+  delete cacheItem[objectName][objectKey];
 };
 
 export const clearCacheItem = (): void => {
   cacheItem = {
-    ...defaultCacheItem,
+    ...defaultCacheItem
   };
 };

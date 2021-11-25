@@ -1,5 +1,4 @@
-// todo: CommonConstant로 네이밍 바꾸기
-const constant = {
+const CommonConstant = {
   /**
    * @description
    * 메세지 풀링 시간
@@ -27,4 +26,4 @@ const constant = {
   MAXIMUM_DELETE_COUNT: 5,
 };
 
-export default constant;
+export default CommonConstant;

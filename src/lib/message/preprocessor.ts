@@ -1,19 +1,19 @@
 import _ from "lodash";
-import { deleteMessage, getMessageItems } from ".";
-import { CacheKeyStatus, getCacheItem, setCacheItem } from "../common/cache";
-import constant from "../common/constant";
 import {
   DeleteEntry,
   QueueMessageIE,
-  QueueMessagesIE,
+  QueueMessagesIE
 } from "../common/interface";
-import CommonEnum from "../enum";
 import {
   BatchResultErrorEntry,
   BatchResultErrorEntryList,
   DeleteMessageBatchResultEntry,
-  DeleteMessageBatchResultEntryList,
+  DeleteMessageBatchResultEntryList
 } from "../sqs/type";
+import CommonEnum from "../enum";
+import { CacheKeyStatus, deleteCacheObjectItem, getCacheObjectItem, isCacheObjectItem, setCacheObjectItem } from "../common/cache";
+import CommonConstant from "../common/constant";
+import { deleteMessage, getMessageItems } from ".";
 
 export const getMultipleMessageQueueMessages = async (
   queueUrls: string[],
@@ -39,24 +39,14 @@ export const getSingleMessageQueueMessages = async (
   return queueMessage;
 };
 
-export const createDeleteEntry = (
-  queueMessage: QueueMessageIE,
-): DeleteEntry => {
+export const createDeleteEntry = (queueMessage: QueueMessageIE): DeleteEntry => {
   const receiptHandle: string = _.get(
     queueMessage,
     CommonEnum.MessageItemStatus.RECEIPT_HANDLE,
     "",
   );
-  const body: string = _.get(
-    queueMessage,
-    CommonEnum.MessageItemStatus.BODY,
-    "",
-  );
-  const id: string = _.get(
-    queueMessage,
-    CommonEnum.MessageItemStatus.MESSAGE_ID,
-    "",
-  );
+  const body: string = _.get(queueMessage, CommonEnum.MessageItemStatus.BODY, "");
+  const id: string = _.get(queueMessage, CommonEnum.MessageItemStatus.MESSAGE_ID, "");
 
   return {
     receiptHandle,
@@ -65,67 +55,76 @@ export const createDeleteEntry = (
   };
 };
 
-export const successDeleteMessage = (
+export const successDeleteMessage = ({
+  successful,
+  messageId
+} : {
   successful: DeleteMessageBatchResultEntryList,
-): void => {
-  _.forEach(successful, (deleteEntry: DeleteMessageBatchResultEntry) => {
-    console.log(`Delete Successful Response ===========>`, deleteEntry);
-  });
+  messageId: string
+}): void => {
+  _.forEach(
+    successful,
+    (deleteEntry: DeleteMessageBatchResultEntry) => {
+      console.log(`Delete Successful Response ===========>`, deleteEntry);
+      
+      if (isCacheObjectItem(CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP, messageId)) {
+        deleteCacheObjectItem(CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP, messageId);
+      }
+    },
+  );
 };
 
-const messageFailedCountController = (messageId: string) => {
-  let deleteMessageFailedCount = getCacheItem({
+const messageFailedCountController = (messageId: string): number => {
+  let deleteMessageFailedCount: number = getCacheObjectItem({
     objectName: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
-    objectKey: messageId,
+    objectKey: messageId
   });
 
-  // todo: cache module에 isNonCacheItem 만들기
   if (_.isUndefined(deleteMessageFailedCount)) {
-    setCacheItem({
+    setCacheObjectItem({
       objectName: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
       objectKey: messageId,
-      value: 0,
+      value: 0
     });
   } else {
-    setCacheItem({
+    setCacheObjectItem({
       objectName: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
       objectKey: messageId,
-      value: ++deleteMessageFailedCount,
+      value: ++deleteMessageFailedCount
     });
   }
+
+  return deleteMessageFailedCount ?? 0;
 };
 
 export const failedDeleteMessage = ({
   failed,
   queueUrl,
-  id,
-  receiptHandle,
-}: {
+  messageId,
+  receiptHandle
+} : {
   failed: BatchResultErrorEntryList;
   queueUrl: string;
-  id: string;
+  messageId: string;
   receiptHandle: string;
 }): void => {
-  _.forEach(failed, (deleteEntry: BatchResultErrorEntry) => {
-    const deleteMessageFailedCount = getCacheItem({
-      objectName: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
-      objectKey: id,
-    });
+  _.forEach(
+    failed,
+    (deleteEntry: BatchResultErrorEntry) => {
+      const deleteMessageFailedCount: number = messageFailedCountController(messageId);
+      console.log(`${queueUrl} Delete Failed Response ===========> message id: ${messageId} / count = ${deleteMessageFailedCount}`);
 
-    console.log(
-      `${queueUrl} Delete Failed Response ===========> message id: ${id} / count = ${deleteMessageFailedCount}`,
-    );
-    if (deleteMessageFailedCount < constant.MAXIMUM_DELETE_COUNT) {
-      messageFailedCountController(id);
-      setTimeout(() => {
-        deleteMessage({
-          queueUrl,
-          id,
-          receiptHandle,
-        });
-      }, constant.DELAY_DELETE_MESSAGE_TIME);
-    } else {
-      throw new Error(CommonEnum.ErrorStatus.MAXIMUM_DELETE_COUNT_OVER);
-    }
-  });
+      if (deleteMessageFailedCount < CommonConstant.MAXIMUM_DELETE_COUNT) {
+        setTimeout(() => {
+          deleteMessage({
+            queueUrl,
+            id: messageId,
+            receiptHandle
+          })
+        }, CommonConstant.DELAY_DELETE_MESSAGE_TIME);
+      } else {
+        throw new Error(CommonEnum.ErrorStatus.MAXIMUM_DELETE_COUNT_OVER);
+      }
+    },
+  );
 };

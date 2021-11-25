@@ -1,5 +1,5 @@
 import _ from "lodash";
-import constant from "../../lib/common/constant";
+import CommonConstant from "../../lib/common/constant";
 import { QueueMessagesIE } from "../common/interface";
 import CommonEnum from "../enum";
 import env from "../env";
@@ -50,13 +50,16 @@ export const deleteMessage = async ({
     failedDeleteMessage({
       failed: deleteResponse.Failed,
       queueUrl,
-      id,
+      messageId: id,
       receiptHandle,
     });
   }
 
   if (!_.isEmpty(deleteResponse.Successful)) {
-    successDeleteMessage(deleteResponse.Successful);
+    successDeleteMessage({
+      successful: deleteResponse.Successful,
+      messageId: id
+    });
   }
 };
 
@@ -65,7 +68,7 @@ export const getMessageItems = async (
 ): Promise<MessageItems> => {
   const messageItems: ReceiveMessageResult = await MessageQueue.getMessage({
     QueueUrl: queueUrl,
-    MaxNumberOfMessages: constant.RECEIVE_MAX_NUMBER_OF_MESSAGES,
+    MaxNumberOfMessages: CommonConstant.RECEIVE_MAX_NUMBER_OF_MESSAGES,
   });
 
   return _.get(messageItems, CommonEnum.MessageResponseStatus.MESSAGES, []);

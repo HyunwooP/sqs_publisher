@@ -2,7 +2,7 @@ import _ from "lodash";
 import CommonEnum from "../enum";
 import intervalController from "../message/interval";
 import { AWSError } from "../sqs/type";
-import { restartWorker } from "../worker";
+import { processReStart } from "../..";
 
 const errorController = (error: AWSError | any): void => {
   try {
@@ -11,38 +11,42 @@ const errorController = (error: AWSError | any): void => {
     } else {
       appErrorController(error);
     }
-  } catch (error: unknown) {
-    console.error(`=========> throw Error!!! => ${error}`);
+  } catch ([ errorMessage, action ]) {
+    console.error(`=========> throw Error!!! => ${errorMessage}`);
+
+    if (_.isFunction(action)) {
+      action();
+    }
   }
 };
 
 const awsErrorController = (error: AWSError): void => {
-  console.log(`awsErrorController ${error} ${error.code}`);
   awsErrorSelector(error);
 };
 
 const awsErrorSelector = (error: AWSError): void => {
-  let errorMessage = error.message ?? "AWS SDK 에러입니다.";
-
+  let errorMessage = error.originalError ?? error.message;
+  let action: Function = null;
+  
   switch (error.code) {
     case CommonEnum.AWSErrorStatus.UN_KNOWN_ENDPOINT:
-      errorMessage = "MQ 서버를 확인 해주시기 바랍니다.";
+      action = () => process.exit(1);
       break;
     default:
-      restartWorker();
+      action = processReStart;
       break;
   }
-
-  throw errorMessage;
+  
+  throw [ errorMessage, action ];
 };
 
 const appErrorController = (error: unknown): void => {
-  console.log(`appErrorController ${error}`);
   appErrorSelector(error);
 };
 
 const appErrorSelector = (error: unknown): void => {
   let errorMessage = error ?? "서비스 장애입니다.";
+  let action: Function = null;
 
   switch (error) {
     case CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS:
@@ -53,17 +57,17 @@ const appErrorSelector = (error: unknown): void => {
       break;
     case CommonEnum.ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE:
       errorMessage = "풀링이 실패했습니다.";
-      intervalController.restartIntervalPullingMessage();
+      action = intervalController.restartIntervalPullingMessage;
       break;
     case CommonEnum.ErrorStatus.MAXIMUM_DELETE_COUNT_OVER:
       errorMessage = "삭제가 되지 않는 메세지가 있습니다.";
       break;
     default:
-      restartWorker();
+      action = processReStart;
       break;
   }
 
-  throw errorMessage;
+  throw [ errorMessage, action ];
 };
 
 export default errorController;

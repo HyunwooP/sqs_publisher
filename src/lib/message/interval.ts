@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { getMessageToDeleteWorker, sendSubScribeToMessage } from ".";
 import { CacheKeyStatus, getCacheItem, setCacheItem } from "../common/cache";
-import constant from "../common/constant";
+import CommonConstant from "../common/constant";
 import CommonEnum from "../enum";
 import queueController from "../queue";
 
@@ -9,7 +9,7 @@ const intervalPullingMessage = (queueUrls: string[]): void => {
   try {
     const intervalPullingMessageId: NodeJS.Timer = setInterval(async () => {
       await intervalWorker(queueUrls);
-    }, constant.MESSAGE_PULLING_TIME);
+    }, CommonConstant.MESSAGE_PULLING_TIME);
 
     setCacheItem({
       key: CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
@@ -44,7 +44,7 @@ const restartIntervalPullingMessage = async (): Promise<void> => {
 
 const delayStartIntervalPullingMessage = () => {
   const delayTime =
-    constant.DELAY_START_INTERVAL_TIME - constant.MESSAGE_PULLING_TIME;
+    CommonConstant.DELAY_START_INTERVAL_TIME - CommonConstant.MESSAGE_PULLING_TIME;
 
   setTimeout(() => {
     restartIntervalPullingMessage();
@@ -58,7 +58,7 @@ const intervalWorker = async (queueUrls: string[]): Promise<void> => {
 
   if (_.isEmpty(messageQueuesInMessage)) {
     const convertMSecondToSecond = Math.floor(
-      constant.DELAY_START_INTERVAL_TIME / 1000,
+      CommonConstant.DELAY_START_INTERVAL_TIME / 1000,
     );
     console.log(
       `Message Queue has Non Message So, Set Delay ${convertMSecondToSecond} second`,
