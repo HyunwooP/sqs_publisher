@@ -1,8 +1,8 @@
 import _ from "lodash";
+import { processReStart } from "../..";
 import CommonEnum from "../enum";
 import intervalController from "../message/interval";
 import { AWSError } from "../sqs/type";
-import { processReStart } from "../..";
 
 const errorController = (error: AWSError | any): void => {
   try {
@@ -11,7 +11,7 @@ const errorController = (error: AWSError | any): void => {
     } else {
       appErrorController(error);
     }
-  } catch ([ errorMessage, action ]) {
+  } catch ([errorMessage, action]) {
     console.error(`=========> throw Error!!! => ${errorMessage}`);
 
     if (_.isFunction(action)) {
@@ -27,7 +27,7 @@ const awsErrorController = (error: AWSError): void => {
 const awsErrorSelector = (error: AWSError): void => {
   let errorMessage = error.originalError ?? error.message;
   let action: Function = null;
-  
+
   switch (error.code) {
     case CommonEnum.AWSErrorStatus.UN_KNOWN_ENDPOINT:
       action = () => process.exit(1);
@@ -36,8 +36,8 @@ const awsErrorSelector = (error: AWSError): void => {
       action = processReStart;
       break;
   }
-  
-  throw [ errorMessage, action ];
+
+  throw [errorMessage, action];
 };
 
 const appErrorController = (error: unknown): void => {
@@ -66,7 +66,7 @@ const appErrorSelector = (error: unknown): void => {
       break;
   }
 
-  throw [ errorMessage, action ];
+  throw [errorMessage, action];
 };
 
 export default errorController;

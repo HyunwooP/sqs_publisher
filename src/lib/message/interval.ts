@@ -44,7 +44,8 @@ const restartIntervalPullingMessage = async (): Promise<void> => {
 
 const delayStartIntervalPullingMessage = () => {
   const delayTime =
-    CommonConstant.DELAY_START_INTERVAL_TIME - CommonConstant.MESSAGE_PULLING_TIME;
+    CommonConstant.DELAY_START_INTERVAL_TIME -
+    CommonConstant.MESSAGE_PULLING_TIME;
 
   setTimeout(() => {
     restartIntervalPullingMessage();

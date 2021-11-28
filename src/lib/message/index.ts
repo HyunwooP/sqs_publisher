@@ -58,7 +58,7 @@ export const deleteMessage = async ({
   if (!_.isEmpty(deleteResponse.Successful)) {
     successDeleteMessage({
       successful: deleteResponse.Successful,
-      messageId
+      messageId,
     });
   }
 };
