@@ -1,5 +1,8 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import * as _ from "lodash";
+import errorController from "../../common/error";
+import { ErrorStatus } from "../../enum/error";
+import env from "../../env";
 
 const generateQueryEndPoint = (endPoint: string, params: any): string => {
   let _endPoint = `${endPoint}?`;
@@ -15,16 +18,42 @@ const generateQueryEndPoint = (endPoint: string, params: any): string => {
   return _endPoint;
 };
 
+const instance: AxiosInstance = axios.create({
+  baseURL: env.SUB_SCRIBE_A_SERVER_ORIGIN,
+});
+
+instance.interceptors.request.use(
+  (config: AxiosRequestConfig) => config,
+  (error: any) => {
+    console.log(`Axios Request Error ========> ${error.message} ${error.code}`);
+    return Promise.reject(ErrorStatus.HTTP_REQUEST_PROTOCOL_ERROR);
+  },
+);
+
+instance.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  (error: any) => {
+    console.log(
+      `Axios Response Error ========> ${error.message} ${error.code}`,
+    );
+    return Promise.reject(ErrorStatus.HTTP_RESPONSE_PROTOCOL_ERROR);
+  },
+);
+
 export const getAPI = async (
   endPoint: string = "",
   params = {},
   axiosOption = {},
 ): Promise<unknown> => {
-  const getEndPoint = _.isEmpty(params)
-    ? endPoint
-    : generateQueryEndPoint(endPoint, params);
-  const result: AxiosResponse = await axios.get(getEndPoint, axiosOption);
-  return await generateAPIData(result);
+  try {
+    const getEndPoint = _.isEmpty(params)
+      ? endPoint
+      : generateQueryEndPoint(endPoint, params);
+    const result: AxiosResponse = await instance.get(getEndPoint, axiosOption);
+    return await generateAPIData(result);
+  } catch (error: unknown) {
+    errorController(error);
+  }
 };
 
 export const deleteAPI = async (
@@ -32,11 +61,18 @@ export const deleteAPI = async (
   params = {},
   axiosOption = {},
 ): Promise<unknown> => {
-  const deleteEndPoint = _.isEmpty(params)
-    ? endPoint
-    : generateQueryEndPoint(endPoint, params);
-  const result: AxiosResponse = await axios.delete(deleteEndPoint, axiosOption);
-  return await generateAPIData(result);
+  try {
+    const deleteEndPoint = _.isEmpty(params)
+      ? endPoint
+      : generateQueryEndPoint(endPoint, params);
+    const result: AxiosResponse = await instance.delete(
+      deleteEndPoint,
+      axiosOption,
+    );
+    return await generateAPIData(result);
+  } catch (error: unknown) {
+    errorController(error);
+  }
 };
 
 export const postAPI = async (
@@ -46,8 +82,16 @@ export const postAPI = async (
     timeout: 2000,
   },
 ): Promise<unknown> => {
-  const result: AxiosResponse = await axios.post(endPoint, data, axiosOption);
-  return await generateAPIData(result);
+  try {
+    const result: AxiosResponse = await instance.post(
+      endPoint,
+      data,
+      axiosOption,
+    );
+    return await generateAPIData(result);
+  } catch (error: unknown) {
+    errorController(error);
+  }
 };
 
 export const putAPI = async (
@@ -57,8 +101,16 @@ export const putAPI = async (
     timeout: 2000,
   },
 ): Promise<unknown> => {
-  const result: AxiosResponse = await axios.put(endPoint, data, axiosOption);
-  return await generateAPIData(result);
+  try {
+    const result: AxiosResponse = await instance.put(
+      endPoint,
+      data,
+      axiosOption,
+    );
+    return await generateAPIData(result);
+  } catch (error: unknown) {
+    errorController(error);
+  }
 };
 
 export const patchAPI = async (
@@ -68,8 +120,16 @@ export const patchAPI = async (
     timeout: 2000,
   },
 ): Promise<unknown> => {
-  const result: AxiosResponse = await axios.patch(endPoint, data, axiosOption);
-  return await generateAPIData(result);
+  try {
+    const result: AxiosResponse = await instance.patch(
+      endPoint,
+      data,
+      axiosOption,
+    );
+    return await generateAPIData(result);
+  } catch (error: unknown) {
+    errorController(error);
+  }
 };
 
 export const generateAPIData = async (res: AxiosResponse) => {

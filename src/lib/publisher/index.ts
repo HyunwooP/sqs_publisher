@@ -12,7 +12,7 @@ const publishController = (queueUrls: string[]): void => {
 const sendMessage = async (queueUrl: string): Promise<void> => {
   const sampleMessages = {
     anyTokenRemoveAction: "deleteUserToken",
-    targetTokenRemoveAction: "deleteUserToken/userACDED/a/b/c/d"
+    targetTokenRemoveAction: "deleteUserToken/userACDED/a/b/c/d",
   };
 
   await MessageQueue.sendMessage({

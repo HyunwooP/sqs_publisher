@@ -3,6 +3,7 @@ import { getMessageToDeleteWorker, sendSubScribeToMessage } from ".";
 import { CacheKeyStatus, getCacheItem, setCacheItem } from "../common/cache";
 import CommonConstant from "../common/constant";
 import CommonEnum from "../enum";
+import publishController from "../publisher";
 import queueController from "../queue";
 
 const intervalPullingMessage = (queueUrls: string[]): void => {
@@ -65,9 +66,9 @@ const intervalWorker = async (queueUrls: string[]): Promise<void> => {
       `Message Queue has Non Message So, Set Delay ${convertMSecondToSecond} second`,
     );
 
-    delayStartIntervalPullingMessage();
+    // delayStartIntervalPullingMessage();
     // 개발환경에서 계속 메세지가 필요할 경우 위 함수를 막고 아래를 푼다.
-    //publishController(queueUrls);
+    publishController(queueUrls);
   } else {
     /**
      * @description

@@ -126,9 +126,8 @@ export const sendSubScribeToMessage = async (
   if (env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
     WebSocket.sendMessage(message);
   } else {
-    await postAPI(env.SUB_SCRIBE_A_SERVER_ORIGIN, {
-      message,
-    });
+    // todo: message에서 endpoint, params 축출하기
+    await postAPI(message);
   }
 };
 

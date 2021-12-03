@@ -6,13 +6,13 @@ import { AWSError } from "../sqs/type";
 
 const errorController = (error: AWSError | any): void => {
   try {
-    if (!_.isUndefined(error.code)) {
+    if (!_.isUndefined(error.time)) {
       awsErrorController(error);
     } else {
       appErrorController(error);
     }
   } catch ([errorMessage, action]) {
-    console.error(`=========> throw Error!!! => ${errorMessage}`);
+    console.error(`errorController Error =========> ${errorMessage} ${action}`);
 
     if (_.isFunction(action)) {
       action();
@@ -40,11 +40,11 @@ const awsErrorSelector = (error: AWSError): void => {
   throw [errorMessage, action];
 };
 
-const appErrorController = (error: unknown): void => {
+const appErrorController = (error: any): void => {
   appErrorSelector(error);
 };
 
-const appErrorSelector = (error: unknown): void => {
+const appErrorSelector = (error: any): void => {
   let errorMessage = error ?? "서비스 장애입니다.";
   let action: Function = null;
 
@@ -62,7 +62,15 @@ const appErrorSelector = (error: unknown): void => {
     case CommonEnum.ErrorStatus.MAXIMUM_DELETE_COUNT_OVER:
       errorMessage = "삭제가 되지 않는 메세지가 있습니다.";
       break;
+    case CommonEnum.ErrorStatus.HTTP_REQUEST_PROTOCOL_ERROR:
+      // todo: 메세지 전달을 실패했을 시, 이미 큐에서는 삭제를 했으니 다시 한번 더 요청해보기.
+      errorMessage = "메세지 전달 요청이 실패하였습니다.";
+      break;
+    case CommonEnum.ErrorStatus.HTTP_RESPONSE_PROTOCOL_ERROR:
+      errorMessage = "메세지 전달 요청에 대한 응답이 없습니다.";
+      break;
     default:
+      errorMessage = error.message ?? error;
       break;
   }
 
