@@ -6,20 +6,20 @@ import {
   getCacheItem,
   getCacheObjectItem,
   isCacheObjectItem,
-  setCacheObjectItem,
+  setCacheObjectItem
 } from "../common/cache";
 import CommonConstant from "../common/constant";
 import {
   DeleteEntry,
   QueueMessageIE,
-  QueueMessagesIE,
+  QueueMessagesIE
 } from "../common/interface";
 import CommonEnum from "../enum";
 import {
   BatchResultErrorEntry,
   BatchResultErrorEntryList,
   DeleteMessageBatchResultEntry,
-  DeleteMessageBatchResultEntryList,
+  DeleteMessageBatchResultEntryList
 } from "../sqs/type";
 
 export const getMultipleMessageQueueMessages = async (

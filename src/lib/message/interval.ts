@@ -66,6 +66,8 @@ const intervalWorker = async (queueUrls: string[]): Promise<void> => {
     );
 
     delayStartIntervalPullingMessage();
+    // 개발환경에서 계속 메세지가 필요할 경우 위 함수를 막고 아래를 푼다.
+    //publishController(queueUrls);
   } else {
     /**
      * @description

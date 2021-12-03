@@ -10,11 +10,14 @@ const publishController = (queueUrls: string[]): void => {
 };
 
 const sendMessage = async (queueUrl: string): Promise<void> => {
-  // todo: Action Message Template 정하기.
-  const sampleMessage = "deleteAction";
+  const sampleMessages = {
+    anyTokenRemoveAction: "deleteUserToken",
+    targetTokenRemoveAction: "deleteUserToken/userACDED/a/b/c/d"
+  };
+
   await MessageQueue.sendMessage({
     QueueUrl: queueUrl,
-    MessageBody: sampleMessage,
+    MessageBody: sampleMessages.targetTokenRemoveAction,
   });
 };
 
