@@ -6,20 +6,22 @@ import {
   getCacheItem,
   getCacheObjectItem,
   isCacheObjectItem,
-  setCacheObjectItem,
+  setCacheObjectItem
 } from "../common/cache";
 import CommonConstant from "../common/constant";
 import {
   DeleteEntry,
+  MessageEntityIE,
   QueueMessageIE,
-  QueueMessagesIE,
+  QueueMessagesIE
 } from "../common/interface";
 import CommonEnum from "../enum";
+import env from "../env";
 import {
   BatchResultErrorEntry,
   BatchResultErrorEntryList,
   DeleteMessageBatchResultEntry,
-  DeleteMessageBatchResultEntryList,
+  DeleteMessageBatchResultEntryList
 } from "../sqs/type";
 
 export const getMultipleMessageQueueMessages = async (
@@ -175,4 +177,14 @@ export const showMaximumDeleteCountOverMessages = (): void => {
       console.log(`message id = ${messageId}`);
     });
   }
+};
+
+export const messageProtocolParser = (message: string): MessageEntityIE => {
+  const messageItems: MessageEntityIE = JSON.parse(message);
+
+  if (env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
+    const endPointSplit = messageItems["endPoint"].split(env.PARAMS_SPLIT_TYPE);
+    messageItems["endPoint"] = endPointSplit[endPointSplit.length - 1];
+  }
+  return messageItems;
 };

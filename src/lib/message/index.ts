@@ -1,6 +1,6 @@
 import _ from "lodash";
 import CommonConstant from "../../lib/common/constant";
-import { QueueMessagesIE } from "../common/interface";
+import { MessageEntityIE, QueueMessagesIE } from "../common/interface";
 import CommonEnum from "../enum";
 import env from "../env";
 import { postAPI } from "../protocol/ajax";
@@ -9,15 +9,14 @@ import MessageQueue from "../sqs/MessageQueue";
 import {
   DeleteMessageBatchResult,
   MessageItems,
-  ReceiveMessageResult,
+  ReceiveMessageResult
 } from "../sqs/type";
 import intervalController from "./interval";
 import {
   createDeleteEntry,
   failedDeleteMessage,
   getMultipleMessageQueueMessages,
-  getSingleMessageQueueMessages,
-  successDeleteMessage,
+  getSingleMessageQueueMessages, messageProtocolParser, successDeleteMessage
 } from "./preprocessor";
 
 const messageController = (queueUrls: string[]): void => {
@@ -121,13 +120,16 @@ export const getMessageToDeleteWorker = async (
 export const sendSubScribeToMessage = async (
   message: string,
 ): Promise<void> => {
-  console.log(`go subscribe ==============> ${message}`);
-
+  const { endPoint, params }: MessageEntityIE = messageProtocolParser(message);
+  
+  console.log(`endPoint =========> ${endPoint} / params =========> ${params}`);
+  
   if (env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
+    const message = _.isEmpty(params) ? endPoint : `${endPoint}/${params}`;
     WebSocket.sendMessage(message);
   } else {
-    // todo: message에서 endpoint, params 축출하기
-    await postAPI(message);
+    const response = await postAPI(endPoint, { params });
+    console.log(`StateLess Response =========> ${response}`);
   }
 };
 

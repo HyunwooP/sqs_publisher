@@ -1,4 +1,5 @@
 import _ from "lodash";
+import env from "../env";
 import MessageQueue from "../sqs/MessageQueue";
 
 const publishController = (queueUrls: string[]): void => {
@@ -10,14 +11,17 @@ const publishController = (queueUrls: string[]): void => {
 };
 
 const sendMessage = async (queueUrl: string): Promise<void> => {
-  const sampleMessages = {
-    anyTokenRemoveAction: "deleteUserToken",
-    targetTokenRemoveAction: "deleteUserToken/userACDED/a/b/c/d",
-  };
+  const anyTokenRemoveAction = {
+    endPoint: `${env.SUB_SCRIBE_A_SERVER_ORIGIN}/deleteUserToken`,
+  }
+  const targetTokenRemoveAction = {
+    endPoint: `${env.SUB_SCRIBE_A_SERVER_ORIGIN}/deleteUserToken`,
+    params: `userACDED${env.PARAMS_SPLIT_TYPE}a${env.PARAMS_SPLIT_TYPE}b${env.PARAMS_SPLIT_TYPE}c${env.PARAMS_SPLIT_TYPE}d`
+  } 
 
   await MessageQueue.sendMessage({
     QueueUrl: queueUrl,
-    MessageBody: sampleMessages.targetTokenRemoveAction,
+    MessageBody: JSON.stringify(anyTokenRemoveAction),
   });
 };
 

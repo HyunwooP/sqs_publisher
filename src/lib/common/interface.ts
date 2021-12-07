@@ -10,8 +10,6 @@ export interface QueueControllerIE {
   queueUrls: string[];
 }
 
-export interface MessageControllerIE {}
-
 export interface DeleteEntry {
   receiptHandle: string;
   body: string;
@@ -20,4 +18,9 @@ export interface DeleteEntry {
 
 export interface ErrorResponseIE {
   errorMessage: string;
+}
+
+export interface MessageEntityIE {
+  endPoint: string;
+  params: string | undefined;
 }

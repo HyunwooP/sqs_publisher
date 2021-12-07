@@ -15,4 +15,5 @@ export default {
       : "http://localhost:3001",
   // * 해당 서버 PORT
   SQS_SERVER_PORT: process.env.SQS_SERVER_PORT ?? 3000,
+  PARAMS_SPLIT_TYPE: process.env.PARAMS_SPLIT_TYPE ?? "/",
 };
