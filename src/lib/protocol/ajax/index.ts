@@ -22,6 +22,7 @@ const instance: AxiosInstance = axios.create({
   baseURL: env.SUB_SCRIBE_A_SERVER_ORIGIN,
 });
 
+// todo: request or response에서 실패했을 경우 다시 재요청하는 로직 개발
 instance.interceptors.request.use(
   (config: AxiosRequestConfig) => config,
   (error: any) => {
