@@ -13,10 +13,9 @@ import {
 } from "../sqs/type";
 import intervalController from "./interval";
 import {
-  createDeleteEntry,
-  failedDeleteMessage,
+  createDeleteEntry, createSubScribeMessageItem, failedDeleteMessage,
   getMultipleMessageQueueMessages,
-  getSingleMessageQueueMessages, messageProtocolParser, successDeleteMessage
+  getSingleMessageQueueMessages, successDeleteMessage
 } from "./preprocessor";
 
 const messageController = (queueUrls: string[]): void => {
@@ -120,7 +119,7 @@ export const getMessageToDeleteWorker = async (
 export const sendSubScribeToMessage = async (
   message: string,
 ): Promise<void> => {
-  const { endPoint, params }: MessageEntityIE = messageProtocolParser(message);
+  const { endPoint, params }: MessageEntityIE = createSubScribeMessageItem(message);
   
   console.log(`endPoint =========> ${endPoint} / params =========> ${params}`);
   

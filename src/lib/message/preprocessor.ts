@@ -179,7 +179,7 @@ export const showMaximumDeleteCountOverMessages = (): void => {
   }
 };
 
-export const messageProtocolParser = (message: string): MessageEntityIE => {
+export const createSubScribeMessageItem = (message: string): MessageEntityIE => {
   const messageItems: MessageEntityIE = JSON.parse(message);
 
   if (env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
