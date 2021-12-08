@@ -8,11 +8,18 @@ export default {
   // * true = socket, false = restful
   IS_SEND_TO_SOCKET_SUBSCRIBE:
     process.env.IS_SEND_TO_SOCKET_SUBSCRIBE === "true" ? true : false,
-  // * 바라보는 Subscribe A 서버 Origin
+  // * true = pulling, false = restful
+  IS_PULLING_MESSAGE: process.env.IS_PULLING_MESSAGE === "true" ? true : false,
+  // * 해당 서버가 지켜보는 Subscribe A 서버 Origin
   SUB_SCRIBE_A_SERVER_ORIGIN:
     process.env.subscribeDomain && process.env.subscribePort
       ? `http://${process.env.subscribeDomain}:${process.env.subscribePort}`
       : "http://localhost:3001",
+  // * 해당 서버를 바라보는 Publisher 서버 Origin (Http로 push를 요청할 경우.)
+  PUBLISHER_SERVER_ORIGIN:
+    process.env.publisherDomain && process.env.publisherPort
+      ? `http://${process.env.publisherDomain}:${process.env.publisherPort}`
+      : "http://localhost:3002",
   // * 해당 서버 PORT
   SQS_SERVER_PORT: process.env.SQS_SERVER_PORT ?? 3000,
   PARAMS_SPLIT_TYPE: process.env.PARAMS_SPLIT_TYPE ?? "/",

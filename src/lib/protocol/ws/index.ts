@@ -1,6 +1,6 @@
 import _ from "lodash";
 import ws from "ws";
-import httpController from "./httpServer";
+import httpController from "../express";
 
 class WebSocket {
   private readonly wss: ws.WebSocketServer = new ws.Server({

@@ -1,15 +1,14 @@
 import _ from "lodash";
-import { getMessageToDeleteWorker, sendSubScribeToMessage } from ".";
+import { sender } from ".";
 import { CacheKeyStatus, getCacheItem, setCacheItem } from "../common/cache";
 import CommonConstant from "../common/constant";
 import CommonEnum from "../enum";
-import publishController from "../publisher";
 import queueController from "../queue";
 
 const intervalPullingMessage = (queueUrls: string[]): void => {
   try {
     const intervalPullingMessageId: NodeJS.Timer = setInterval(async () => {
-      await intervalWorker(queueUrls);
+      await sender(queueUrls);
     }, CommonConstant.MESSAGE_PULLING_TIME);
 
     setCacheItem({
@@ -51,34 +50,6 @@ const delayStartIntervalPullingMessage = () => {
   setTimeout(() => {
     restartIntervalPullingMessage();
   }, delayTime);
-};
-
-const intervalWorker = async (queueUrls: string[]): Promise<void> => {
-  const messageQueuesInMessage: string[] = await getMessageToDeleteWorker(
-    queueUrls,
-  );
-
-  if (_.isEmpty(messageQueuesInMessage)) {
-    const convertMSecondToSecond = Math.floor(
-      CommonConstant.DELAY_START_INTERVAL_TIME / 1000,
-    );
-    console.log(
-      `Message Queue has Non Message So, Set Delay ${convertMSecondToSecond} second`,
-    );
-
-    // delayStartIntervalPullingMessage();
-    // 개발환경에서 계속 메세지가 필요할 경우 위 함수를 막고 아래를 푼다.
-    publishController(queueUrls);
-  } else {
-    /**
-     * @description
-     * SQS에 등록된 모든 Message Queue들의 메세지를 꺼내서 전송하기 때문에,
-     * 각각에 맞는 Subscribe Server가 존재한다면, 메세지 설계를 잘해야한다.
-     */
-    _.forEach(messageQueuesInMessage, (message: string) => {
-      sendSubScribeToMessage(message);
-    });
-  }
 };
 
 const intervalController = {
