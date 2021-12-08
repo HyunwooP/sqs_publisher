@@ -1,7 +1,6 @@
 import env from "../env";
 import messageController from "../message";
 import { showMaximumDeleteCountOverMessages } from "../message/preprocessor";
-import httpController from "../protocol/express";
 import WebSocket from "../protocol/ws";
 import publishController from "../publisher";
 import queueController from "../queue";
@@ -12,7 +11,6 @@ const worker = async (): Promise<void> => {
     WebSocket.connect();
   } else {
     console.log("StateLess SubScribe Message");
-    httpController();
   }
 
   const { queueUrls } = await queueController();
