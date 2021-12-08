@@ -7,10 +7,10 @@ import queueController from "../queue";
 
 const worker = async (): Promise<void> => {
   if (env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
-    console.log("StateFul SubScribe Message");
+    console.log("STATEFUL SUBSCRIBE MESSAGE");
     WebSocket.connect();
   } else {
-    console.log("StateLess SubScribe Message");
+    console.log("STATELESS SUBSCRIBE MESSAGE");
   }
 
   const { queueUrls } = await queueController();

@@ -100,10 +100,14 @@ const getMessageQueueInMessages = async (
 
 export const getMessageToDeleteWorker = async (
   queueUrls: string[],
-): Promise<any> => {
+): Promise<{
+  [queueUrl: string]: string[]
+}> => {
   const multipleQueueMessages: QueueMessagesIE =
     await getMessageQueueInMessages(queueUrls);
-  let messageBody: string[] = [];
+  const messageItems: {
+    [queueUrl: string]: string[]
+  } = {} ;
 
   // * Message Queue들을 순회...
   for (const queueUrl of queueUrls) {
@@ -115,7 +119,13 @@ export const getMessageToDeleteWorker = async (
 
       if (!_.isEmpty(receiptHandle) && !_.isEmpty(body) && !_.isEmpty(id)) {
         await deleteMessage({ queueUrl, messageId: id, receiptHandle });
-        messageBody.push(body);
+
+        if (_.isEmpty(messageItems[queueUrl])) {
+          messageItems[queueUrl] = [ body ];
+        } else {
+          messageItems[queueUrl].push(body);
+        }
+        
       } else {
         throw new Error(
           CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS,
@@ -124,31 +134,46 @@ export const getMessageToDeleteWorker = async (
     }
   }
 
-  return messageBody;
+  return messageItems;
+};
+
+export const sendMessage = async (queueUrl: string, message: string): Promise<void> => {
+  await MessageQueue.sendMessage({
+    QueueUrl: queueUrl,
+    MessageBody: message,
+  });
 };
 
 export const sendSubScribeToMessage = async (
+  queueUrl: string,
   message: string,
 ): Promise<void> => {
   const { endPoint, params }: MessageEntityIE = createSubScribeMessageItem(message);
   
   console.log(`endPoint =========> ${endPoint} / params =========> ${params}`);
-  
-  if (env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
-    const message = _.isEmpty(params) ? endPoint : `${endPoint}/${params}`;
-    WebSocket.sendMessage(message);
-  } else {
-    const response = await postAPI(endPoint, { params });
-    console.log(`StateLess Response =========> ${response}`);
+  try {
+    if (env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
+      const message = _.isEmpty(params) ? endPoint : `${endPoint}/${params}`;
+      await WebSocket.sendMessage(message);
+    } else {
+      const response = await postAPI(endPoint, { params });
+      console.log(`StateLess Response =========> ${response}`);
+    }
+  } catch(error: any) {
+    // * 전송에 대한 에러 대응으로, Message Queue에 이미 삭제된 해당 Message를 다시 삽입한다.
+    console.log(`Message Queue Insert Failed Message message: ${message} / queueUrl: ${queueUrl}`)
+    sendMessage(queueUrl, message);
   }
 };
 
 export const sender = async (queueUrls: string[]): Promise<void> => {
-  const messageQueuesInMessage: string[] = await getMessageToDeleteWorker(
+  const messageItems: {
+    [queueUrl: string]: string[]
+  } = await getMessageToDeleteWorker(
     queueUrls,
   );
 
-  if (_.isEmpty(messageQueuesInMessage)) {
+  if (_.isEmpty(messageItems)) {
     const convertMSecondToSecond = Math.floor(
       CommonConstant.DELAY_START_INTERVAL_TIME / 1000,
     );
@@ -165,8 +190,11 @@ export const sender = async (queueUrls: string[]): Promise<void> => {
      * SQS에 등록된 모든 Message Queue들의 메세지를 꺼내서 전송하기 때문에,
      * 각각에 맞는 Subscribe Server가 존재한다면, 메세지 설계를 잘해야한다.
      */
-    _.forEach(messageQueuesInMessage, (message: string) => {
-      sendSubScribeToMessage(message);
+    const queueUrls = Object.keys(messageItems);
+    _.forEach(queueUrls, (queueUrl: string) => {
+      _.forEach(messageItems[queueUrl], (message: string) => {
+        sendSubScribeToMessage(queueUrl, message);
+      })
     });
   }
 };

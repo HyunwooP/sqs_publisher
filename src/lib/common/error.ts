@@ -12,7 +12,7 @@ const errorController = (error: AWSError | any): void => {
       appErrorController(error);
     }
   } catch ([errorMessage, action]) {
-    console.error(`errorController Error =========> ${errorMessage} ${action}`);
+    console.error(`errorController Error =========> ${errorMessage} / next call = ${_.isEmpty(action) ? '없음' : action}`);
 
     if (_.isFunction(action)) {
       action();
@@ -63,11 +63,10 @@ const appErrorSelector = (error: any): void => {
       errorMessage = "삭제가 되지 않는 메세지가 있습니다.";
       break;
     case CommonEnum.ErrorStatus.HTTP_REQUEST_PROTOCOL_ERROR:
-      // todo: 메세지 전달을 실패했을 시, 이미 큐에서는 삭제를 했으니 다시 한번 더 요청해보기.
-      errorMessage = "메세지 전달 요청이 실패하였습니다.";
+      errorMessage = `메세지 전달 요청이 실패하였습니다.`;
       break;
     case CommonEnum.ErrorStatus.HTTP_RESPONSE_PROTOCOL_ERROR:
-      errorMessage = "메세지 전달 요청에 대한 응답이 없습니다.";
+      errorMessage = `메세지 전달 요청에 대한 응답이 없습니다.`;
       break;
     default:
       errorMessage = error.message ?? error;

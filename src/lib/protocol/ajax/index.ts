@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import * as _ from "lodash";
 import errorController from "../../common/error";
 import { ErrorStatus } from "../../enum/error";
@@ -22,10 +22,9 @@ const instance: AxiosInstance = axios.create({
   baseURL: env.SUB_SCRIBE_A_SERVER_ORIGIN,
 });
 
-// todo: request or response에서 실패했을 경우 다시 재요청하는 로직 개발
 instance.interceptors.request.use(
   (config: AxiosRequestConfig) => config,
-  (error: any) => {
+  (error: AxiosError) => {
     console.log(`Axios Request Error ========> ${error.message} ${error.code}`);
     return Promise.reject(ErrorStatus.HTTP_REQUEST_PROTOCOL_ERROR);
   },
@@ -33,7 +32,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response: AxiosResponse) => response,
-  (error: any) => {
+  (error: AxiosError) => {
     console.log(
       `Axios Response Error ========> ${error.message} ${error.code}`,
     );
@@ -73,6 +72,7 @@ export const deleteAPI = async (
     return await generateAPIData(result);
   } catch (error: unknown) {
     errorController(error);
+    throw error;
   }
 };
 
@@ -92,6 +92,7 @@ export const postAPI = async (
     return await generateAPIData(result);
   } catch (error: unknown) {
     errorController(error);
+    throw error;
   }
 };
 
@@ -111,6 +112,7 @@ export const putAPI = async (
     return await generateAPIData(result);
   } catch (error: unknown) {
     errorController(error);
+    throw error;
   }
 };
 
@@ -130,6 +132,7 @@ export const patchAPI = async (
     return await generateAPIData(result);
   } catch (error: unknown) {
     errorController(error);
+    throw error;
   }
 };
 
