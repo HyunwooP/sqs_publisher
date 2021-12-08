@@ -1,7 +1,7 @@
 import { MessageItem, MessageItems } from "../sqs/type";
 
 export interface QueueMessagesIE {
-  [index: string]: MessageItems;
+  [queueUrl: string]: MessageItems;
 }
 
 export interface QueueMessageIE extends MessageItem {}
