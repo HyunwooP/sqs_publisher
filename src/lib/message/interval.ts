@@ -53,6 +53,7 @@ const delayStartIntervalPullingMessage = () => {
 };
 
 const intervalController = {
+  delayStartIntervalPullingMessage,
   intervalPullingMessage,
   clearIntervalPullingMessage,
   restartIntervalPullingMessage,
