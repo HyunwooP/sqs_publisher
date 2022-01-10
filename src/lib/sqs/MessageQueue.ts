@@ -12,11 +12,11 @@ import {
   ReceiveMessageResult,
   SendMessageRequest,
   SendMessageResult,
-  VoidResponse,
+  VoidResponse
 } from "./type";
 
 class MessageQueue {
-  private readonly sqs: AWS.SQS = SQSInstance.getSQSInstance();
+  private readonly sqs: AWS.SQS = SQSInstance.instance;
 
   getQueues = async (): Promise<GetQueueResponse> =>
     await this.sqs.listQueues().promise();
