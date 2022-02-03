@@ -1,4 +1,4 @@
-# SQS_PUBLISHER
+# SQS-PUBLISHER
 #### Publishing Message -> SQS Queue -> Subscribe Server to Message
 ##### Author 박현우
 ##### Create Date 2021.11.19
@@ -16,7 +16,7 @@
 ### 내용
 * 샘플 메세지를 미리 생성한 SQS Message Queue 안에 집어 넣는다.
 * 메세지를 풀링
-* [SQS_SUBSCRIBE](https://github.com/awakelife93/sqs_subscribe)에게로 전송한다.
+* [SQS-SUBSCRIBE](https://github.com/awakelife93/sqs-subscribe)에게로 전송한다.
 #
 ### todo
 #
