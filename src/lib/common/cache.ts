@@ -5,24 +5,24 @@ export enum CacheKeyStatus {
   DELETE_MESSAGE_FAILED_COUNT_GROUP = "deleteMessageFailedCountGroup",
 }
 
-export interface CacheIE {
+export type Cache = {
   deleteMessageFailedCountGroup: {
     [index: string]: number;
   };
   intervalPullingMessageId: null | NodeJS.Timer;
 }
 
-type CacheKeyType =
+type CacheKey =
   | CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID
-  | CacheObjectNameType;
-type CacheObjectNameType = CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP;
+  | CacheObjectName;
+type CacheObjectName = CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP;
 
-const defaultCacheItem: CacheIE = {
+const defaultCacheItem: Cache = {
   deleteMessageFailedCountGroup: {},
   intervalPullingMessageId: null,
 };
 
-let cacheItem: CacheIE = {
+let cacheItem: Cache = {
   ...defaultCacheItem,
 };
 
@@ -30,7 +30,7 @@ export const getCacheItem = ({
   key,
   defaultValue,
 }: {
-  key: CacheKeyType;
+  key: CacheKey;
   defaultValue?: string | number | null | [];
 }): any => {
   return _.get(cacheItem, key, defaultValue);
@@ -41,7 +41,7 @@ export const getCacheObjectItem = ({
   objectKey,
   defaultValue,
 }: {
-  objectName: CacheObjectNameType;
+  objectName: CacheObjectName;
   objectKey: string;
   defaultValue?: string | number | null | [];
 }): any => {
@@ -52,7 +52,7 @@ export const setCacheItem = ({
   key,
   value,
 }: {
-  key: CacheKeyType;
+  key: CacheKey;
   value: any;
 }): void => {
   cacheItem[key] = value;
@@ -63,14 +63,14 @@ export const setCacheObjectItem = ({
   objectKey,
   value,
 }: {
-  objectName: CacheObjectNameType;
+  objectName: CacheObjectName;
   objectKey: string;
   value: any;
 }): void => {
   cacheItem[objectName][objectKey] = value;
 };
 
-export const isCacheItem = (key: CacheKeyType): boolean => {
+export const isCacheItem = (key: CacheKey): boolean => {
   return !_.isEmpty(
     getCacheItem({
       key,
@@ -79,7 +79,7 @@ export const isCacheItem = (key: CacheKeyType): boolean => {
 };
 
 export const isCacheObjectItem = (
-  objectName: CacheObjectNameType,
+  objectName: CacheObjectName,
   objectKey: string,
 ): boolean => {
   return !_.isEmpty(
@@ -90,12 +90,12 @@ export const isCacheObjectItem = (
   );
 };
 
-export const deleteCacheItem = (key: CacheKeyType): void => {
+export const deleteCacheItem = (key: CacheKey): void => {
   delete cacheItem[key];
 };
 
 export const deleteCacheObjectItem = (
-  objectName: CacheObjectNameType,
+  objectName: CacheObjectName,
   objectKey: string,
 ): void => {
   delete cacheItem[objectName][objectKey];

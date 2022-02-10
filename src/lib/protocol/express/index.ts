@@ -5,7 +5,7 @@ import _ from "lodash";
 import path from "path";
 import env from "../../env";
 import middlewareController from "./middleware";
-import CommonWorkerRoutes, { CommonWorkerRouteIE } from "./routes";
+import CommonWorkerRoutes, { CommonWorkerRoute } from "./routes";
 
 const httpController = (): http.Server => {
   const app: express.Application = createExpress();
@@ -45,7 +45,7 @@ export const createRouteForPublisher = ({
 }): void => {
   const app: express.Application = createExpress();
   
-  _.forEach(CommonWorkerRoutes, async (CommonWorkerRoute: CommonWorkerRouteIE) => {
+  _.forEach(CommonWorkerRoutes, async (CommonWorkerRoute: CommonWorkerRoute) => {
     app[CommonWorkerRoute.method](
       CommonWorkerRoute.path,
       middlewareController,

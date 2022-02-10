@@ -11,10 +11,10 @@ import {
 import CommonConstant from "../common/constant";
 import {
   DeleteEntry,
-  MessageEntityIE,
+  MessageEntity,
   QueueMessageIE,
-  QueueMessagesIE
-} from "../common/interface";
+  QueueMessages
+} from "../common/type";
 import CommonEnum from "../enum";
 import env from "../env";
 import {
@@ -26,8 +26,8 @@ import {
 
 export const getMultipleMessageQueueMessages = async (
   queueUrls: string[],
-): Promise<QueueMessagesIE> => {
-  const queueMessages: QueueMessagesIE = {};
+): Promise<QueueMessages> => {
+  const queueMessages = {} as QueueMessages;
 
   for (const queueUrl of queueUrls) {
     const messages = await getMessageItems(queueUrl);
@@ -39,8 +39,8 @@ export const getMultipleMessageQueueMessages = async (
 
 export const getSingleMessageQueueMessages = async (
   queueUrl: string,
-): Promise<QueueMessagesIE> => {
-  const queueMessage: QueueMessagesIE = {};
+): Promise<QueueMessages> => {
+  const queueMessage = {} as QueueMessages;
 
   const messages = await getMessageItems(queueUrl);
   queueMessage[queueUrl] = messages;
@@ -179,8 +179,8 @@ export const showMaximumDeleteCountOverMessages = (): void => {
   }
 };
 
-export const createSubScribeMessageItem = (message: string): MessageEntityIE => {
-  const messageItems: MessageEntityIE = JSON.parse(message);
+export const createSubScribeMessageItem = (message: string): MessageEntity => {
+  const messageItems: MessageEntity = JSON.parse(message);
 
   if (env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
     const endPointSplit = messageItems["endPoint"].split(env.PARAMS_SPLIT_TYPE);

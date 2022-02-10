@@ -1,14 +1,14 @@
 import _ from "lodash";
-import { QueueControllerIE } from "../common/interface";
+import { QueueController } from "../common/type";
 import MessageQueue from "../sqs/MessageQueue";
 import {
   CreateQueueRequest,
   CreateQueueResult,
-  QueueResponse,
+  QueueResponse
 } from "../sqs/type";
 import { createQueueUrl, getQueueUrls } from "./preprocessor";
 
-const queueController = async (): Promise<QueueControllerIE> => {
+const queueController = async (): Promise<QueueController> => {
   let queueUrls: string[] = await getQueueUrls();
 
   if (_.isEmpty(queueUrls)) {

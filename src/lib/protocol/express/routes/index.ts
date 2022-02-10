@@ -1,8 +1,9 @@
-export interface CommonWorkerRouteIE {
+export type CommonWorkerRoute = {
   path: string;
   method: "get" | "post" | "put" | "delete" | "patch";
 }
-const CommonWorkerRoutes: CommonWorkerRouteIE[] = [
+
+const CommonWorkerRoutes: CommonWorkerRoute[] = [
   {
     path: "/getSQSMessage",
     method: "post",

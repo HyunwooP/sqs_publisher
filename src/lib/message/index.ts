@@ -2,7 +2,7 @@ import _ from "lodash";
 import CommonConstant from "../../lib/common/constant";
 import { createRouteForPublisher } from "../../lib/protocol/express";
 import publishController from "../../lib/publisher";
-import { MessageEntityIE, QueueMessagesIE } from "../common/interface";
+import { MessageEntity, QueueMessages } from "../common/type";
 import CommonEnum from "../enum";
 import env from "../env";
 import { postAPI } from "../protocol/ajax";
@@ -85,8 +85,8 @@ export const getMessageItems = async (
 
 const getMessageQueueInMessages = async (
   queueUrls: string[],
-): Promise<QueueMessagesIE> => {
-  let queueMessages: QueueMessagesIE = {};
+): Promise<QueueMessages> => {
+  let queueMessages = {} as QueueMessages;
 
   if (queueUrls.length < 2) {
     const queueUrl: string = _.get(queueUrls, 0, "");
@@ -103,7 +103,7 @@ export const getMessageToDeleteWorker = async (
 ): Promise<{
   [queueUrl: string]: string[]
 }> => {
-  const multipleQueueMessages: QueueMessagesIE =
+  const multipleQueueMessages: QueueMessages =
     await getMessageQueueInMessages(queueUrls);
   const messageItems: {
     [queueUrl: string]: string[]
@@ -148,7 +148,7 @@ export const sendSubScribeToMessage = async (
   queueUrl: string,
   message: string,
 ): Promise<void> => {
-  const { endPoint, params }: MessageEntityIE = createSubScribeMessageItem(message);
+  const { endPoint, params }: MessageEntity = createSubScribeMessageItem(message);
   
   console.log(`endPoint =========> ${endPoint} / params =========> ${params}`);
   try {

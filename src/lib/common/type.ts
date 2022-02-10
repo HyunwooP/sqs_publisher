@@ -1,26 +1,26 @@
 import { MessageItem, MessageItems } from "../sqs/type";
 
-export interface QueueMessagesIE {
+export type QueueMessages = {
   [queueUrl: string]: MessageItems;
 }
 
-export interface QueueMessageIE extends MessageItem {}
-
-export interface QueueControllerIE {
+export type QueueController = {
   queueUrls: string[];
 }
 
-export interface DeleteEntry {
+export type DeleteEntry = {
   receiptHandle: string;
   body: string;
   id: string;
 }
 
-export interface ErrorResponseIE {
+export type ErrorResponse = {
   errorMessage: string;
 }
 
-export interface MessageEntityIE {
+export type MessageEntity = {
   endPoint: string;
   params: string | undefined;
 }
+
+export interface QueueMessageIE extends MessageItem {}
