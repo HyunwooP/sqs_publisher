@@ -1,19 +1,19 @@
 import cors from "cors";
-import express, { Request, Response } from "express";
-import http from "http";
+import express, { Application, Request, Response } from "express";
+import { Server } from "http";
 import _ from "lodash";
 import path from "path";
 import env from "../../env";
 import middlewareController from "./middleware";
 import CommonWorkerRoutes, { CommonWorkerRoute } from "./routes";
 
-const httpController = (): http.Server => {
-  const app: express.Application = createExpress();
+const httpController = (): Server => {
+  const app: Application = createExpress();
   return createExpressServer(app);
 };
 
-const createExpress = (): express.Application => {
-  const app: express.Application = express();
+const createExpress = (): Application => {
+  const app: Application = express();
 
   const corsConfig = {
     // * publisher servers origin / subscribe servers origin
@@ -29,7 +29,7 @@ const createExpress = (): express.Application => {
   return app;
 };
 
-const createExpressServer = (app: express.Application): http.Server => {
+const createExpressServer = (app: Application): Server => {
   const port = env.SQS_SERVER_PORT;
   return app.listen(port, () => {
     console.log(`SQS SERVER PORT ${port}`);
@@ -43,7 +43,7 @@ export const createRouteForPublisher = ({
   queueUrls: string[];
   action: Function;
 }): void => {
-  const app: express.Application = createExpress();
+  const app: Application = createExpress();
   
   _.forEach(CommonWorkerRoutes, async (CommonWorkerRoute: CommonWorkerRoute) => {
     app[CommonWorkerRoute.method](

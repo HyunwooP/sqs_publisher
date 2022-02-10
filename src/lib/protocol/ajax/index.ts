@@ -1,10 +1,11 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import * as _ from "lodash";
+import { UnknownObject } from "../../../lib/common/type";
 import errorController from "../../common/error";
 import { ErrorStatus } from "../../enum/error";
 import env from "../../env";
 
-const generateQueryEndPoint = (endPoint: string, params: any): string => {
+const generateQueryEndPoint = (endPoint: string, params: UnknownObject): string => {
   let _endPoint = `${endPoint}?`;
 
   Object.keys(params).forEach((key: string, index: number) => {
@@ -42,8 +43,8 @@ instance.interceptors.response.use(
 
 export const getAPI = async (
   endPoint: string = "",
-  params = {},
-  axiosOption = {},
+  params: UnknownObject,
+  axiosOption: AxiosRequestConfig,
 ): Promise<unknown> => {
   try {
     const getEndPoint = _.isEmpty(params)
@@ -58,8 +59,8 @@ export const getAPI = async (
 
 export const deleteAPI = async (
   endPoint: string = "",
-  params = {},
-  axiosOption = {},
+  params: UnknownObject,
+  axiosOption: AxiosRequestConfig,
 ): Promise<unknown> => {
   try {
     const deleteEndPoint = _.isEmpty(params)
@@ -78,8 +79,8 @@ export const deleteAPI = async (
 
 export const postAPI = async (
   endPoint: string = "",
-  data = {},
-  axiosOption = {
+  data: UnknownObject,
+  axiosOption: AxiosRequestConfig = {
     timeout: 2000,
   },
 ): Promise<unknown> => {
@@ -98,8 +99,8 @@ export const postAPI = async (
 
 export const putAPI = async (
   endPoint: string = "",
-  data = {},
-  axiosOption = {
+  data: UnknownObject,
+  axiosOption: AxiosRequestConfig = {
     timeout: 2000,
   },
 ): Promise<unknown> => {
@@ -118,8 +119,8 @@ export const putAPI = async (
 
 export const patchAPI = async (
   endPoint: string = "",
-  data = {},
-  axiosOption = {
+  data: UnknownObject,
+  axiosOption: AxiosRequestConfig = {
     timeout: 2000,
   },
 ): Promise<unknown> => {
@@ -136,7 +137,7 @@ export const patchAPI = async (
   }
 };
 
-export const generateAPIData = async (res: AxiosResponse) => {
+export const generateAPIData = async (response: AxiosResponse) => {
   // * 확장할 것이 있으면 여기에 작성
-  return res.data;
+  return response.data;
 };

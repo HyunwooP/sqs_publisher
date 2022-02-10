@@ -23,4 +23,6 @@ export type MessageEntity = {
   params: string | undefined;
 }
 
+export type UnknownObject<type = unknown> = Record<string, type>
+
 export interface QueueMessageIE extends MessageItem {}
