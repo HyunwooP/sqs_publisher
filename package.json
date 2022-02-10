@@ -1,5 +1,5 @@
 {
-  "name": "sqs_publisher",
+  "name": "sqs-publisher",
   "version": "0.0.1",
   "description": "study message queue, sqs & publisher / subscribe pattern",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/awakelife93/sqs_publisher.git"
+    "url": "git+https://github.com/awakelife93/sqs-publisher.git"
   },
   "keywords": [
     "sqs",
@@ -20,9 +20,9 @@
   "author": "HyunwooPark",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/awakelife93/sqs_publisher/issues"
+    "url": "https://github.com/awakelife93/sqs-publisher/issues"
   },
-  "homepage": "https://github.com/awakelife93/sqs_publisher#readme",
+  "homepage": "https://github.com/awakelife93/sqs-publisher#readme",
   "dependencies": {
     "aws-sdk": "^2.1032.0",
     "axios": "^0.24.0",
