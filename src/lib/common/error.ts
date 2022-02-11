@@ -12,7 +12,11 @@ const errorController = (error: AWSError | any): void => {
       appErrorController(error);
     }
   } catch ([errorMessage, action]) {
-    console.error(`errorController Error =========> ${errorMessage} / next call = ${_.isEmpty(action) ? '없음' : action}`);
+    console.error(
+      `errorController Error =========> ${errorMessage} / next call = ${
+        _.isEmpty(action) ? "없음" : action
+      }`,
+    );
 
     if (_.isFunction(action)) {
       action();

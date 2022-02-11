@@ -1,11 +1,19 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from "axios";
 import * as _ from "lodash";
 import { UnknownObject } from "../../../lib/common/type";
 import errorController from "../../common/error";
 import { ErrorStatus } from "../../enum/error";
 import env from "../../env";
 
-const generateQueryEndPoint = (endPoint: string, params: UnknownObject): string => {
+const generateQueryEndPoint = (
+  endPoint: string,
+  params: UnknownObject,
+): string => {
   let _endPoint = `${endPoint}?`;
 
   Object.keys(params).forEach((key: string, index: number) => {
@@ -43,8 +51,8 @@ instance.interceptors.response.use(
 
 export const getAPI = async (
   endPoint: string = "",
-  params: UnknownObject,
-  axiosOption: AxiosRequestConfig,
+  params: UnknownObject = {},
+  axiosOption: AxiosRequestConfig = {},
 ): Promise<unknown> => {
   try {
     const getEndPoint = _.isEmpty(params)
@@ -59,8 +67,8 @@ export const getAPI = async (
 
 export const deleteAPI = async (
   endPoint: string = "",
-  params: UnknownObject,
-  axiosOption: AxiosRequestConfig,
+  params: UnknownObject = {},
+  axiosOption: AxiosRequestConfig = {},
 ): Promise<unknown> => {
   try {
     const deleteEndPoint = _.isEmpty(params)
@@ -79,7 +87,7 @@ export const deleteAPI = async (
 
 export const postAPI = async (
   endPoint: string = "",
-  data: UnknownObject,
+  data: UnknownObject = {},
   axiosOption: AxiosRequestConfig = {
     timeout: 2000,
   },
@@ -99,7 +107,7 @@ export const postAPI = async (
 
 export const putAPI = async (
   endPoint: string = "",
-  data: UnknownObject,
+  data: UnknownObject = {},
   axiosOption: AxiosRequestConfig = {
     timeout: 2000,
   },
@@ -119,7 +127,7 @@ export const putAPI = async (
 
 export const patchAPI = async (
   endPoint: string = "",
-  data: UnknownObject,
+  data: UnknownObject = {},
   axiosOption: AxiosRequestConfig = {
     timeout: 2000,
   },

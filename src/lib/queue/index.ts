@@ -4,7 +4,7 @@ import MessageQueue from "../sqs/MessageQueue";
 import {
   CreateQueueRequest,
   CreateQueueResult,
-  QueueResponse
+  QueueResponse,
 } from "../sqs/type";
 import { createQueueUrl, getQueueUrls } from "./preprocessor";
 

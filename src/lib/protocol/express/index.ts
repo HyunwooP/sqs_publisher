@@ -38,25 +38,28 @@ const createExpressServer = (app: Application): Server => {
 
 export const createRouteForPublisher = ({
   queueUrls,
-  action
-} : {
+  action,
+}: {
   queueUrls: string[];
   action: Function;
 }): void => {
   const app: Application = createExpress();
-  
-  _.forEach(CommonWorkerRoutes, async (CommonWorkerRoute: CommonWorkerRoute) => {
-    app[CommonWorkerRoute.method](
-      CommonWorkerRoute.path,
-      middlewareController,
-      async (req: Request, res: Response) => {
-        const result = await action(queueUrls);
 
-        res.status(200);
-        res.send(result);
-      },
-    );
-  });
+  _.forEach(
+    CommonWorkerRoutes,
+    async (CommonWorkerRoute: CommonWorkerRoute) => {
+      app[CommonWorkerRoute.method](
+        CommonWorkerRoute.path,
+        middlewareController,
+        async (req: Request, res: Response) => {
+          const result = await action(queueUrls);
+
+          res.status(200);
+          res.send(result);
+        },
+      );
+    },
+  );
 };
 
 export default httpController;

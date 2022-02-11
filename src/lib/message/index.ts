@@ -11,13 +11,16 @@ import MessageQueue from "../sqs/MessageQueue";
 import {
   DeleteMessageBatchResult,
   MessageItems,
-  ReceiveMessageResult
+  ReceiveMessageResult,
 } from "../sqs/type";
 import intervalController from "./interval";
 import {
-  createDeleteEntry, createSubScribeMessageItem, failedDeleteMessage,
+  createDeleteEntry,
+  createSubScribeMessageItem,
+  failedDeleteMessage,
   getMultipleMessageQueueMessages,
-  getSingleMessageQueueMessages, successDeleteMessage
+  getSingleMessageQueueMessages,
+  successDeleteMessage,
 } from "./preprocessor";
 
 const messageController = (queueUrls: string[]): void => {
@@ -29,8 +32,8 @@ const messageController = (queueUrls: string[]): void => {
       console.log("EVENT DRIVEN TO RESTFUL");
       createRouteForPublisher({
         queueUrls,
-        action: sender
-      })
+        action: sender,
+      });
     }
   }
 };
@@ -101,13 +104,14 @@ const getMessageQueueInMessages = async (
 export const getMessageToDeleteWorker = async (
   queueUrls: string[],
 ): Promise<{
-  [queueUrl: string]: string[]
+  [queueUrl: string]: string[];
 }> => {
-  const multipleQueueMessages: QueueMessages =
-    await getMessageQueueInMessages(queueUrls);
+  const multipleQueueMessages: QueueMessages = await getMessageQueueInMessages(
+    queueUrls,
+  );
   const messageItems: {
-    [queueUrl: string]: string[]
-  } = {} ;
+    [queueUrl: string]: string[];
+  } = {};
 
   // * Message Queue들을 순회...
   for (const queueUrl of queueUrls) {
@@ -121,11 +125,10 @@ export const getMessageToDeleteWorker = async (
         await deleteMessage({ queueUrl, messageId: id, receiptHandle });
 
         if (_.isEmpty(messageItems[queueUrl])) {
-          messageItems[queueUrl] = [ body ];
+          messageItems[queueUrl] = [body];
         } else {
           messageItems[queueUrl].push(body);
         }
-        
       } else {
         throw new Error(
           CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS,
@@ -137,7 +140,10 @@ export const getMessageToDeleteWorker = async (
   return messageItems;
 };
 
-export const sendMessage = async (queueUrl: string, message: string): Promise<void> => {
+export const sendMessage = async (
+  queueUrl: string,
+  message: string,
+): Promise<void> => {
   await MessageQueue.sendMessage({
     QueueUrl: queueUrl,
     MessageBody: message,
@@ -148,8 +154,9 @@ export const sendSubScribeToMessage = async (
   queueUrl: string,
   message: string,
 ): Promise<void> => {
-  const { endPoint, params }: MessageEntity = createSubScribeMessageItem(message);
-  
+  const { endPoint, params }: MessageEntity =
+    createSubScribeMessageItem(message);
+
   console.log(`endPoint =========> ${endPoint} / params =========> ${params}`);
   try {
     if (env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
@@ -159,19 +166,19 @@ export const sendSubScribeToMessage = async (
       const response = await postAPI(endPoint, { params });
       console.log(`StateLess Response =========> ${response}`);
     }
-  } catch(error: any) {
+  } catch (error: any) {
     // * 전송에 대한 에러 대응으로, Message Queue에 이미 삭제된 해당 Message를 다시 삽입한다.
-    console.log(`Message Queue Insert Failed Message message: ${message} / queueUrl: ${queueUrl}`)
+    console.log(
+      `Message Queue Insert Failed Message message: ${message} / queueUrl: ${queueUrl}`,
+    );
     sendMessage(queueUrl, message);
   }
 };
 
 export const sender = async (queueUrls: string[]): Promise<void> => {
   const messageItems: {
-    [queueUrl: string]: string[]
-  } = await getMessageToDeleteWorker(
-    queueUrls,
-  );
+    [queueUrl: string]: string[];
+  } = await getMessageToDeleteWorker(queueUrls);
 
   if (_.isEmpty(messageItems)) {
     const convertMSecondToSecond = Math.floor(
@@ -194,7 +201,7 @@ export const sender = async (queueUrls: string[]): Promise<void> => {
     _.forEach(queueUrls, (queueUrl: string) => {
       _.forEach(messageItems[queueUrl], (message: string) => {
         sendSubScribeToMessage(queueUrl, message);
-      })
+      });
     });
   }
 };

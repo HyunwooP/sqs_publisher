@@ -6,14 +6,14 @@ import {
   getCacheItem,
   getCacheObjectItem,
   isCacheObjectItem,
-  setCacheObjectItem
+  setCacheObjectItem,
 } from "../common/cache";
 import CommonConstant from "../common/constant";
 import {
   DeleteEntry,
   MessageEntity,
   QueueMessageIE,
-  QueueMessages
+  QueueMessages,
 } from "../common/type";
 import CommonEnum from "../enum";
 import env from "../env";
@@ -21,7 +21,7 @@ import {
   BatchResultErrorEntry,
   BatchResultErrorEntryList,
   DeleteMessageBatchResultEntry,
-  DeleteMessageBatchResultEntryList
+  DeleteMessageBatchResultEntryList,
 } from "../sqs/type";
 
 export const getMultipleMessageQueueMessages = async (

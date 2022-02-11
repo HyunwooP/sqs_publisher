@@ -7,14 +7,12 @@ export enum CacheKeyStatus {
 
 export type Cache = {
   deleteMessageFailedCountGroup: {
-    [index: string]: number;
+    [key: string]: number;
   };
   intervalPullingMessageId: null | NodeJS.Timer;
-}
+};
 
-type CacheKey =
-  | CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID
-  | CacheObjectName;
+type CacheKey = CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID | CacheObjectName;
 type CacheObjectName = CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP;
 
 const defaultCacheItem: Cache = {

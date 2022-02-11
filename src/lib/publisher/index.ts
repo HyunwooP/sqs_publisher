@@ -14,11 +14,11 @@ const publisher = async (queueUrl: string): Promise<void> => {
   const split = env.PARAMS_SPLIT_TYPE;
   const anyTokenRemoveAction = {
     endPoint: `${env.SUB_SCRIBE_A_SERVER_ORIGIN}/deleteUserToken`,
-  }
+  };
   const targetTokenRemoveAction = {
     endPoint: `${env.SUB_SCRIBE_A_SERVER_ORIGIN}/deleteUserToken`,
-    params: `userACDED${split}a${split}b${split}c${split}d`
-  } 
+    params: `userACDED${split}a${split}b${split}c${split}d`,
+  };
 
   sendMessage(queueUrl, JSON.stringify(anyTokenRemoveAction));
 };

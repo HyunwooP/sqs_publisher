@@ -16,7 +16,7 @@ class SQSInstance {
         CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_AWS_ENDPOINT_INFO,
       );
     }
-    
+
     AWS.config.update({
       accessKeyId: env.AWS_ACCESS_KEY,
       secretAccessKey: env.AWS_SECRET_KEY,
@@ -30,7 +30,7 @@ class SQSInstance {
 
   get instance(): AWS.SQS {
     return this.sqs;
-  };
+  }
 }
 
 export default new SQSInstance();

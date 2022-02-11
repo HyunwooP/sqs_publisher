@@ -12,7 +12,7 @@ import {
   ReceiveMessageResult,
   SendMessageRequest,
   SendMessageResult,
-  VoidResponse
+  VoidResponse,
 } from "./type";
 
 class MessageQueue {

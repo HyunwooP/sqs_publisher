@@ -1,7 +1,7 @@
 export type CommonWorkerRoute = {
   path: string;
   method: "get" | "post" | "put" | "delete" | "patch";
-}
+};
 
 const CommonWorkerRoutes: CommonWorkerRoute[] = [
   {
@@ -11,4 +11,3 @@ const CommonWorkerRoutes: CommonWorkerRoute[] = [
 ];
 
 export default CommonWorkerRoutes;
-
