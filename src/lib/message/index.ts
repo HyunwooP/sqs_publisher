@@ -166,7 +166,7 @@ export const sendSubScribeToMessage = async (
       const response = await postAPI(endPoint, { params });
       console.log(`StateLess Response =========> ${response}`);
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     // * 전송에 대한 에러 대응으로, Message Queue에 이미 삭제된 해당 Message를 다시 삽입한다.
     console.log(
       `Message Queue Insert Failed Message message: ${message} / queueUrl: ${queueUrl}`,
