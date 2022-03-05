@@ -25,4 +25,4 @@ export type MessageEntity = {
 
 export type UnknownObject<T = unknown> = Record<string, T>;
 
-export interface QueueMessageIE extends MessageItem {}
+export interface IQueueMessage extends MessageItem {}

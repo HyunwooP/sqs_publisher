@@ -1,27 +1,24 @@
 import _ from "lodash";
 import { deleteMessage, getMessageItems } from ".";
 import {
-  CacheKeyStatus,
-  deleteCacheObjectItem,
-  getCacheItem,
-  getCacheObjectItem,
-  isCacheObjectItem,
-  setCacheObjectItem,
+    CacheKeyStatus,
+    deleteCacheObjectItem,
+    getCacheItem,
+    getCacheObjectItem,
+    isCacheObjectItem,
+    setCacheObjectItem
 } from "../common/cache";
 import CommonConstant from "../common/constant";
 import {
-  DeleteEntry,
-  MessageEntity,
-  QueueMessageIE,
-  QueueMessages,
+    DeleteEntry, IQueueMessage, MessageEntity, QueueMessages
 } from "../common/type";
 import CommonEnum from "../enum";
 import env from "../env";
 import {
-  BatchResultErrorEntry,
-  BatchResultErrorEntryList,
-  DeleteMessageBatchResultEntry,
-  DeleteMessageBatchResultEntryList,
+    BatchResultErrorEntry,
+    BatchResultErrorEntryList,
+    DeleteMessageBatchResultEntry,
+    DeleteMessageBatchResultEntryList
 } from "../sqs/type";
 
 export const getMultipleMessageQueueMessages = async (
@@ -49,7 +46,7 @@ export const getSingleMessageQueueMessages = async (
 };
 
 export const createDeleteEntry = (
-  queueMessage: QueueMessageIE,
+  queueMessage: IQueueMessage,
 ): DeleteEntry => {
   const receiptHandle: string = _.get(
     queueMessage,
