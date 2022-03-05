@@ -30,7 +30,7 @@ const awsErrorController = (error: AWSError): void => {
 
 const awsErrorSelector = (error: AWSError): void => {
   let errorMessage = error.originalError ?? error.message;
-  let action: Function = null;
+  let action = null;
 
   switch (error.code) {
     case CommonEnum.AWSErrorStatus.UN_KNOWN_ENDPOINT:
@@ -50,7 +50,7 @@ const appErrorController = (error: any): void => {
 
 const appErrorSelector = (error: any): void => {
   let errorMessage = error ?? "서비스 장애입니다.";
-  let action: Function = null;
+  let action = null;
 
   switch (error) {
     case CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS:

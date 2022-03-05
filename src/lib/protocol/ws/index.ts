@@ -6,7 +6,7 @@ class WebSocket {
   private readonly wss: ws.WebSocketServer = new ws.Server({
     server: httpController(),
   });
-  private ws: ws.WebSocket;
+  private ws!: ws.WebSocket;
 
   connect = (): void => {
     if (!_.isEmpty(this.wss)) {
@@ -20,7 +20,7 @@ class WebSocket {
     }
   };
 
-  close = (callback?: (error: Error) => void): void => {
+  close = (callback?: (error: Error | undefined) => void): void => {
     if (!_.isEmpty(this.wss)) {
       this.wss.close(callback);
     }

@@ -1,3 +1,4 @@
+import { UnknownObject } from "lib/common/type";
 import SQSInstance from "./SQSInstance";
 import {
   AWSError,
@@ -12,7 +13,7 @@ import {
   ReceiveMessageResult,
   SendMessageRequest,
   SendMessageResult,
-  VoidResponse,
+  VoidResponse
 } from "./type";
 
 class MessageQueue {
@@ -29,7 +30,7 @@ class MessageQueue {
 
   deleteQueue = async (
     params: DeleteQueueRequest,
-    callback?: (error: AWSError, data: DeleteQueueRequest) => void,
+    callback?: (error: AWSError, data: UnknownObject) => void,
   ): Promise<VoidResponse> => await this.sqs.deleteQueue(params, callback);
 
   getMessage = async (
@@ -50,7 +51,7 @@ class MessageQueue {
    */
   deleteMessage = async (
     params: DeleteMessageRequest,
-    callback?: (error: AWSError, data: VoidResponse) => void,
+    callback?: (error: AWSError, data: UnknownObject) => void,
   ): Promise<VoidResponse> => await this.sqs.deleteMessage(params, callback);
 
   /**
