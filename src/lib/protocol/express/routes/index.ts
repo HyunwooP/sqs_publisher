@@ -5,7 +5,7 @@ export type CommonWorkerRoute = {
 
 const CommonWorkerRoutes: CommonWorkerRoute[] = [
   {
-    path: "/getSQSMessage",
+    path: "/sendSQSMessage",
     method: "post",
   },
 ];
