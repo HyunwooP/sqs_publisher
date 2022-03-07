@@ -25,10 +25,13 @@ import {
 
 const messageController = (queueUrls: string[]): void => {
   if (!_.isEmpty(queueUrls)) {
+    // * 해당 인스턴스내에서 풀링하여 처리
     if (env.IS_PULLING_MESSAGE) {
       console.log("PULLING MESSAGE");
       intervalController.intervalPullingMessage(queueUrls);
     } else {
+      // * 외부 요청에 의해 처리
+      // todo: httpController을 처음부터 결정할지 현재 스레드에 의해서 결정할지 고민
       console.log("EVENT DRIVEN TO RESTFUL");
       createRouteForPublisher({
         queueUrls,
