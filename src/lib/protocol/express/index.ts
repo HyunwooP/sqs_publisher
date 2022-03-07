@@ -53,11 +53,11 @@ export const createRouteForPublisher = ({
       app[CommonWorkerRoute.method](
         CommonWorkerRoute.path,
         middlewareController,
-        async (req: Request, res: Response) => {
+        async (request: Request, response: Response) => {
           const result = await action(queueUrls);
 
-          res.status(200);
-          res.send(result);
+          response.status(200);
+          response.send(result);
         },
       );
     },

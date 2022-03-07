@@ -6,14 +6,14 @@ import {
   getCacheItem,
   getCacheObjectItem,
   isCacheObjectItem,
-  setCacheObjectItem,
+  setCacheObjectItem
 } from "../common/cache";
 import CommonConstant from "../common/constant";
 import {
   DeleteEntry,
   IQueueMessage,
   MessageEntity,
-  QueueMessages,
+  QueueMessages
 } from "../common/type";
 import CommonEnum from "../enum";
 import env from "../env";
@@ -21,7 +21,7 @@ import {
   BatchResultErrorEntry,
   BatchResultErrorEntryList,
   DeleteMessageBatchResultEntry,
-  DeleteMessageBatchResultEntryList,
+  DeleteMessageBatchResultEntryList
 } from "../sqs/type";
 
 export const getMultipleMessageQueueMessages = async (
@@ -184,5 +184,6 @@ export const createSubScribeMessageItem = (message: string): MessageEntity => {
     const endPointSplit = messageItems["endPoint"].split(env.PARAMS_SPLIT_TYPE);
     messageItems["endPoint"] = endPointSplit[endPointSplit.length - 1];
   }
+  
   return messageItems;
 };
