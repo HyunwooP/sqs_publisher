@@ -3,21 +3,28 @@ import ws from "ws";
 import httpController from "../express";
 
 class WebSocket {
-  private readonly wss: ws.WebSocketServer = new ws.Server({
-    server: httpController(),
-  });
+  private wss!: ws.WebSocketServer;
   private ws!: ws.WebSocket;
 
-  connect = (): void => {
-    if (!_.isEmpty(this.wss)) {
-      this.wss.on("connection", (ws: ws.WebSocket): void => {
-        this.ws = ws;
+  connect = async (): Promise<void> => {
+    await this.connectWss();
+    await this.connectWs();
+  };
 
-        // * connection하면 listener 등록.
-        this.onMessage();
-        this.onError();
-      });
-    }
+  connectWss = () => {
+    this.wss = new ws.Server({
+      server: httpController(),
+    });
+  };
+
+  connectWs = () => {
+    this.wss.on("connection", (ws: ws.WebSocket): void => {
+      this.ws = ws;
+
+      // * connection하면 listener 등록.
+      this.onMessage();
+      this.onError();
+    });
   };
 
   close = (callback?: (error: Error | undefined) => void): void => {

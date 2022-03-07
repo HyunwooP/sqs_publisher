@@ -46,6 +46,7 @@ export const createRouteForPublisher = ({
   action: Function;
 }): void => {
   const app: Application = createExpress();
+  createExpressServer(app);
 
   _.forEach(
     CommonWorkerRoutes,
@@ -54,10 +55,10 @@ export const createRouteForPublisher = ({
         CommonWorkerRoute.path,
         middlewareController,
         async (request: Request, response: Response) => {
-          const result = await action(queueUrls);
+          await action(queueUrls);
 
           response.status(200);
-          response.send(result);
+          response.send("queueUrls Message is Deleted");
         },
       );
     },
