@@ -1,5 +1,5 @@
+import { processReStart } from "@/index";
 import _ from "lodash";
-import { processReStart } from "../..";
 import CommonEnum from "../enum";
 import intervalController from "../message/interval";
 import { AWSError } from "../sqs/type";

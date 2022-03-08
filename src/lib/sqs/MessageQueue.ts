@@ -1,4 +1,4 @@
-import { UnknownObject } from "lib/common/type";
+import { UnknownObject } from "../common/type";
 import SQSInstance from "./SQSInstance";
 import {
   AWSError,
@@ -13,7 +13,7 @@ import {
   ReceiveMessageResult,
   SendMessageRequest,
   SendMessageResult,
-  VoidResponse,
+  VoidResponse
 } from "./type";
 
 class MessageQueue {

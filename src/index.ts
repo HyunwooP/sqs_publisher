@@ -1,3 +1,4 @@
+import "module-alias/register";
 import errorController from "./lib/common/error";
 import { AWSError } from "./lib/sqs/type";
 import worker from "./lib/worker";
