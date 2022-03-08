@@ -1,6 +1,5 @@
 import _ from "lodash";
 import CommonConstant from "../../lib/common/constant";
-import { createRouteForPublisher } from "../../lib/protocol/express";
 import publishController from "../../lib/publisher";
 import { MessageEntity, QueueMessages } from "../common/type";
 import CommonEnum from "../enum";
@@ -11,7 +10,7 @@ import MessageQueue from "../sqs/MessageQueue";
 import {
   DeleteMessageBatchResult,
   MessageItems,
-  ReceiveMessageResult,
+  ReceiveMessageResult
 } from "../sqs/type";
 import intervalController from "./interval";
 import {
@@ -20,23 +19,20 @@ import {
   failedDeleteMessage,
   getMultipleMessageQueueMessages,
   getSingleMessageQueueMessages,
-  successDeleteMessage,
+  successDeleteMessage
 } from "./preprocessor";
 
 const messageController = (queueUrls: string[]): void => {
   if (!_.isEmpty(queueUrls)) {
     // * 해당 인스턴스내에서 풀링하여 처리
     if (env.IS_PULLING_MESSAGE) {
-      console.log("PULLING MESSAGE");
+      console.log("START PULLING MESSAGE");
       intervalController.intervalPullingMessage(queueUrls);
     } else {
-      // * 외부 요청에 의해 처리
-      // todo: httpController을 처음부터 결정할지 현재 스레드에 의해서 결정할지 고민
-      console.log("EVENT DRIVEN TO RESTFUL");
-      createRouteForPublisher({
-        queueUrls,
-        action: sender,
-      });
+      /**
+       * * 외부 HTTP 요청에 의해 처리
+       * * worker - createExpressServer(queueUrls) 참조
+       */
     }
   }
 };

@@ -1,16 +1,20 @@
+import env from "@/lib/env";
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import helmet from "helmet";
 import { Server } from "http";
-import _ from "lodash";
 import path from "path";
-import env from "../../env";
-import middlewareController from "./middleware";
-import CommonWorkerRoutes, { CommonWorkerRoute } from "./routes";
+import { sender } from "../../message";
 
-const httpController = (): Server => {
+export const getExpressServer = (): Server => {
   const app: Application = createExpress();
-  return createExpressServer(app);
+  return listenExpressServer(app);
+};
+
+export const createExpressServer = (queueUrls: string[]): Server => {
+  const app: Application = createExpress();
+  createRouteWorker(app, queueUrls);
+  return listenExpressServer(app);
 };
 
 const createExpress = (): Application => {
@@ -31,38 +35,18 @@ const createExpress = (): Application => {
   return app;
 };
 
-const createExpressServer = (app: Application): Server => {
+const listenExpressServer = (app: Application): Server => {
   const port = env.SQS_SERVER_PORT;
   return app.listen(port, () => {
     console.log(`SQS SERVER PORT ${port}`);
   });
 };
 
-export const createRouteForPublisher = ({
-  queueUrls,
-  action,
-}: {
-  queueUrls: string[];
-  action: Function;
-}): void => {
-  const app: Application = createExpress();
-  createExpressServer(app);
-
-  _.forEach(
-    CommonWorkerRoutes,
-    async (CommonWorkerRoute: CommonWorkerRoute) => {
-      app[CommonWorkerRoute.method](
-        CommonWorkerRoute.path,
-        middlewareController,
-        async (request: Request, response: Response) => {
-          await action(queueUrls);
-
-          response.status(200);
-          response.send("queueUrls Message is Deleted");
-        },
-      );
-    },
-  );
+const createRouteWorker = (app: Application, queueUrls: string[]): void => {
+  app.post("/deleteMessage", async (request: Request, response: Response) => {
+    await sender(queueUrls);
+    
+    response.status(200);
+    response.send("queueUrls Message is Deleted");
+  });
 };
-
-export default httpController;

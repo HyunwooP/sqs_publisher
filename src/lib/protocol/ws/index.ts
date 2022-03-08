@@ -1,6 +1,6 @@
 import _ from "lodash";
 import ws from "ws";
-import httpController from "../express";
+import { getExpressServer } from "../express";
 
 class WebSocket {
   private wss!: ws.WebSocketServer;
@@ -13,7 +13,7 @@ class WebSocket {
 
   connectWss = () => {
     this.wss = new ws.Server({
-      server: httpController(),
+      server: getExpressServer(),
     });
   };
 
