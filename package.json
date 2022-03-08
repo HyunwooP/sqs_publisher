@@ -22,6 +22,9 @@
   "bugs": {
     "url": "https://github.com/awakelife93/sqs-publisher/issues"
   },
+  "_moduleAliases": {
+    "@": "src"
+  },
   "homepage": "https://github.com/awakelife93/sqs-publisher#readme",
   "dependencies": {
     "aws-sdk": "^2.1032.0",
@@ -32,7 +35,8 @@
     "lodash": "^4.17.21",
     "path": "^0.12.7",
     "ws": "^8.2.3",
-    "helmet": "^5.0.2"
+    "helmet": "^5.0.2",
+    "module-alias": "^2.2.2"
   },
   "devDependencies": {
     "@types/aws-sdk": "^2.7.0",
