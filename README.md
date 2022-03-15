@@ -1,4 +1,4 @@
-# SQS-PUBLISHER
+# NODE-SQS
 #### Publishing Message -> SQS Queue -> Subscribe Server to Message
 ##### Author 박현우
 ##### Create Date 2021.11.19
