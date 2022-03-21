@@ -16,7 +16,7 @@
 ### 내용
 * 샘플 메세지를 미리 생성한 SQS Message Queue 안에 집어 넣는다.
 * 메세지를 풀링
-* [node-sqs-message-action](https://github.com/awakelife93/node-sqs-message-action)에게로 전송한다.
+* [node-message-action](https://github.com/awakelife93/node-message-action)에게로 전송한다.
 #
 ### todo
 #
