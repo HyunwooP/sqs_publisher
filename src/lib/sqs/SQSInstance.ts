@@ -1,33 +1,33 @@
 import * as AWS from "aws-sdk";
 import _ from "lodash";
+import config from "../config";
 import CommonEnum from "../enum";
-import env from "../env";
 
 class SQSInstance {
   private readonly sqs: AWS.SQS;
 
   constructor() {
     if (
-      _.isUndefined(env.AWS_ACCESS_KEY) ||
-      _.isUndefined(env.AWS_SECRET_KEY)
+      _.isUndefined(config.AWS_ACCESS_KEY) ||
+      _.isUndefined(config.AWS_SECRET_KEY)
     ) {
       throw new Error(CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_AWS_KEY);
     }
 
-    if (_.isEmpty(env.SQS_END_POINT) || _.isEmpty(env.SQS_REGION)) {
+    if (_.isEmpty(config.SQS_END_POINT) || _.isEmpty(config.SQS_REGION)) {
       throw new Error(
         CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_AWS_ENDPOINT_INFO,
       );
     }
 
     AWS.config.update({
-      accessKeyId: env.AWS_ACCESS_KEY,
-      secretAccessKey: env.AWS_SECRET_KEY,
+      accessKeyId: config.AWS_ACCESS_KEY,
+      secretAccessKey: config.AWS_SECRET_KEY,
     });
 
     this.sqs = new AWS.SQS({
-      endpoint: env.SQS_END_POINT,
-      region: env.SQS_REGION,
+      endpoint: config.SQS_END_POINT,
+      region: config.SQS_REGION,
     });
   }
 

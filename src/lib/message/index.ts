@@ -2,15 +2,15 @@ import _ from "lodash";
 import CommonConstant from "../../lib/common/constant";
 import publishController from "../../lib/publisher";
 import { MessageEntity, QueueMessages } from "../common/type";
+import config from "../config";
 import CommonEnum from "../enum";
-import env from "../env";
 import { postAPI } from "../protocol/ajax";
 import WebSocket from "../protocol/ws";
 import MessageQueue from "../sqs/MessageQueue";
 import {
   DeleteMessageBatchResult,
   MessageItems,
-  ReceiveMessageResult
+  ReceiveMessageResult,
 } from "../sqs/type";
 import intervalController from "./interval";
 import {
@@ -19,13 +19,13 @@ import {
   failedDeleteMessage,
   getMultipleMessageQueueMessages,
   getSingleMessageQueueMessages,
-  successDeleteMessage
+  successDeleteMessage,
 } from "./preprocessor";
 
 const messageController = (queueUrls: string[]): void => {
   if (!_.isEmpty(queueUrls)) {
     // * 해당 인스턴스내에서 풀링하여 처리
-    if (env.IS_PULLING_MESSAGE) {
+    if (config.IS_PULLING_MESSAGE) {
       console.log("START PULLING MESSAGE");
       intervalController.intervalPullingMessage(queueUrls);
     } else {
@@ -158,7 +158,7 @@ export const sendSubScribeToMessage = async (
 
   console.log(`endPoint =========> ${endPoint} / params =========> ${params}`);
   try {
-    if (env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
+    if (config.IS_SEND_TO_SOCKET_SUBSCRIBE) {
       const message = _.isEmpty(params) ? endPoint : `${endPoint}/${params}`;
       await WebSocket.sendMessage(message);
     } else {

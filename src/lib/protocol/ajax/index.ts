@@ -7,8 +7,8 @@ import axios, {
 import * as _ from "lodash";
 import { UnknownObject } from "../../../lib/common/type";
 import errorController from "../../common/error";
+import config from "../../config";
 import { ErrorStatus } from "../../enum/error";
-import env from "../../env";
 
 const generateQueryEndPoint = (
   endPoint: string,
@@ -28,7 +28,7 @@ const generateQueryEndPoint = (
 };
 
 const instance: AxiosInstance = axios.create({
-  baseURL: env.SUB_SCRIBE_A_SERVER_ORIGIN,
+  baseURL: config.SUB_SCRIBE_A_SERVER_ORIGIN,
 });
 
 instance.interceptors.request.use(

@@ -1,5 +1,4 @@
-
-import env from "../env";
+import config from "../config";
 import messageController from "../message";
 import { showMaximumDeleteCountOverMessages } from "../message/preprocessor";
 import { createExpressServer } from "../protocol/express";
@@ -8,10 +7,9 @@ import publishController from "../publisher";
 import queueController from "../queue";
 
 const worker = async (): Promise<void> => {
-
   const { queueUrls } = await queueController();
 
-  if (env.IS_SEND_TO_SOCKET_SUBSCRIBE) {
+  if (config.IS_SEND_TO_SOCKET_SUBSCRIBE) {
     console.log("STATEFUL SUBSCRIBE MESSAGE");
     await WebSocket.connect();
   } else {

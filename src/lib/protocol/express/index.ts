@@ -1,4 +1,4 @@
-import env from "@/lib/env";
+import config from "@/lib/config";
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import helmet from "helmet";
@@ -22,7 +22,7 @@ const createExpress = (): Application => {
 
   const corsConfig = {
     // * publisher servers origin / subscribe servers origin
-    origin: [env.SUB_SCRIBE_A_SERVER_ORIGIN, env.PUBLISHER_SERVER_ORIGIN],
+    origin: [config.SUB_SCRIBE_A_SERVER_ORIGIN, config.PUBLISHER_SERVER_ORIGIN],
     credentials: true,
   };
 
@@ -36,16 +36,15 @@ const createExpress = (): Application => {
 };
 
 const listenExpressServer = (app: Application): Server => {
-  const port = env.SQS_SERVER_PORT;
-  return app.listen(port, () => {
-    console.log(`SQS SERVER PORT ${port}`);
+  return app.listen(config.port, () => {
+    console.log(`SQS SERVER PORT ${config.port}`);
   });
 };
 
 const createRouteWorker = (app: Application, queueUrls: string[]): void => {
   app.post("/deleteMessage", async (request: Request, response: Response) => {
     await sender(queueUrls);
-    
+
     response.status(200);
     response.send("queueUrls Message is Deleted");
   });
