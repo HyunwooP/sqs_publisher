@@ -49,10 +49,10 @@ const appErrorController = (error: any): void => {
 };
 
 const appErrorSelector = (error: any): void => {
-  let errorMessage = error ?? "서비스 장애입니다.";
+  let errorMessage = error.message ?? error;
   let action = null;
 
-  switch (error) {
+  switch (errorMessage) {
     case CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS:
       errorMessage = "Message 객체에 필수 파라메터가 부족합니다.";
       break;
@@ -71,9 +71,6 @@ const appErrorSelector = (error: any): void => {
       break;
     case CommonEnum.ErrorStatus.HTTP_RESPONSE_PROTOCOL_ERROR:
       errorMessage = `메세지 전달 요청에 대한 응답이 없습니다.`;
-      break;
-    default:
-      errorMessage = error.message ?? error;
       break;
   }
 
