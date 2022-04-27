@@ -29,7 +29,7 @@ const awsErrorController = (error: AWSError): void => {
 };
 
 const awsErrorSelector = (error: AWSError): void => {
-  let errorMessage = error.originalError ?? error.message;
+  let errorMessage = error.originalError?.message ?? error.message;
   let action = null;
 
   switch (error.code) {
