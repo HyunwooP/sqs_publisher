@@ -1,12 +1,12 @@
 import { processReStart } from "@/index";
 import _ from "lodash";
 import CommonEnum from "../enum";
-import intervalController from "../message/interval";
+import scheduler from "../message/scheduler";
 import { AWSError } from "../sqs/type";
 
 const errorController = (error: AWSError | any): void => {
   try {
-    if (!_.isUndefined(error.time)) {
+    if (!_.isUndefined(error.originalError)) {
       awsErrorController(error);
     } else {
       appErrorController(error);
@@ -14,7 +14,7 @@ const errorController = (error: AWSError | any): void => {
   } catch ([errorMessage, action]) {
     console.error(
       `errorController Error =========> ${errorMessage} / next call = ${
-        _.isEmpty(action) ? "없음" : action
+        _.isNull(action) ? "없음" : action
       }`,
     );
 
@@ -61,7 +61,7 @@ const appErrorSelector = (error: any): void => {
       break;
     case CommonEnum.ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE:
       errorMessage = "풀링이 실패했습니다.";
-      action = intervalController.restartIntervalPullingMessage;
+      action = scheduler.restartMessageScheduler;
       break;
     case CommonEnum.ErrorStatus.MAXIMUM_DELETE_COUNT_OVER:
       errorMessage = "삭제가 되지 않는 메세지가 있습니다.";

@@ -5,7 +5,7 @@ import CommonConstant from "../common/constant";
 import CommonEnum from "../enum";
 import queueController from "../queue";
 
-const intervalPullingMessage = (queueUrls: string[]): void => {
+const startMessageScheduler = (queueUrls: string[]): void => {
   try {
     const intervalPullingMessageId: NodeJS.Timer = setInterval(async () => {
       await sender(queueUrls);
@@ -20,7 +20,7 @@ const intervalPullingMessage = (queueUrls: string[]): void => {
   }
 };
 
-const clearIntervalPullingMessage = (): void => {
+const clearMessageScheduler = (): void => {
   const intervalPullingMessageId = getCacheItem({
     key: CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
     defaultValue: null,
@@ -35,28 +35,28 @@ const clearIntervalPullingMessage = (): void => {
   }
 };
 
-const restartIntervalPullingMessage = async (): Promise<void> => {
+const restartMessageScheduler = async (): Promise<void> => {
   const { queueUrls } = await queueController();
 
-  clearIntervalPullingMessage();
-  intervalPullingMessage(queueUrls);
+  clearMessageScheduler();
+  startMessageScheduler(queueUrls);
 };
 
-const delayStartIntervalPullingMessage = () => {
+const delayStartMessageScheduler = () => {
   const delayTime =
     CommonConstant.DELAY_START_INTERVAL_TIME -
     CommonConstant.MESSAGE_PULLING_TIME;
 
   setTimeout(() => {
-    restartIntervalPullingMessage();
+    restartMessageScheduler();
   }, delayTime);
 };
 
-const intervalController = {
-  delayStartIntervalPullingMessage,
-  intervalPullingMessage,
-  clearIntervalPullingMessage,
-  restartIntervalPullingMessage,
+const scheduler = {
+  delayStartMessageScheduler,
+  startMessageScheduler,
+  clearMessageScheduler,
+  restartMessageScheduler,
 };
 
-export default intervalController;
+export default scheduler;

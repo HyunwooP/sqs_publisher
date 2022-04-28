@@ -1,6 +1,5 @@
 import _ from "lodash";
 import CommonConstant from "../../lib/common/constant";
-import publishController from "../../lib/publisher";
 import { MessageEntity, QueueMessages } from "../common/type";
 import config from "../config";
 import CommonEnum from "../enum";
@@ -10,24 +9,24 @@ import MessageQueue from "../sqs/MessageQueue";
 import {
   DeleteMessageBatchResult,
   MessageItems,
-  ReceiveMessageResult,
+  ReceiveMessageResult
 } from "../sqs/type";
-import intervalController from "./interval";
 import {
   createDeleteEntry,
   createSubScribeMessageItem,
   failedDeleteMessage,
   getMultipleMessageQueueMessages,
   getSingleMessageQueueMessages,
-  successDeleteMessage,
+  successDeleteMessage
 } from "./preprocessor";
+import scheduler from "./scheduler";
 
 const messageController = (queueUrls: string[]): void => {
   if (!_.isEmpty(queueUrls)) {
     // * 해당 인스턴스내에서 풀링하여 처리
     if (config.IS_PULLING_MESSAGE) {
       console.log("START PULLING MESSAGE");
-      intervalController.intervalPullingMessage(queueUrls);
+      scheduler.startMessageScheduler(queueUrls);
     } else {
       /**
        * * 외부 HTTP 요청에 의해 처리
@@ -187,9 +186,7 @@ export const sender = async (queueUrls: string[]): Promise<void> => {
       `Message Queue has Non Message So, Set Delay ${convertMSecondToSecond} second`,
     );
 
-    // delayStartIntervalPullingMessage();
-    // 개발환경에서 계속 메세지가 필요할 경우 위 함수를 막고 아래를 푼다.
-    publishController(queueUrls);
+    scheduler.delayStartMessageScheduler();
   } else {
     /**
      * @description
