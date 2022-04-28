@@ -1,3 +1,4 @@
+import config from "@/lib/config";
 import _ from "lodash";
 import ws from "ws";
 import { getExpressServer } from "../express";
@@ -7,24 +8,8 @@ class WebSocket {
   private ws!: ws.WebSocket;
 
   connect = async (): Promise<void> => {
-    await this.connectWss();
-    await this.connectWs();
-  };
-
-  connectWss = () => {
-    this.wss = new ws.Server({
-      server: getExpressServer(),
-    });
-  };
-
-  connectWs = () => {
-    this.wss.on("connection", (ws: ws.WebSocket): void => {
-      this.ws = ws;
-
-      // * connection하면 listener 등록.
-      this.onMessage();
-      this.onError();
-    });
+    await this.createWebSocketServer();
+    await this.onConnectWebSocket();
   };
 
   close = (callback?: (error: Error | undefined) => void): void => {
@@ -33,18 +18,49 @@ class WebSocket {
     }
   };
 
-  onMessage = (): void => {
+  sendMessage = (message: string): void => {
+    if (!_.isEmpty(this.ws)) {
+      this.ws.send(message);
+    }
+  };
+  
+  private createWebSocketServer = (): void => {
+    this.wss = new ws.Server({
+      server: getExpressServer(),
+    });
+  };
+
+  private onConnectWebSocket = (): void => {
+    this.wss.on("connection", (ws: ws.WebSocket): void => {
+      this.ws = ws;
+
+      // * connection하면 listener 등록.
+      this.onMessage();
+      this.onError();
+      this.onClose();
+    });
+  };
+
+  private onMessage = (): void => {
     if (!_.isEmpty(this.ws)) {
       this.ws.on("message", (message: string): void => {
-        console.log(`Subscribe Message: ${message}`);
+        console.log(`${config.SUB_SCRIBE_A_SERVER_ORIGIN} MESSAGE: ${message}`);
       });
     }
   };
 
-  onError = (callback?: (error: Error) => void): void => {
+  private onClose = (): void => {
+    if (!_.isEmpty(this.ws)) {
+      this.ws.on("close", (): void => {
+        console.log(`${config.SUB_SCRIBE_A_SERVER_ORIGIN} CLOSE`);
+      });
+    }
+  };
+
+  private onError = (callback?: (error: Error) => void): void => {
     if (!_.isEmpty(this.ws)) {
       this.ws.on("error", (error: Error): void => {
-        console.log(`WebSocket Error ${error}`);
+        console.log(`${config.SUB_SCRIBE_A_SERVER_ORIGIN} ERROR: ${error}`);
 
         if (_.isFunction(callback)) {
           callback(error);
@@ -52,12 +68,6 @@ class WebSocket {
 
         throw error;
       });
-    }
-  };
-
-  sendMessage = (message: string): void => {
-    if (!_.isEmpty(this.ws)) {
-      this.ws.send(message);
     }
   };
 }
