@@ -97,13 +97,14 @@ export const successDeleteMessage = ({
 };
 
 const messageFailedCountController = (messageId: string): number => {
+  const defaultFailStartCount = 1;
   let deleteMessageFailedCount: number = getCacheObjectItem({
     objectName: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
     objectKey: messageId,
-    defaultValue: 0,
+    defaultValue: defaultFailStartCount,
   });
 
-  if (deleteMessageFailedCount > 0) {
+  if (deleteMessageFailedCount > defaultFailStartCount) {
     ++deleteMessageFailedCount
   }
 
