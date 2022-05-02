@@ -100,23 +100,20 @@ const messageFailedCountController = (messageId: string): number => {
   let deleteMessageFailedCount: number = getCacheObjectItem({
     objectName: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
     objectKey: messageId,
+    defaultValue: 0,
   });
 
-  if (_.isUndefined(deleteMessageFailedCount)) {
-    setCacheObjectItem({
-      objectName: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
-      objectKey: messageId,
-      value: 0,
-    });
-  } else {
-    setCacheObjectItem({
-      objectName: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
-      objectKey: messageId,
-      value: ++deleteMessageFailedCount,
-    });
+  if (deleteMessageFailedCount > 0) {
+    ++deleteMessageFailedCount
   }
 
-  return deleteMessageFailedCount ?? 0;
+  setCacheObjectItem({
+    objectName: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
+    objectKey: messageId,
+    value: deleteMessageFailedCount,
+  });
+
+  return deleteMessageFailedCount;
 };
 
 export const failedDeleteMessage = ({
