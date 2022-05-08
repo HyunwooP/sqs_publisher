@@ -1,3 +1,7 @@
+import errorController from "@/lib/common/error";
+import { UnknownObject } from "@/lib/common/type";
+import config from "@/lib/config";
+import { ErrorStatus } from "@/lib/enum/error";
 import axios, {
   AxiosError,
   AxiosInstance,
@@ -5,10 +9,6 @@ import axios, {
   AxiosResponse,
 } from "axios";
 import * as _ from "lodash";
-import { UnknownObject } from "../../../lib/common/type";
-import errorController from "../../common/error";
-import config from "../../config";
-import { ErrorStatus } from "../../enum/error";
 
 const generateQueryEndPoint = (
   endPoint: string,

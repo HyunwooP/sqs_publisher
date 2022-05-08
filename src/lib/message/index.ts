@@ -1,15 +1,15 @@
 import _ from "lodash";
-import CommonConstant from "../../lib/common/constant";
+import CommonConstant from "../common/constant";
 import { MessageEntity, QueueMessages } from "../common/type";
 import config from "../config";
 import CommonEnum from "../enum";
-import { postAPI } from "../protocol/ajax";
+import { postAPI } from "../protocol/axios";
 import WebSocket from "../protocol/ws";
 import MessageQueue from "../sqs/MessageQueue";
 import {
   DeleteMessageBatchResult,
   MessageItems,
-  ReceiveMessageResult
+  ReceiveMessageResult,
 } from "../sqs/type";
 import {
   createDeleteEntry,
@@ -17,7 +17,7 @@ import {
   failedDeleteMessage,
   getMultipleMessageQueueMessages,
   getSingleMessageQueueMessages,
-  successDeleteMessage
+  successDeleteMessage,
 } from "./preprocessor";
 import scheduler from "./scheduler";
 
