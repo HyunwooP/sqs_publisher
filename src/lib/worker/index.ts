@@ -17,6 +17,7 @@ const worker = async (): Promise<void> => {
     createExpressServer(queueUrls);
   }
 
+  // * 외부에서 sqs에 publish 해주면 제거
   await publishController(queueUrls);
 
   await messageController(queueUrls);
