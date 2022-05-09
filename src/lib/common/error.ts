@@ -1,7 +1,7 @@
 import { processReStart } from "@/index";
 import _ from "lodash";
 import CommonEnum from "../enum";
-import scheduler from "../message/scheduler";
+import { restartMessageScheduler } from "../message/scheduler";
 import { AWSError } from "../sqs/type";
 
 const errorController = (error: AWSError | any): void => {
@@ -61,7 +61,7 @@ const appErrorSelector = (error: any): void => {
       break;
     case CommonEnum.ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE:
       errorMessage = "풀링이 실패했습니다.";
-      action = scheduler.restartMessageScheduler;
+      action = restartMessageScheduler;
       break;
     case CommonEnum.ErrorStatus.MAXIMUM_DELETE_COUNT_OVER:
       errorMessage = "삭제가 되지 않는 메세지가 있습니다.";

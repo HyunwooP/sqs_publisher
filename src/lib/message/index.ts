@@ -19,14 +19,14 @@ import {
   getSingleMessageQueueMessages,
   successDeleteMessage,
 } from "./preprocessor";
-import scheduler from "./scheduler";
+import { delayStartMessageScheduler, startMessageScheduler } from "./scheduler";
 
 const messageController = (queueUrls: string[]): void => {
   if (!_.isEmpty(queueUrls)) {
     // * 해당 인스턴스내에서 풀링하여 처리
     if (config.IS_PULLING_MESSAGE) {
       console.log("START PULLING MESSAGE");
-      scheduler.startMessageScheduler(queueUrls);
+      startMessageScheduler(queueUrls);
     } else {
       /**
        * * 외부 HTTP 요청에 의해 처리
@@ -186,7 +186,7 @@ export const messageBroker = async (queueUrls: string[]): Promise<void> => {
       `Message Queue has Non Message So, Set Delay ${convertMSecondToSecond} second`,
     );
 
-    scheduler.delayStartMessageScheduler();
+    delayStartMessageScheduler();
   } else {
     /**
      * @description
