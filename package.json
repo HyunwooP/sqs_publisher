@@ -21,7 +21,7 @@
     "message"
   ],
   "author": "HyunwooPark",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/awakelife93/node-sqs-pubsub/issues"
   },
