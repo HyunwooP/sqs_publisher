@@ -1,5 +1,5 @@
 # NODE-SQS
-#### Publishing Message -> SQS Queue -> Subscribe & Send To Message Action Server
+#### Publishing Message -> SQS & Message Broker -> Message Action Server (Subscriber)
 ##### Author 박현우
 ##### Create Date 2021.11.19
 #

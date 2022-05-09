@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { receiveAndSender } from ".";
+import { messageBroker } from ".";
 import { CacheKeyStatus, getCacheItem, setCacheItem } from "../common/cache";
 import CommonConstant from "../common/constant";
 import CommonEnum from "../enum";
@@ -8,7 +8,7 @@ import queueController from "../queue";
 const startMessageScheduler = (queueUrls: string[]): void => {
   try {
     const intervalPullingMessageId: NodeJS.Timer = setInterval(async () => {
-      await receiveAndSender(queueUrls);
+      await messageBroker(queueUrls);
     }, CommonConstant.MESSAGE_PULLING_TIME);
 
     setCacheItem({

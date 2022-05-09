@@ -173,7 +173,7 @@ export const sendSubScribeToMessage = async (
   }
 };
 
-export const receiveAndSender = async (queueUrls: string[]): Promise<void> => {
+export const messageBroker = async (queueUrls: string[]): Promise<void> => {
   const messageItems: {
     [queueUrl: string]: string[];
   } = await getMessageToDeleteWorker(queueUrls);
