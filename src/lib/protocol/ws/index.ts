@@ -23,7 +23,7 @@ class WebSocket {
       this.ws.send(message);
     }
   };
-  
+
   private createWebSocketServer = (): void => {
     this.wss = new ws.Server({
       server: getExpressServer(),
