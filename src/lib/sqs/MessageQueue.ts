@@ -19,50 +19,59 @@ import {
 class MessageQueue {
   private readonly sqs: AWS.SQS = SQSInstance.instance;
 
-  getQueues = async (): Promise<GetQueueResponse> =>
-    await this.sqs.listQueues().promise();
+  async getQueues(): Promise<GetQueueResponse> {
+    return await this.sqs.listQueues().promise();
+  }
 
-  createQueue = async (
+  async createQueue(
     params: CreateQueueRequest,
     callback?: (error: AWSError, data: CreateQueueResult) => void,
-  ): Promise<CreateQueueResult> =>
-    await this.sqs.createQueue(params, callback).promise();
+  ): Promise<CreateQueueResult> {
+    return await this.sqs.createQueue(params, callback).promise();
+  }
 
-  deleteQueue = async (
+  async deleteQueue(
     params: DeleteQueueRequest,
     callback?: (error: AWSError, data: UnknownObject) => void,
-  ): Promise<VoidResponse> => await this.sqs.deleteQueue(params, callback);
+  ): Promise<VoidResponse> {
+    return await this.sqs.deleteQueue(params, callback);
+  }
 
-  getMessage = async (
+  async getMessage(
     params: ReceiveMessageRequest,
     callback?: (error: AWSError, data: ReceiveMessageResult) => void,
-  ): Promise<ReceiveMessageResult> =>
-    await this.sqs.receiveMessage(params, callback).promise();
+  ): Promise<ReceiveMessageResult> {
+    return await this.sqs.receiveMessage(params, callback).promise();
+  }
 
-  sendMessage = async (
+  async sendMessage(
     params: SendMessageRequest,
     callback?: (error: AWSError, data: SendMessageResult) => void,
-  ): Promise<SendMessageResult> =>
-    await this.sqs.sendMessage(params, callback).promise();
+  ): Promise<SendMessageResult> {
+    return await this.sqs.sendMessage(params, callback).promise();
+  }
 
   /**
    * @description
    * 해당 Delete는 가시성 (time)을 계산하여 지운다. 즉각적인 삭제처리가 안됨.
    */
-  deleteMessage = async (
+  async deleteMessage(
     params: DeleteMessageRequest,
     callback?: (error: AWSError, data: UnknownObject) => void,
-  ): Promise<VoidResponse> => await this.sqs.deleteMessage(params, callback);
+  ): Promise<VoidResponse> {
+    return await this.sqs.deleteMessage(params, callback);
+  }
 
   /**
    * @description
    * 바로 삭제 처리
    */
-  deleteMessageBatch = async (
+  async deleteMessageBatch(
     params: DeleteMessageBatchRequest,
     callback?: (error: AWSError, data: DeleteMessageBatchResult) => void,
-  ): Promise<DeleteMessageBatchResult> =>
-    await this.sqs.deleteMessageBatch(params, callback).promise();
+  ): Promise<DeleteMessageBatchResult> {
+    return await this.sqs.deleteMessageBatch(params, callback).promise();
+  }
 }
 
 export default new MessageQueue();
