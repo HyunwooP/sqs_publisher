@@ -152,6 +152,7 @@ export const failedDeleteMessage = ({
 const getMaximumDeleteCountOverMessages = (): string[] => {
   const messageObject = getCacheItem({
     key: CacheKeyStatus.DELETE_MESSAGE_FAILED_COUNT_GROUP,
+    defaultValue: {},
   });
 
   const messageIds = Object.keys(messageObject).filter((messageId: string) => {

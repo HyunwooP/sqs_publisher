@@ -29,7 +29,7 @@ export const getCacheItem = ({
   defaultValue,
 }: {
   key: CacheKey;
-  defaultValue?: string | number | null | [];
+  defaultValue?: string | number | null | object | [];
 }): any => {
   return _.get(cacheItem, key, defaultValue);
 };
@@ -41,7 +41,7 @@ export const getCacheObjectItem = ({
 }: {
   objectName: CacheObjectName;
   objectKey: string;
-  defaultValue?: string | number | null | [];
+  defaultValue?: string | number | null | object | [];
 }): any => {
   return _.get(cacheItem[objectName], objectKey, defaultValue);
 };
