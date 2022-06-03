@@ -7,7 +7,10 @@ class SQSInstance {
   private readonly sqs: AWS.SQS;
 
   constructor() {
-    if (_.isUndefined(config.AWS_ACCESS_KEY) || _.isUndefined(config.AWS_SECRET_KEY)) {
+    if (
+      _.isUndefined(config.AWS_ACCESS_KEY) ||
+      _.isUndefined(config.AWS_SECRET_KEY)
+    ) {
       throw new Error(ErrorStatus.IS_NOT_VALID_REQUIRE_AWS_KEY);
     }
 

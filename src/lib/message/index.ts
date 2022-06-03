@@ -10,7 +10,7 @@ import MessageQueue from "../sqs/MessageQueue";
 import {
   DeleteMessageBatchResult,
   MessageItems,
-  ReceiveMessageResult
+  ReceiveMessageResult,
 } from "../sqs/type";
 import {
   createDeleteEntry,
@@ -18,7 +18,7 @@ import {
   failedDeleteMessage,
   getMultipleMessageQueueMessages,
   getSingleMessageQueueMessages,
-  successDeleteMessage
+  successDeleteMessage,
 } from "./preprocessor";
 import { delayStartMessageScheduler, startMessageScheduler } from "./scheduler";
 
@@ -129,9 +129,7 @@ export const getMessageToDeleteWorker = async (
           messageItems[queueUrl].push(body);
         }
       } else {
-        throw new Error(
-          ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS,
-        );
+        throw new Error(ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS);
       }
     }
   }

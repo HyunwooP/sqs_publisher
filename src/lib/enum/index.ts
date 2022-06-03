@@ -7,5 +7,5 @@ export default {
   ...Error,
   ...Message,
   ...Queue,
-  ...Cache
+  ...Cache,
 };

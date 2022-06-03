@@ -5,13 +5,10 @@ import {
   getCacheItem,
   getCacheObjectItem,
   isCacheObjectItem,
-  setCacheObjectItem
+  setCacheObjectItem,
 } from "../common/cache";
 import CommonConstant from "../common/constant";
-import {
-  DeleteEntry, MessageEntity,
-  QueueMessages
-} from "../common/type";
+import { DeleteEntry, MessageEntity, QueueMessages } from "../common/type";
 import config from "../config";
 import { CacheKeys } from "../enum/cache";
 import { ErrorStatus } from "../enum/error";
@@ -21,7 +18,7 @@ import {
   BatchResultErrorEntryList,
   DeleteMessageBatchResultEntry,
   DeleteMessageBatchResultEntryList,
-  MessageItem
+  MessageItem,
 } from "../sqs/type";
 
 export const getMultipleMessageQueueMessages = async (
@@ -54,16 +51,8 @@ export const createDeleteEntry = (queueMessage: MessageItem): DeleteEntry => {
     MessageItemObject.RECEIPT_HANDLE,
     "",
   );
-  const body: string = _.get(
-    queueMessage,
-    MessageItemObject.BODY,
-    "",
-  );
-  const id: string = _.get(
-    queueMessage,
-    MessageItemObject.MESSAGE_ID,
-    "",
-  );
+  const body: string = _.get(queueMessage, MessageItemObject.BODY, "");
+  const id: string = _.get(queueMessage, MessageItemObject.MESSAGE_ID, "");
 
   return {
     receiptHandle,
@@ -83,10 +72,7 @@ export const successDeleteMessage = ({
     console.log(`Delete Successful Response ===========>`, deleteEntry);
 
     if (
-      isCacheObjectItem(
-        CacheKeys.DELETE_MESSAGE_FAILED_COUNT_GROUP,
-        messageId,
-      )
+      isCacheObjectItem(CacheKeys.DELETE_MESSAGE_FAILED_COUNT_GROUP, messageId)
     ) {
       deleteCacheObjectItem(
         CacheKeys.DELETE_MESSAGE_FAILED_COUNT_GROUP,
