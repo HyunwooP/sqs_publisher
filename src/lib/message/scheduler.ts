@@ -1,8 +1,9 @@
 import _ from "lodash";
 import { messageBroker } from ".";
-import { CacheKeyStatus, getCacheItem, setCacheItem } from "../common/cache";
+import { getCacheItem, setCacheItem } from "../common/cache";
 import CommonConstant from "../common/constant";
-import CommonEnum from "../enum";
+import { CacheKeys } from "../enum/cache";
+import { ErrorStatus } from "../enum/error";
 import queueController from "../queue";
 
 export const startMessageScheduler = (queueUrls: string[]): void => {
@@ -12,24 +13,24 @@ export const startMessageScheduler = (queueUrls: string[]): void => {
     }, CommonConstant.MESSAGE_PULLING_TIME);
 
     setCacheItem({
-      key: CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
+      key: CacheKeys.INTERVAL_PULLING_MESSAGE_ID,
       value: intervalPullingMessageId,
     });
   } catch (error: unknown) {
-    throw new Error(CommonEnum.ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE);
+    throw new Error(ErrorStatus.STOP_INTERVAL_PULLING_MESSAGE);
   }
 };
 
 export const clearMessageScheduler = (): void => {
   const intervalPullingMessageId = getCacheItem({
-    key: CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
+    key: CacheKeys.INTERVAL_PULLING_MESSAGE_ID,
     defaultValue: null,
   });
 
   if (!_.isNull(intervalPullingMessageId)) {
     clearInterval(intervalPullingMessageId);
     setCacheItem({
-      key: CacheKeyStatus.INTERVAL_PULLING_MESSAGE_ID,
+      key: CacheKeys.INTERVAL_PULLING_MESSAGE_ID,
       value: null,
     });
   }

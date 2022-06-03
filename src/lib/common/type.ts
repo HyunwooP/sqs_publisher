@@ -1,4 +1,4 @@
-import { MessageItem, MessageItems } from "../sqs/type";
+import { MessageItems } from "../sqs/type";
 
 export type QueueMessages = {
   [queueUrl: string]: MessageItems;
@@ -24,5 +24,3 @@ export type MessageEntity = {
 };
 
 export type UnknownObject<T = unknown> = Record<string, T>;
-
-export interface IQueueMessage extends MessageItem {}

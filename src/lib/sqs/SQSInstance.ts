@@ -1,17 +1,14 @@
 import * as AWS from "aws-sdk";
 import _ from "lodash";
 import config from "../config";
-import CommonEnum from "../enum";
+import { ErrorStatus } from "../enum/error";
 
 class SQSInstance {
   private readonly sqs: AWS.SQS;
 
   constructor() {
-    if (
-      _.isUndefined(config.AWS_ACCESS_KEY) ||
-      _.isUndefined(config.AWS_SECRET_KEY)
-    ) {
-      throw new Error(CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_AWS_KEY);
+    if (_.isUndefined(config.AWS_ACCESS_KEY) || _.isUndefined(config.AWS_SECRET_KEY)) {
+      throw new Error(ErrorStatus.IS_NOT_VALID_REQUIRE_AWS_KEY);
     }
 
     AWS.config.update({

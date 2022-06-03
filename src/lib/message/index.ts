@@ -2,14 +2,15 @@ import _ from "lodash";
 import CommonConstant from "../common/constant";
 import { MessageEntity, QueueMessages } from "../common/type";
 import config from "../config";
-import CommonEnum from "../enum";
+import { ErrorStatus } from "../enum/error";
+import { MessageResponse } from "../enum/message";
 import { postAPI } from "../protocol/axios";
 import WebSocket from "../protocol/ws";
 import MessageQueue from "../sqs/MessageQueue";
 import {
   DeleteMessageBatchResult,
   MessageItems,
-  ReceiveMessageResult,
+  ReceiveMessageResult
 } from "../sqs/type";
 import {
   createDeleteEntry,
@@ -17,7 +18,7 @@ import {
   failedDeleteMessage,
   getMultipleMessageQueueMessages,
   getSingleMessageQueueMessages,
-  successDeleteMessage,
+  successDeleteMessage
 } from "./preprocessor";
 import { delayStartMessageScheduler, startMessageScheduler } from "./scheduler";
 
@@ -81,7 +82,7 @@ export const getMessageItems = async (
     MaxNumberOfMessages: CommonConstant.RECEIVE_MAX_NUMBER_OF_MESSAGES,
   });
 
-  return _.get(messageItems, CommonEnum.MessageResponseStatus.MESSAGES, []);
+  return _.get(messageItems, MessageResponse.MESSAGES, []);
 };
 
 const getMessageQueueInMessages = async (
@@ -129,7 +130,7 @@ export const getMessageToDeleteWorker = async (
         }
       } else {
         throw new Error(
-          CommonEnum.ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS,
+          ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS,
         );
       }
     }
@@ -174,9 +175,7 @@ export const sendSubScribeToMessage = async (
 };
 
 export const messageBroker = async (queueUrls: string[]): Promise<void> => {
-  const messageItems: {
-    [queueUrl: string]: string[];
-  } = await getMessageToDeleteWorker(queueUrls);
+  const messageItems = await getMessageToDeleteWorker(queueUrls);
 
   if (_.isEmpty(messageItems)) {
     const convertMSecondToSecond = Math.floor(
