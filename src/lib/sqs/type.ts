@@ -9,6 +9,10 @@ export type SendMessageRequest = AWS.SQS.Types.SendMessageRequest;
 
 export type SendMessageResult = AWS.SQS.Types.SendMessageResult;
 
+export type QueueAttributeMap = AWS.SQS.QueueAttributeMap;
+
+export type QueueAttributeName = AWS.SQS.QueueAttributeName;
+
 export type CreateQueueRequest = AWS.SQS.Types.CreateQueueRequest;
 
 export type CreateQueueResult = AWS.SQS.Types.CreateQueueResult;

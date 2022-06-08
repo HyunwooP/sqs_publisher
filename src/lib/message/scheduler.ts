@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { messageBroker } from ".";
+import broker from "../broker";
 import { getCacheItem, setCacheItem } from "../common/cache";
 import CommonConstant from "../common/constant";
 import { CacheKeys } from "../enum/cache";
@@ -9,7 +9,7 @@ import queueController from "../queue";
 export const startMessageScheduler = (queueUrls: string[]): void => {
   try {
     const intervalPullingMessageId: NodeJS.Timer = setInterval(async () => {
-      await messageBroker(queueUrls);
+      await broker(queueUrls);
     }, CommonConstant.MESSAGE_PULLING_TIME);
 
     setCacheItem({
@@ -39,16 +39,18 @@ export const clearMessageScheduler = (): void => {
 export const restartMessageScheduler = async (): Promise<void> => {
   const { queueUrls } = await queueController();
 
+  if (_.isEmpty(queueUrls)) {
+    throw new Error(ErrorStatus.IS_EMPTY_QUEUE_URLS);
+  }
+
   clearMessageScheduler();
   startMessageScheduler(queueUrls);
 };
 
-export const delayStartMessageScheduler = () => {
-  const delayTime =
-    CommonConstant.DELAY_START_INTERVAL_TIME -
-    CommonConstant.MESSAGE_PULLING_TIME;
+export const delayStartMessageScheduler = (delayTime?: number) => {
+  const _delayTime = delayTime ?? CommonConstant.DELAY_START_INTERVAL_TIME - CommonConstant.MESSAGE_PULLING_TIME;
 
   setTimeout(() => {
     restartMessageScheduler();
-  }, delayTime);
+  }, _delayTime);
 };

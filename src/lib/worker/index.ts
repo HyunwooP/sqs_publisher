@@ -1,4 +1,6 @@
+import _ from "lodash";
 import config from "../config";
+import { ErrorStatus } from "../enum/error";
 import messageController from "../message";
 import { showMaximumDeleteCountOverMessages } from "../message/preprocessor";
 import { createExpressServer } from "../protocol/express";
@@ -8,6 +10,10 @@ import queueController from "../queue";
 
 const worker = async (): Promise<void> => {
   const { queueUrls } = await queueController();
+
+  if (!_.isEmpty(queueUrls)) {
+    throw new Error(ErrorStatus.IS_EMPTY_QUEUE_URLS);
+  }
 
   if (config.IS_SEND_TO_SOCKET_SUBSCRIBE) {
     console.log("STATEFUL SUBSCRIBE MESSAGE");

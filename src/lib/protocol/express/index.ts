@@ -1,5 +1,5 @@
+import broker from "@/lib/broker";
 import config from "@/lib/config";
-import { messageBroker } from "@/lib/message";
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import helmet from "helmet";
@@ -11,10 +11,10 @@ export const getExpressServer = (): Server => {
   return listenExpressServer(app);
 };
 
-export const createExpressServer = (queueUrls: string[]): Server => {
+export const createExpressServer = (queueUrls: string[]): void => {
   const app: Application = createExpress();
   createRouteWorker(app, queueUrls);
-  return listenExpressServer(app);
+  listenExpressServer(app);
 };
 
 const createExpress = (): Application => {
@@ -43,7 +43,7 @@ const listenExpressServer = (app: Application): Server => {
 
 const createRouteWorker = (app: Application, queueUrls: string[]): void => {
   app.post("/deleteMessage", async (request: Request, response: Response) => {
-    await messageBroker(queueUrls);
+    await broker(queueUrls);
 
     response.status(200);
     response.send("queueUrls Message is Deleted");

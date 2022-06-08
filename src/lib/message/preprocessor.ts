@@ -5,10 +5,10 @@ import {
   getCacheItem,
   getCacheObjectItem,
   isCacheObjectItem,
-  setCacheObjectItem,
+  setCacheObjectItem
 } from "../common/cache";
 import CommonConstant from "../common/constant";
-import { DeleteEntry, MessageEntity, QueueMessages } from "../common/type";
+import { DeleteEntry, MessageEntity, QueueMessagesItems } from "../common/type";
 import config from "../config";
 import { CacheKeys } from "../enum/cache";
 import { ErrorStatus } from "../enum/error";
@@ -18,13 +18,13 @@ import {
   BatchResultErrorEntryList,
   DeleteMessageBatchResultEntry,
   DeleteMessageBatchResultEntryList,
-  MessageItem,
+  MessageItem
 } from "../sqs/type";
 
 export const getMultipleMessageQueueMessages = async (
   queueUrls: string[],
-): Promise<QueueMessages> => {
-  const queueMessages = {} as QueueMessages;
+): Promise<QueueMessagesItems> => {
+  const queueMessages = {} as QueueMessagesItems;
 
   for (const queueUrl of queueUrls) {
     const messages = await getMessageItems(queueUrl);
@@ -36,13 +36,10 @@ export const getMultipleMessageQueueMessages = async (
 
 export const getSingleMessageQueueMessages = async (
   queueUrl: string,
-): Promise<QueueMessages> => {
-  const queueMessage = {} as QueueMessages;
-
-  const messages = await getMessageItems(queueUrl);
-  queueMessage[queueUrl] = messages;
-
-  return queueMessage;
+): Promise<QueueMessagesItems> => {
+  const queueMessages = {} as QueueMessagesItems;
+  queueMessages[queueUrl] = await getMessageItems(queueUrl);
+  return queueMessages;
 };
 
 export const createDeleteEntry = (queueMessage: MessageItem): DeleteEntry => {
@@ -63,13 +60,20 @@ export const createDeleteEntry = (queueMessage: MessageItem): DeleteEntry => {
 
 export const successDeleteMessage = ({
   successful,
+  queueUrl,
   messageId,
 }: {
   successful: DeleteMessageBatchResultEntryList;
+  queueUrl: string;
   messageId: string;
 }): void => {
   _.forEach(successful, (deleteEntry: DeleteMessageBatchResultEntry) => {
-    console.log(`Delete Successful Response ===========>`, deleteEntry);
+    console.log(`
+      ${queueUrl} Delete Successful Response ===========>
+      message id = ${messageId} /
+      id = ${deleteEntry.Id}
+      `,
+    );
 
     if (
       isCacheObjectItem(CacheKeys.DELETE_MESSAGE_FAILED_COUNT_GROUP, messageId)
@@ -116,8 +120,15 @@ export const failedDeleteMessage = ({
 }): void => {
   _.forEach(failed, (deleteEntry: BatchResultErrorEntry) => {
     const deleteMessageFailedCount = messageFailedCountController(messageId);
-    console.log(
-      `${queueUrl} Delete Failed Response ===========> message id: ${messageId} / count = ${deleteMessageFailedCount}`,
+    console.log(`
+      ${queueUrl} Delete Failed Response ===========>
+      message id = ${messageId} /
+      count = ${deleteMessageFailedCount} /
+      id = ${deleteEntry.Id} /
+      code = ${deleteEntry.Code} /
+      message = ${deleteEntry.Message} /
+      senderFault = ${deleteEntry.SenderFault}
+      `,
     );
 
     if (deleteMessageFailedCount < CommonConstant.MAXIMUM_DELETE_COUNT) {
@@ -135,13 +146,13 @@ export const failedDeleteMessage = ({
 };
 
 const getMaximumDeleteCountOverMessages = (): string[] => {
-  const messageObject = getCacheItem({
+  const deleteMessageFailedIdCountGroup = getCacheItem({
     key: CacheKeys.DELETE_MESSAGE_FAILED_COUNT_GROUP,
     defaultValue: {},
   });
 
-  const messageIds = Object.keys(messageObject).filter((messageId: string) => {
-    return messageObject[messageId] >= CommonConstant.MAXIMUM_DELETE_COUNT;
+  const messageIds = Object.keys(deleteMessageFailedIdCountGroup).filter((messageId: string) => {
+    return deleteMessageFailedIdCountGroup[messageId] >= CommonConstant.MAXIMUM_DELETE_COUNT;
   });
 
   return messageIds;
@@ -162,14 +173,14 @@ export const showMaximumDeleteCountOverMessages = (): void => {
 };
 
 export const createSubScribeMessageItem = (message: string): MessageEntity => {
-  const messageItems: MessageEntity = JSON.parse(message);
+  const messages: MessageEntity = JSON.parse(message);
 
   if (config.IS_SEND_TO_SOCKET_SUBSCRIBE) {
-    const endPointSplit = messageItems["endPoint"].split(
+    const endPointSplit = messages["endPoint"].split(
       config.PARAMS_SPLIT_TYPE,
     );
-    messageItems["endPoint"] = endPointSplit[endPointSplit.length - 1];
+    messages["endPoint"] = endPointSplit[endPointSplit.length - 1];
   }
 
-  return messageItems;
+  return messages;
 };

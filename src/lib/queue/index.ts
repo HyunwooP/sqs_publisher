@@ -1,12 +1,12 @@
 import _ from "lodash";
 import { QueueController } from "../common/type";
+import config from "../config";
 import MessageQueue from "../sqs/MessageQueue";
 import {
   CreateQueueRequest,
-  CreateQueueResult,
-  QueueResponse,
+  CreateQueueResult, QueueResponse
 } from "../sqs/type";
-import { createQueueUrl, getQueueUrls } from "./preprocessor";
+import { createQueueUrl, defaultQueueAttributes, getQueueUrls } from "./preprocessor";
 
 const queueController = async (): Promise<QueueController> => {
   let queueUrls: string[] = await getQueueUrls();
@@ -33,7 +33,12 @@ export const createQueue = async ({
 }: CreateQueueRequest): Promise<CreateQueueResult> => {
   return await MessageQueue.createQueue({
     QueueName,
-    Attributes,
+    Attributes: config.IS_SETUP_QUEUE_DEFAULT_ATTRIBUTES
+      ? {
+        ...defaultQueueAttributes,
+        ...Attributes
+      }
+      : Attributes
   });
 };
 

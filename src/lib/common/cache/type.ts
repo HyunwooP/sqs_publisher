@@ -1,7 +1,7 @@
 import { CacheKeys } from "@/lib/enum/cache";
 
 export type CacheItem = {
-  deleteMessageFailedCountGroup: {
+  deleteMessageFailedIdCountGroup: {
     [key: string]: number;
   };
   intervalPullingMessageId: null | NodeJS.Timer;

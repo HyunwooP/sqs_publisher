@@ -1,7 +1,15 @@
-import { MessageItems } from "../sqs/type";
+import { MessageItems, QueueAttributeName } from "../sqs/type";
+
+export type QueueAttributes = {
+  [key: QueueAttributeName]: string;
+};
+
+export type QueueMessagesItems = {
+  [queueUrl: string]: MessageItems;
+};
 
 export type QueueMessages = {
-  [queueUrl: string]: MessageItems;
+  [queueUrl: string]: string[];
 };
 
 export type QueueController = {

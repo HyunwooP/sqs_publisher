@@ -1,6 +1,6 @@
 import _ from "lodash";
 import CommonConstant from "../common/constant";
-import { MessageEntity, QueueMessages } from "../common/type";
+import { MessageEntity, QueueMessages, QueueMessagesItems } from "../common/type";
 import config from "../config";
 import { ErrorStatus } from "../enum/error";
 import { MessageResponse } from "../enum/message";
@@ -10,7 +10,7 @@ import MessageQueue from "../sqs/MessageQueue";
 import {
   DeleteMessageBatchResult,
   MessageItems,
-  ReceiveMessageResult,
+  ReceiveMessageResult
 } from "../sqs/type";
 import {
   createDeleteEntry,
@@ -18,22 +18,20 @@ import {
   failedDeleteMessage,
   getMultipleMessageQueueMessages,
   getSingleMessageQueueMessages,
-  successDeleteMessage,
+  successDeleteMessage
 } from "./preprocessor";
-import { delayStartMessageScheduler, startMessageScheduler } from "./scheduler";
+import { startMessageScheduler } from "./scheduler";
 
 const messageController = (queueUrls: string[]): void => {
-  if (!_.isEmpty(queueUrls)) {
-    // * 해당 인스턴스내에서 풀링하여 처리
-    if (config.IS_PULLING_MESSAGE) {
-      console.log("START PULLING MESSAGE");
-      startMessageScheduler(queueUrls);
-    } else {
-      /**
-       * * 외부 HTTP 요청에 의해 처리
-       * * worker - createExpressServer(queueUrls) 참조
-       */
-    }
+  // * 해당 인스턴스내에서 풀링하여 처리
+  if (config.IS_PULLING_MESSAGE) {
+    console.log("START PULLING MESSAGE");
+    startMessageScheduler(queueUrls);
+  } else {
+    /**
+     * * 외부 HTTP 요청에 의해 처리
+     * * worker - createExpressServer(queueUrls) 참조
+     */
   }
 };
 
@@ -69,6 +67,7 @@ export const deleteMessage = async ({
   if (!_.isEmpty(deleteResponse.Successful)) {
     successDeleteMessage({
       successful: deleteResponse.Successful,
+      queueUrl,
       messageId,
     });
   }
@@ -77,18 +76,18 @@ export const deleteMessage = async ({
 export const getMessageItems = async (
   queueUrl: string,
 ): Promise<MessageItems> => {
-  const messageItems: ReceiveMessageResult = await MessageQueue.getMessage({
+  const messages: ReceiveMessageResult = await MessageQueue.getMessage({
     QueueUrl: queueUrl,
     MaxNumberOfMessages: CommonConstant.RECEIVE_MAX_NUMBER_OF_MESSAGES,
   });
 
-  return _.get(messageItems, MessageResponse.MESSAGES, []);
+  return _.get(messages, MessageResponse.MESSAGES, []);
 };
 
 const getMessageQueueInMessages = async (
   queueUrls: string[],
-): Promise<QueueMessages> => {
-  let queueMessages = {} as QueueMessages;
+): Promise<QueueMessagesItems> => {
+  let queueMessages = {} as QueueMessagesItems;
 
   if (queueUrls.length < 2) {
     const queueUrl: string = _.get(queueUrls, 0, "");
@@ -102,15 +101,11 @@ const getMessageQueueInMessages = async (
 
 export const getMessageToDeleteWorker = async (
   queueUrls: string[],
-): Promise<{
-  [queueUrl: string]: string[];
-}> => {
-  const multipleQueueMessages: QueueMessages = await getMessageQueueInMessages(
+): Promise<QueueMessages> => {
+  const multipleQueueMessages: QueueMessagesItems = await getMessageQueueInMessages(
     queueUrls,
   );
-  const messageItems: {
-    [queueUrl: string]: string[];
-  } = {};
+  const messages: QueueMessages = {};
 
   // * Message Queue들을 순회...
   for (const queueUrl of queueUrls) {
@@ -123,10 +118,10 @@ export const getMessageToDeleteWorker = async (
       if (!_.isEmpty(receiptHandle) && !_.isEmpty(body) && !_.isEmpty(id)) {
         await deleteMessage({ queueUrl, messageId: id, receiptHandle });
 
-        if (_.isEmpty(messageItems[queueUrl])) {
-          messageItems[queueUrl] = [body];
+        if (_.isEmpty(messages[queueUrl])) {
+          messages[queueUrl] = [body];
         } else {
-          messageItems[queueUrl].push(body);
+          messages[queueUrl].push(body);
         }
       } else {
         throw new Error(ErrorStatus.IS_NOT_VALID_REQUIRE_MESSAGE_PARAMS);
@@ -134,7 +129,7 @@ export const getMessageToDeleteWorker = async (
     }
   }
 
-  return messageItems;
+  return messages;
 };
 
 export const sendMessage = async (
@@ -147,7 +142,7 @@ export const sendMessage = async (
   });
 };
 
-export const sendSubScribeToMessage = async (
+export const sendMessageToSubscriber = async (
   queueUrl: string,
   message: string,
 ): Promise<void> => {
@@ -169,33 +164,6 @@ export const sendSubScribeToMessage = async (
       `Message Queue Insert Failed Message message: ${message} / queueUrl: ${queueUrl}`,
     );
     sendMessage(queueUrl, message);
-  }
-};
-
-export const messageBroker = async (queueUrls: string[]): Promise<void> => {
-  const messageItems = await getMessageToDeleteWorker(queueUrls);
-
-  if (_.isEmpty(messageItems)) {
-    const convertMSecondToSecond = Math.floor(
-      CommonConstant.DELAY_START_INTERVAL_TIME / 1000,
-    );
-    console.log(
-      `Message Queue has Non Message So, Set Delay ${convertMSecondToSecond} second`,
-    );
-
-    delayStartMessageScheduler();
-  } else {
-    /**
-     * @description
-     * SQS에 등록된 모든 Message Queue들의 메세지를 꺼내서 전송하기 때문에,
-     * 각각에 맞는 Subscribe Server가 존재한다면, 메세지 설계를 잘해야한다.
-     */
-    const queueUrls = Object.keys(messageItems);
-    _.forEach(queueUrls, (queueUrl: string) => {
-      _.forEach(messageItems[queueUrl], (message: string) => {
-        sendSubScribeToMessage(queueUrl, message);
-      });
-    });
   }
 };
 

@@ -4,11 +4,11 @@ import {
   CacheItem,
   CacheObjectName,
   CacheValue,
-  ReturnDefaultValue,
+  ReturnDefaultValue
 } from "./type";
 
 const defaultCacheItem: CacheItem = {
-  deleteMessageFailedCountGroup: {},
+  deleteMessageFailedIdCountGroup: {},
   intervalPullingMessageId: null,
 };
 
