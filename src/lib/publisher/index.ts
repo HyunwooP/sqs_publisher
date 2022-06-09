@@ -9,8 +9,10 @@ const publishController = (queueUrls: string[]): void => {
 };
 
 const publisher = async (queueUrl: string): Promise<void> => {
+  // const split = config.PARAMS_SPLIT_TYPE;
   const tokenRemoveAction = {
     endPoint: `${config.SUB_SCRIBE_A_SERVER_ORIGIN}/deleteUserToken`,
+    // params: `userACDED${split}a${split}b${split}c${split}d`,
   };
 
   sendMessage(queueUrl, JSON.stringify(tokenRemoveAction));

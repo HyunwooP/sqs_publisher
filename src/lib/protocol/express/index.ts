@@ -43,9 +43,16 @@ const listenExpressServer = (app: Application): Server => {
 
 const createRouteWorker = (app: Application, queueUrls: string[]): void => {
   app.post("/deleteMessage", async (request: Request, response: Response) => {
-    await broker(queueUrls);
+    try {
+      await broker(queueUrls);
 
-    response.status(200);
-    response.send("queueUrls Message is Deleted");
+      response.status(200);
+      response.send("queueUrls Message is Deleted");
+    } catch (error: any) {
+      // todo: error code 작성하기.
+      // todo: error 공통 타입 작성하기.
+      response.status(500);
+      response.send(`queueUrls Message is Deleted - ${error.message ?? error}`);
+    }
   });
 };
