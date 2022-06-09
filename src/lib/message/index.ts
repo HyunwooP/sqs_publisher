@@ -1,6 +1,10 @@
 import _ from "lodash";
 import CommonConstant from "../common/constant";
-import { MessageEntity, QueueMessages, QueueMessagesItems } from "../common/type";
+import {
+  MessageEntity,
+  QueueMessages,
+  QueueMessagesItems,
+} from "../common/type";
 import config from "../config";
 import { ErrorStatus } from "../enum/error";
 import { MessageResponse } from "../enum/message";
@@ -10,7 +14,7 @@ import MessageQueue from "../sqs/MessageQueue";
 import {
   DeleteMessageBatchResult,
   MessageItems,
-  ReceiveMessageResult
+  ReceiveMessageResult,
 } from "../sqs/type";
 import {
   createDeleteEntry,
@@ -18,7 +22,7 @@ import {
   failedDeleteMessage,
   getMultipleMessageQueueMessages,
   getSingleMessageQueueMessages,
-  successDeleteMessage
+  successDeleteMessage,
 } from "./preprocessor";
 import { startMessageScheduler } from "./scheduler";
 
@@ -102,9 +106,8 @@ const getMessageQueueInMessages = async (
 export const getMessageToDeleteWorker = async (
   queueUrls: string[],
 ): Promise<QueueMessages> => {
-  const multipleQueueMessages: QueueMessagesItems = await getMessageQueueInMessages(
-    queueUrls,
-  );
+  const multipleQueueMessages: QueueMessagesItems =
+    await getMessageQueueInMessages(queueUrls);
   const messages: QueueMessages = {};
 
   // * Message Queue들을 순회...

@@ -5,8 +5,8 @@ import { QueueResponseItem } from "../enum/queue";
 import { CreateQueueResult, QueueResponse } from "../sqs/type";
 
 export const defaultQueueAttributes: QueueAttributes = {
-  "FifoQueue": "true",
-  "ContentBasedDeduplication": "true"
+  FifoQueue: "true",
+  ContentBasedDeduplication: "true",
 };
 
 export const getQueueUrls = async (): Promise<string[]> => {

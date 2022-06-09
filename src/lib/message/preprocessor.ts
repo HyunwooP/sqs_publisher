@@ -5,7 +5,7 @@ import {
   getCacheItem,
   getCacheObjectItem,
   isCacheObjectItem,
-  setCacheObjectItem
+  setCacheObjectItem,
 } from "../common/cache";
 import CommonConstant from "../common/constant";
 import { DeleteEntry, MessageEntity, QueueMessagesItems } from "../common/type";
@@ -18,7 +18,7 @@ import {
   BatchResultErrorEntryList,
   DeleteMessageBatchResultEntry,
   DeleteMessageBatchResultEntryList,
-  MessageItem
+  MessageItem,
 } from "../sqs/type";
 
 export const getMultipleMessageQueueMessages = async (
@@ -72,8 +72,7 @@ export const successDeleteMessage = ({
       ${queueUrl} Delete Successful Response ===========>
       message id = ${messageId} /
       id = ${deleteEntry.Id}
-      `,
-    );
+      `);
 
     if (
       isCacheObjectItem(CacheKeys.DELETE_MESSAGE_FAILED_COUNT_GROUP, messageId)
@@ -128,8 +127,7 @@ export const failedDeleteMessage = ({
       code = ${deleteEntry.Code} /
       message = ${deleteEntry.Message} /
       senderFault = ${deleteEntry.SenderFault}
-      `,
-    );
+      `);
 
     if (deleteMessageFailedCount < CommonConstant.MAXIMUM_DELETE_COUNT) {
       setTimeout(() => {
@@ -151,9 +149,14 @@ const getMaximumDeleteCountOverMessages = (): string[] => {
     defaultValue: {},
   });
 
-  const messageIds = Object.keys(deleteMessageFailedIdCountGroup).filter((messageId: string) => {
-    return deleteMessageFailedIdCountGroup[messageId] >= CommonConstant.MAXIMUM_DELETE_COUNT;
-  });
+  const messageIds = Object.keys(deleteMessageFailedIdCountGroup).filter(
+    (messageId: string) => {
+      return (
+        deleteMessageFailedIdCountGroup[messageId] >=
+        CommonConstant.MAXIMUM_DELETE_COUNT
+      );
+    },
+  );
 
   return messageIds;
 };
@@ -176,9 +179,7 @@ export const createSubScribeMessageItem = (message: string): MessageEntity => {
   const messages: MessageEntity = JSON.parse(message);
 
   if (config.IS_SEND_TO_SOCKET_SUBSCRIBE) {
-    const endPointSplit = messages["endPoint"].split(
-      config.PARAMS_SPLIT_TYPE,
-    );
+    const endPointSplit = messages["endPoint"].split(config.PARAMS_SPLIT_TYPE);
     messages["endPoint"] = endPointSplit[endPointSplit.length - 1];
   }
 

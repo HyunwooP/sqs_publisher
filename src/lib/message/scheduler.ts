@@ -48,7 +48,10 @@ export const restartMessageScheduler = async (): Promise<void> => {
 };
 
 export const delayStartMessageScheduler = (delayTime?: number) => {
-  const _delayTime = delayTime ?? CommonConstant.DELAY_START_INTERVAL_TIME - CommonConstant.MESSAGE_PULLING_TIME;
+  const _delayTime =
+    delayTime ??
+    CommonConstant.DELAY_START_INTERVAL_TIME -
+      CommonConstant.MESSAGE_PULLING_TIME;
 
   setTimeout(() => {
     restartMessageScheduler();
