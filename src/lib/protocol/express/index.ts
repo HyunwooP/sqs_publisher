@@ -36,8 +36,8 @@ const createExpress = (): Application => {
 };
 
 const listenExpressServer = (app: Application): Server => {
-  return app.listen(config.port, () => {
-    console.log(`SQS SERVER PORT ${config.port}`);
+  return app.listen(config.PORT, () => {
+    console.log(`SQS SERVER PORT ${config.PORT}`);
   });
 };
 

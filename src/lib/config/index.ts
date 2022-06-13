@@ -1,7 +1,7 @@
 import "dotenv/config";
 
 export default {
-  port: process.env.port ?? 5000,
+  PORT: process.env.port ?? 5000,
   SQS_END_POINT: process.env.SQS_END_POINT ?? "http://localhost:9324",
   SQS_REGION: process.env.SQS_REGION ?? "us-east-1",
   AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY ?? undefined,
