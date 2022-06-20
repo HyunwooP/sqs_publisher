@@ -1,7 +1,7 @@
-import errorController from "@/lib/common/error";
-import { UnknownObject } from "@/lib/common/type";
-import config from "@/lib/config";
-import { ErrorStatus } from "@/lib/enum/error";
+import errorController from "@/common/error";
+import { UnknownObject } from "@/common/type";
+import config from "@/config";
+import { ErrorStatus } from "@/enum/error";
 import axios, {
   AxiosError,
   AxiosInstance,

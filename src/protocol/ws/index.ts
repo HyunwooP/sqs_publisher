@@ -1,4 +1,4 @@
-import config from "@/lib/config";
+import config from "@/config";
 import _ from "lodash";
 import ws from "ws";
 import { getExpressServer } from "../express";

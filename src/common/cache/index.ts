@@ -1,4 +1,4 @@
-import { CacheKeys } from "@/lib/enum/cache";
+import { CacheKeys } from "@/enum/cache";
 import _ from "lodash";
 import {
   CacheItem,

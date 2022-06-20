@@ -1,5 +1,5 @@
-import broker from "@/lib/broker";
-import config from "@/lib/config";
+import broker from "@/broker";
+import config from "@/config";
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import helmet from "helmet";

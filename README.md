@@ -21,7 +21,7 @@
 ### todo
 #
 ### 실행
-* (please confirm dotenv file / dotenv configuration is same src/lib/config file)
+* (please confirm dotenv file / dotenv configuration is same src/config file)
 * docker build
 * run docker
 * npm install
