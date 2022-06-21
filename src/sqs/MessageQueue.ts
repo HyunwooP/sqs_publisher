@@ -8,19 +8,39 @@ import {
   DeleteMessageBatchResult,
   DeleteMessageRequest,
   DeleteQueueRequest,
-  GetQueueResponse,
+  GetQueueAttributesRequest,
+  GetQueueAttributesResult, GetQueueUrlRequest,
+  GetQueueUrlResult, ListQueuesRequest,
+  ListQueuesResult,
   ReceiveMessageRequest,
   ReceiveMessageResult,
   SendMessageRequest,
   SendMessageResult,
-  VoidResponse,
+  VoidResponse
 } from "./type";
 
 class MessageQueue {
   private readonly sqs: AWS.SQS = SQSInstance.instance;
 
-  async getQueues(): Promise<GetQueueResponse> {
-    return await this.sqs.listQueues().promise();
+  async getQueueUrl(
+    params: GetQueueUrlRequest,
+    callback?: (err: AWSError, data: GetQueueUrlResult) => void
+  ): Promise<GetQueueUrlResult> {
+    return await this.sqs.getQueueUrl(params, callback).promise();
+  }
+
+  async getQueueAttributes(
+    params: GetQueueAttributesRequest,
+    callback?: (err: AWSError, data: GetQueueAttributesResult) => void,
+  ): Promise<GetQueueAttributesResult> {
+    return await this.sqs.getQueueAttributes(params, callback).promise();
+  }
+
+  async getQueues(
+    params: ListQueuesRequest = {},
+    callback?: (err: AWSError, data: ListQueuesResult) => void,
+  ): Promise<ListQueuesResult> {
+    return await this.sqs.listQueues(params, callback).promise();
   }
 
   async createQueue(
