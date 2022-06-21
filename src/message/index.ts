@@ -3,7 +3,7 @@ import CommonConstant from "../common/constant";
 import {
   MessageEntity,
   QueueMessages,
-  QueueMessagesItems
+  QueueMessagesItems,
 } from "../common/type";
 import config from "../config";
 import { ErrorStatus } from "../enum/error";
@@ -14,7 +14,7 @@ import MessageQueue from "../sqs/MessageQueue";
 import {
   DeleteMessageBatchResult,
   MessageList,
-  ReceiveMessageResult
+  ReceiveMessageResult,
 } from "../sqs/type";
 import {
   createDeleteEntry,
@@ -22,7 +22,7 @@ import {
   failedDeleteMessage,
   getMultipleMessageQueueMessages,
   getSingleMessageQueueMessages,
-  successDeleteMessage
+  successDeleteMessage,
 } from "./preprocessor";
 import { startMessageScheduler } from "./scheduler";
 

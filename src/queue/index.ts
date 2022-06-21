@@ -7,45 +7,46 @@ import {
   CreateQueueRequest,
   CreateQueueResult,
   GetQueueAttributesResult,
-  ListQueuesResult
+  ListQueuesResult,
 } from "../sqs/type";
 import {
   createQueueArn,
   createQueueUrl,
   defaultQueueAttributes,
-  getQueueUrls
+  getQueueUrls,
 } from "./preprocessor";
 
 const queueController = async (): Promise<QueueController> => {
   let deadLetterQueueUrl = config.DEAD_LATTER_QUEUE_URL;
   let deadLetterQueueArn = config.DEAD_LATTER_QUEUE_ARN;
   let queueUrls: string[] = await getQueueUrls();
-  
+
   // * 둘중에 하나라도 없으면, 그냥 새로 생성...
   if (_.isEmpty(deadLetterQueueUrl) || _.isEmpty(deadLetterQueueArn)) {
     const deadLetterQueueResponse: CreateQueueResult = await createQueue({
       QueueName: "DeadLetterQueue",
     });
-    
+
     deadLetterQueueUrl = createQueueUrl(deadLetterQueueResponse);
-    const deadLetterQueueArnAttributes: GetQueueAttributesResult = await getQueueArn(deadLetterQueueUrl);
+    const deadLetterQueueArnAttributes: GetQueueAttributesResult =
+      await getQueueArn(deadLetterQueueUrl);
     deadLetterQueueArn = createQueueArn(deadLetterQueueArnAttributes);
   }
-  
+
   if (_.isEmpty(queueUrls)) {
     const queueResponse: CreateQueueResult = await createQueue({
       QueueName: "DeleteActionQueue",
       Attributes: {
         RedrivePolicy: `{"deadLetterTargetArn":${deadLetterQueueArn},' + '"maxReceiveCount":${CommonConstant.MAXIMUM_DEAD_LETTER_COUNT}}`,
-      }
+      },
     });
-    
+
     queueUrls = [createQueueUrl(queueResponse)];
   }
 
   return {
     queueUrls,
-    deadLetterQueueUrl
+    deadLetterQueueUrl,
   };
 };
 
@@ -65,19 +66,21 @@ export const createQueue = async ({
     attributes = {
       ...defaultQueueAttributes,
       ...attributes,
-    }
+    };
   }
 
   return await MessageQueue.createQueue({
     QueueName,
-    Attributes: attributes
+    Attributes: attributes,
   });
 };
 
-export const getQueueArn = async (queueUrl: string): Promise<GetQueueAttributesResult> => {
+export const getQueueArn = async (
+  queueUrl: string,
+): Promise<GetQueueAttributesResult> => {
   return await MessageQueue.getQueueAttributes({
     QueueUrl: queueUrl,
-    AttributeNames: ["QueueArn"]
+    AttributeNames: ["QueueArn"],
   });
 };
 

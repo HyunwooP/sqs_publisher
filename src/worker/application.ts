@@ -10,6 +10,6 @@ const applicationController = async (queueUrls: string[]): Promise<void> => {
     console.log("STATELESS SUBSCRIBE MESSAGE");
     createExpressServer(queueUrls);
   }
-}
+};
 
 export default applicationController;

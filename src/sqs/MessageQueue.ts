@@ -9,14 +9,16 @@ import {
   DeleteMessageRequest,
   DeleteQueueRequest,
   GetQueueAttributesRequest,
-  GetQueueAttributesResult, GetQueueUrlRequest,
-  GetQueueUrlResult, ListQueuesRequest,
+  GetQueueAttributesResult,
+  GetQueueUrlRequest,
+  GetQueueUrlResult,
+  ListQueuesRequest,
   ListQueuesResult,
   ReceiveMessageRequest,
   ReceiveMessageResult,
   SendMessageRequest,
   SendMessageResult,
-  VoidResponse
+  VoidResponse,
 } from "./type";
 
 class MessageQueue {
@@ -24,7 +26,7 @@ class MessageQueue {
 
   async getQueueUrl(
     params: GetQueueUrlRequest,
-    callback?: (err: AWSError, data: GetQueueUrlResult) => void
+    callback?: (err: AWSError, data: GetQueueUrlResult) => void,
   ): Promise<GetQueueUrlResult> {
     return await this.sqs.getQueueUrl(params, callback).promise();
   }

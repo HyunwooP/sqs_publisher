@@ -6,10 +6,9 @@ import publishController from "../publisher";
 import queueController from "../queue";
 import applicationController from "./application";
 
-
 const worker = async (): Promise<void> => {
   const { queueUrls, deadLetterQueueUrl } = await queueController();
-  const totalQueueUrls = [ ...queueUrls, deadLetterQueueUrl ];
+  const totalQueueUrls = [...queueUrls, deadLetterQueueUrl];
 
   if (!_.isEmpty(totalQueueUrls)) {
     throw new Error(ErrorStatus.IS_EMPTY_QUEUE_URLS);

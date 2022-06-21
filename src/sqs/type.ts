@@ -54,6 +54,8 @@ export type GetQueueUrlRequest = AWS.SQS.Types.GetQueueUrlRequest;
 
 export type GetQueueUrlResult = AWS.SQS.Types.GetQueueUrlResult;
 
-export type ListDeadLetterSourceQueuesRequest = AWS.SQS.Types.ListDeadLetterSourceQueuesRequest;
+export type ListDeadLetterSourceQueuesRequest =
+  AWS.SQS.Types.ListDeadLetterSourceQueuesRequest;
 
-export type ListDeadLetterSourceQueuesResult = AWS.SQS.Types.ListDeadLetterSourceQueuesResult;
+export type ListDeadLetterSourceQueuesResult =
+  AWS.SQS.Types.ListDeadLetterSourceQueuesResult;

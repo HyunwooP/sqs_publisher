@@ -2,7 +2,11 @@ import _ from "lodash";
 import { getQueues } from ".";
 import { QueueAttributes } from "../common/type";
 import { QueueResponseItem } from "../enum/queue";
-import { CreateQueueResult, GetQueueAttributesResult, ListQueuesResult } from "../sqs/type";
+import {
+  CreateQueueResult,
+  GetQueueAttributesResult,
+  ListQueuesResult,
+} from "../sqs/type";
 
 export const defaultQueueAttributes: QueueAttributes = {
   FifoQueue: "true",
@@ -27,8 +31,7 @@ export const createQueueUrl = (
 };
 
 export const createQueueArn = (
-  attributesResult: GetQueueAttributesResult
+  attributesResult: GetQueueAttributesResult,
 ): string => {
   return _.get(attributesResult.Attributes, QueueResponseItem.QUEUE_ARN, "");
-}
-
+};
