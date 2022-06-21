@@ -1,4 +1,5 @@
 import CommonConstant from "@/common/constant";
+import { QueueResponseItem } from "@/enum/queue";
 import _ from "lodash";
 import { QueueController } from "../common/type";
 import config from "../config";
@@ -80,7 +81,7 @@ export const getQueueArn = async (
 ): Promise<GetQueueAttributesResult> => {
   return await MessageQueue.getQueueAttributes({
     QueueUrl: queueUrl,
-    AttributeNames: ["QueueArn"],
+    AttributeNames: [QueueResponseItem.QUEUE_ARN],
   });
 };
 
