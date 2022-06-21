@@ -1,8 +1,8 @@
 import _ from "lodash";
-import { getQueueResponse } from ".";
+import { getQueues } from ".";
 import { QueueAttributes } from "../common/type";
 import { QueueResponseItem } from "../enum/queue";
-import { CreateQueueResult, QueueResponse } from "../sqs/type";
+import { CreateQueueResult, GetQueueAttributesResult, ListQueuesResult } from "../sqs/type";
 
 export const defaultQueueAttributes: QueueAttributes = {
   FifoQueue: "true",
@@ -10,18 +10,25 @@ export const defaultQueueAttributes: QueueAttributes = {
 };
 
 export const getQueueUrls = async (): Promise<string[]> => {
-  const queueResponse: QueueResponse = await getQueueResponse();
+  const queueResponse: ListQueuesResult = await getQueues();
   return createQueueUrls(queueResponse);
 };
 
 export const createQueueUrls = (
-  queues: QueueResponse | CreateQueueResult,
+  queues: ListQueuesResult | CreateQueueResult,
 ): string[] => {
   return _.get(queues, QueueResponseItem.QUEUE_URLS, []);
 };
 
 export const createQueueUrl = (
-  queues: QueueResponse | CreateQueueResult,
+  queues: ListQueuesResult | CreateQueueResult,
 ): string => {
   return _.get(queues, QueueResponseItem.QUEUE_URL, "");
 };
+
+export const createQueueArn = (
+  attributesResult: GetQueueAttributesResult
+): string => {
+  return _.get(attributesResult.Attributes, QueueResponseItem.QUEUE_ARN, "");
+}
+

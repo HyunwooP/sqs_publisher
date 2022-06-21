@@ -24,6 +24,11 @@ const CommonConstant = {
    * 최대 메세지 삭제 시도 횟수
    */
   MAXIMUM_DELETE_COUNT: 5,
+  /**
+   * @description
+   * 최대 메세지 수신 실패 횟수
+   */
+  MAXIMUM_DEAD_LETTER_COUNT: 5,
 };
 
 export default CommonConstant;

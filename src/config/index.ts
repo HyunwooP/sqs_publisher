@@ -6,6 +6,8 @@ export default {
   SQS_REGION: process.env.SQS_REGION ?? "us-east-1",
   AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY ?? undefined,
   AWS_SECRET_KEY: process.env.AWS_SECRET_KEY ?? undefined,
+  IS_CHECK_FAILED_MESSAGE_CLEAR_CACHE:
+    process.env.IS_CHECK_FAILED_MESSAGE_CLEAR_CACHE === "true" ? true : false,
   IS_SETUP_QUEUE_DEFAULT_ATTRIBUTES:
     process.env.IS_SETUP_QUEUE_DEFAULT_ATTRIBUTES === "true" ? true : false,
   // * true = socket, false = restful
@@ -24,4 +26,6 @@ export default {
       ? `http://${process.env.publisherDomain}:${process.env.publisherPort}`
       : "http://localhost:3002",
   PARAMS_SPLIT_TYPE: process.env.PARAMS_SPLIT_TYPE ?? "/",
+  DEAD_LATTER_QUEUE_ARN: process.env.DEAD_LATTER_QUEUE_ARN ?? "",
+  DEAD_LATTER_QUEUE_URL: process.env.DEAD_LATTER_QUEUE_URL ?? "",
 };

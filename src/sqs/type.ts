@@ -1,5 +1,4 @@
-import { ListQueuesResult, Message, MessageList } from "aws-sdk/clients/sqs";
-import { PromiseResult, Request } from "aws-sdk/lib/request";
+import { Request } from "aws-sdk/lib/request";
 
 export type ReceiveMessageRequest = AWS.SQS.Types.ReceiveMessageRequest;
 
@@ -37,12 +36,24 @@ export type BatchResultErrorEntry = AWS.SQS.Types.BatchResultErrorEntry;
 
 export type AWSError = AWS.AWSError;
 
-export type QueueResponse = ListQueuesResult;
+export type ListQueuesRequest = AWS.SQS.Types.ListQueuesRequest;
 
-export type MessageItems = MessageList;
+export type ListQueuesResult = AWS.SQS.Types.ListQueuesResult;
 
-export type MessageItem = Message;
+export type MessageList = AWS.SQS.Types.MessageList;
 
-export type GetQueueResponse = PromiseResult<ListQueuesResult, AWSError>;
+export type Message = AWS.SQS.Types.Message;
 
 export type VoidResponse = Request<{}, AWSError>;
+
+export type GetQueueAttributesRequest = AWS.SQS.Types.GetQueueAttributesRequest;
+
+export type GetQueueAttributesResult = AWS.SQS.Types.GetQueueAttributesResult;
+
+export type GetQueueUrlRequest = AWS.SQS.Types.GetQueueUrlRequest;
+
+export type GetQueueUrlResult = AWS.SQS.Types.GetQueueUrlResult;
+
+export type ListDeadLetterSourceQueuesRequest = AWS.SQS.Types.ListDeadLetterSourceQueuesRequest;
+
+export type ListDeadLetterSourceQueuesResult = AWS.SQS.Types.ListDeadLetterSourceQueuesResult;

@@ -3,7 +3,7 @@ import CommonConstant from "../common/constant";
 import {
   MessageEntity,
   QueueMessages,
-  QueueMessagesItems,
+  QueueMessagesItems
 } from "../common/type";
 import config from "../config";
 import { ErrorStatus } from "../enum/error";
@@ -13,8 +13,8 @@ import WebSocket from "../protocol/ws";
 import MessageQueue from "../sqs/MessageQueue";
 import {
   DeleteMessageBatchResult,
-  MessageItems,
-  ReceiveMessageResult,
+  MessageList,
+  ReceiveMessageResult
 } from "../sqs/type";
 import {
   createDeleteEntry,
@@ -22,7 +22,7 @@ import {
   failedDeleteMessage,
   getMultipleMessageQueueMessages,
   getSingleMessageQueueMessages,
-  successDeleteMessage,
+  successDeleteMessage
 } from "./preprocessor";
 import { startMessageScheduler } from "./scheduler";
 
@@ -79,7 +79,7 @@ export const deleteMessage = async ({
 
 export const getMessageItems = async (
   queueUrl: string,
-): Promise<MessageItems> => {
+): Promise<MessageList> => {
   const messages: ReceiveMessageResult = await MessageQueue.getMessage({
     QueueUrl: queueUrl,
     MaxNumberOfMessages: CommonConstant.RECEIVE_MAX_NUMBER_OF_MESSAGES,

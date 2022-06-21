@@ -5,7 +5,7 @@ import {
   getCacheItem,
   getCacheObjectItem,
   isCacheObjectItem,
-  setCacheObjectItem,
+  setCacheObjectItem
 } from "../common/cache";
 import CommonConstant from "../common/constant";
 import { DeleteEntry, MessageEntity, QueueMessagesItems } from "../common/type";
@@ -18,7 +18,7 @@ import {
   BatchResultErrorEntryList,
   DeleteMessageBatchResultEntry,
   DeleteMessageBatchResultEntryList,
-  MessageItem,
+  Message
 } from "../sqs/type";
 
 export const getMultipleMessageQueueMessages = async (
@@ -42,7 +42,7 @@ export const getSingleMessageQueueMessages = async (
   return queueMessages;
 };
 
-export const createDeleteEntry = (queueMessage: MessageItem): DeleteEntry => {
+export const createDeleteEntry = (queueMessage: Message): DeleteEntry => {
   const receiptHandle: string = _.get(
     queueMessage,
     MessageItemObject.RECEIPT_HANDLE,
@@ -161,6 +161,10 @@ const getMaximumDeleteCountOverMessages = (): string[] => {
   return messageIds;
 };
 
+const deleteMaximumDeleteCountOverMessage = (messageId: string): void => {
+  deleteCacheObjectItem(CacheKeys.DELETE_MESSAGE_FAILED_COUNT_GROUP, messageId);
+}
+
 export const showMaximumDeleteCountOverMessages = (): void => {
   const messageIds = getMaximumDeleteCountOverMessages();
 
@@ -171,6 +175,11 @@ export const showMaximumDeleteCountOverMessages = (): void => {
 
     _.forEach(messageIds, (messageId: string) => {
       console.log(`message id = ${messageId}`);
+
+      if (config.IS_CHECK_FAILED_MESSAGE_CLEAR_CACHE) {
+        console.log('해당 메세지는 캐시에서 제거 합니다.');
+        deleteMaximumDeleteCountOverMessage(messageId);
+      }
     });
   }
 };

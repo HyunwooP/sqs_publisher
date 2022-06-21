@@ -1,11 +1,11 @@
-import { MessageItems, QueueAttributeName } from "../sqs/type";
+import { MessageList, QueueAttributeName } from "../sqs/type";
 
 export type QueueAttributes = {
   [key: QueueAttributeName]: string;
 };
 
 export type QueueMessagesItems = {
-  [queueUrl: string]: MessageItems;
+  [queueUrl: string]: MessageList;
 };
 
 export type QueueMessages = {
@@ -14,6 +14,7 @@ export type QueueMessages = {
 
 export type QueueController = {
   queueUrls: string[];
+  deadLetterQueueUrl: string;
 };
 
 export type DeleteEntry = {
