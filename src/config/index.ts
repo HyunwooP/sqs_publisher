@@ -7,14 +7,14 @@ export default {
   AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY ?? undefined,
   AWS_SECRET_KEY: process.env.AWS_SECRET_KEY ?? undefined,
   IS_CHECK_FAILED_MESSAGE_CLEAR_CACHE:
-    process.env.IS_CHECK_FAILED_MESSAGE_CLEAR_CACHE === "true" ? true : false,
+    process.env.IS_CHECK_FAILED_MESSAGE_CLEAR_CACHE === "true",
   IS_SETUP_QUEUE_DEFAULT_ATTRIBUTES:
-    process.env.IS_SETUP_QUEUE_DEFAULT_ATTRIBUTES === "true" ? true : false,
+    process.env.IS_SETUP_QUEUE_DEFAULT_ATTRIBUTES === "true",
   // * true = socket, false = restful
   IS_SEND_TO_SOCKET_SUBSCRIBE:
-    process.env.IS_SEND_TO_SOCKET_SUBSCRIBE === "true" ? true : false,
+    process.env.IS_SEND_TO_SOCKET_SUBSCRIBE === "true",
   // * true = pulling, false = restful
-  IS_PULLING_MESSAGE: process.env.IS_PULLING_MESSAGE === "true" ? true : false,
+  IS_PULLING_MESSAGE: process.env.IS_PULLING_MESSAGE === "true",
   // * 해당 서버가 지켜보는 Subscribe A 서버 Origin
   SUB_SCRIBE_A_SERVER_ORIGIN:
     process.env.subscribeDomain && process.env.subscribePort
