@@ -1,7 +1,6 @@
 import _ from "lodash";
 import { ErrorStatus } from "../enum/error";
-import messageController from "../message";
-import { showMaximumDeleteCountOverMessages } from "../message/preprocessor";
+import messageController, { showMaximumDeleteCountOverMessages } from "../message";
 import publishController from "../publisher";
 import queueController from "../queue";
 import applicationController from "./application";

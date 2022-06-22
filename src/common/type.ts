@@ -32,4 +32,9 @@ export type MessageEntity = {
   params: string | undefined;
 };
 
+export type CreateDeadLetterQueueResult = {
+  deadLetterQueueUrl: string;
+  deadLetterQueueArn: string;
+}
+
 export type UnknownObject<T = unknown> = Record<string, T>;
