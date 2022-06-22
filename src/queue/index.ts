@@ -8,13 +8,13 @@ import {
   CreateQueueRequest,
   CreateQueueResult,
   GetQueueAttributesResult,
-  ListQueuesResult
+  ListQueuesResult,
 } from "../sqs/type";
 import {
   createQueueArn,
   createQueueUrl,
   defaultQueueAttributes,
-  getQueueUrls
+  getQueueUrls,
 } from "./preprocessor";
 
 const queueController = async (): Promise<QueueController> => {
@@ -23,18 +23,17 @@ const queueController = async (): Promise<QueueController> => {
   let queueUrls: string[] = await getQueueUrls();
 
   if (_.isEmpty(queueUrls)) {
-
     // * The DLQ Message does not move to the standard queue.
     if (_.isEmpty(deadLetterQueueUrl) || _.isEmpty(deadLetterQueueArn)) {
-
-      const deadLetterQueueResponse: CreateDeadLetterQueueResult = await createDeadLetterQueue({
-        QueueName: "DeadLetterQueue"
-      });
+      const deadLetterQueueResponse: CreateDeadLetterQueueResult =
+        await createDeadLetterQueue({
+          QueueName: "DeadLetterQueue",
+        });
 
       deadLetterQueueArn = deadLetterQueueResponse.deadLetterQueueArn;
       deadLetterQueueUrl = deadLetterQueueResponse.deadLetterQueueUrl;
     }
-  
+
     const queueResponse: CreateQueueResult = await createQueue({
       QueueName: "DeleteActionQueue",
       Attributes: {
@@ -77,13 +76,16 @@ export const createQueue = async ({
 };
 
 const createDeadLetterQueue = async ({
-  QueueName
+  QueueName,
 }: {
   QueueName: string;
 }): Promise<CreateDeadLetterQueueResult> => {
-  let deadLetterQueueUrl, deadLetterQueueArn = "";
+  let deadLetterQueueUrl,
+    deadLetterQueueArn = "";
 
-  const deadLetterQueueResponse: CreateQueueResult = await createQueue({ QueueName });
+  const deadLetterQueueResponse: CreateQueueResult = await createQueue({
+    QueueName,
+  });
 
   deadLetterQueueUrl = createQueueUrl(deadLetterQueueResponse);
   const deadLetterQueueArnAttributes: GetQueueAttributesResult =
@@ -92,9 +94,9 @@ const createDeadLetterQueue = async ({
 
   return {
     deadLetterQueueUrl,
-    deadLetterQueueArn
-  }
-}
+    deadLetterQueueArn,
+  };
+};
 
 const getQueueArn = async (
   queueUrl: string,

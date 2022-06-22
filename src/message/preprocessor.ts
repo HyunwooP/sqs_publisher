@@ -1,18 +1,12 @@
 import MessageQueue from "@/sqs/MessageQueue";
 import _ from "lodash";
-import {
-  getCacheItem
-} from "../common/cache";
+import { getCacheItem } from "../common/cache";
 import CommonConstant from "../common/constant";
 import { DeleteEntry, MessageEntity, QueueMessagesItems } from "../common/type";
 import config from "../config";
 import { CacheKeys } from "../enum/cache";
 import { MessageItemObject, MessageResponse } from "../enum/message";
-import {
-  Message,
-  MessageList,
-  ReceiveMessageResult
-} from "../sqs/type";
+import { Message, MessageList, ReceiveMessageResult } from "../sqs/type";
 
 export const getMessageItems = async (
   queueUrl: string,
