@@ -18,26 +18,26 @@ import {
 } from "./preprocessor";
 
 const queueController = async (): Promise<QueueController> => {
-  let deadLetterQueueUrl = config.DEAD_LATTER_QUEUE_URL;
-  let deadLetterQueueArn = config.DEAD_LATTER_QUEUE_ARN;
   let queueUrls: string[] = await getQueueUrls();
+  let deadLetterQueueUrl: string = "";
 
   if (_.isEmpty(queueUrls)) {
     // * The DLQ Message does not move to the standard queue.
-    if (_.isEmpty(deadLetterQueueUrl) || _.isEmpty(deadLetterQueueArn)) {
-      const deadLetterQueueResponse: CreateDeadLetterQueueResult =
-        await createDeadLetterQueue({
-          QueueName: "DeadLetterQueue",
-        });
+    const deadLetterQueueResponse: CreateDeadLetterQueueResult =
+      await createDeadLetterQueue({
+        QueueName: "DeadLetterQueue",
+      });
 
-      deadLetterQueueArn = deadLetterQueueResponse.deadLetterQueueArn;
-      deadLetterQueueUrl = deadLetterQueueResponse.deadLetterQueueUrl;
-    }
+    const deadLetterQueueArn = deadLetterQueueResponse.deadLetterQueueArn;
+    deadLetterQueueUrl = deadLetterQueueResponse.deadLetterQueueUrl;
 
     const queueResponse: CreateQueueResult = await createQueue({
       QueueName: "DeleteActionQueue",
       Attributes: {
-        RedrivePolicy: `{"deadLetterTargetArn":${deadLetterQueueArn},' + '"maxReceiveCount":${CommonConstant.MAXIMUM_DEAD_LETTER_COUNT}}`,
+        RedrivePolicy: JSON.stringify({
+          deadLetterTargetArn: deadLetterQueueArn,
+          maxReceiveCount: CommonConstant.MAXIMUM_DEAD_LETTER_COUNT,
+        }),
       },
     });
 
@@ -105,6 +105,10 @@ const getQueueArn = async (
     QueueUrl: queueUrl,
     AttributeNames: [QueueResponseItem.QUEUE_ARN],
   });
+};
+
+export const resetSQS = async (): Promise<void> => {
+  await MessageQueue.resetQueue();
 };
 
 export default queueController;
