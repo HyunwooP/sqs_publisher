@@ -33,11 +33,11 @@ import {
 } from "./preprocessor";
 import { startMessageScheduler } from "./scheduler";
 
-const messageController = (queueUrls: string[]): void => {
+const messageController = async (queueUrls: string[]): Promise<void> => {
   // * 해당 인스턴스내에서 풀링하여 처리
   if (config.IS_PULLING_MESSAGE) {
     console.log("START PULLING MESSAGE");
-    startMessageScheduler(queueUrls);
+    await startMessageScheduler(queueUrls);
   } else {
     /**
      * * 외부 HTTP 요청에 의해 처리
