@@ -1,5 +1,5 @@
 export enum MessageResponse {
-  MESSAGES = "QueueMessages",
+  MESSAGES = "Messages",
 }
 
 export enum MessageItemObject {
