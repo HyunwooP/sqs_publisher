@@ -26,6 +26,4 @@ export default {
       ? `http://${process.env.publisherDomain}:${process.env.publisherPort}`
       : "http://localhost:3002",
   PARAMS_SPLIT_TYPE: process.env.PARAMS_SPLIT_TYPE ?? "/",
-  DEAD_LATTER_QUEUE_ARN: process.env.DEAD_LATTER_QUEUE_ARN ?? "",
-  DEAD_LATTER_QUEUE_URL: process.env.DEAD_LATTER_QUEUE_URL ?? "",
 };

@@ -6,8 +6,12 @@ import { CacheKeys } from "../enum/cache";
 import { ErrorStatus } from "../enum/error";
 import queueController from "../queue";
 
-export const startMessageScheduler = (queueUrls: string[]): void => {
+export const startMessageScheduler = async (
+  queueUrls: string[],
+): Promise<void> => {
   try {
+    await broker(queueUrls);
+
     const intervalPullingMessageId: NodeJS.Timer = setInterval(async () => {
       await broker(queueUrls);
     }, CommonConstant.MESSAGE_PULLING_TIME);
