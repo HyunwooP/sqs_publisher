@@ -94,6 +94,16 @@ class MessageQueue {
   ): Promise<DeleteMessageBatchResult> {
     return await this.sqs.deleteMessageBatch(params, callback).promise();
   }
+
+  async resetQueue(): Promise<void> {
+    const queueResponse: ListQueuesResult = await this.getQueues();
+
+    queueResponse.QueueUrls?.forEach((queueUrl: string) => {
+      this.deleteQueue({
+        QueueUrl: queueUrl,
+      });
+    });
+  }
 }
 
 export default new MessageQueue();
