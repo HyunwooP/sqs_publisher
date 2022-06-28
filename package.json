@@ -1,5 +1,5 @@
 {
-  "name": "node-sqs-pubsub",
+  "name": "node-sqs-sample",
   "version": "0.0.1",
   "description": "study message queue, sqs & publisher / subscribe pattern",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/awakelife93/node-sqs-pubsub.git"
+    "url": "git+https://github.com/awakelife93/node-sqs-sample.git"
   },
   "keywords": [
     "sqs",
@@ -23,12 +23,12 @@
   "author": "HyunwooPark",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/awakelife93/node-sqs-pubsub/issues"
+    "url": "https://github.com/awakelife93/node-sqs-sample/issues"
   },
   "_moduleAliases": {
     "@": "src"
   },
-  "homepage": "https://github.com/awakelife93/node-sqs-pubsub#readme",
+  "homepage": "https://github.com/awakelife93/node-sqs-sample#readme",
   "dependencies": {
     "aws-sdk": "^2.1032.0",
     "axios": "^0.24.0",
