@@ -1,4 +1,4 @@
-# NODE-SQS
+# Node-SQS
 #### Publishing Message -> SQS & Message Broker -> Message Action Server (Subscriber)
 ##### Author 박현우
 ##### Create Date 2021.11.19
