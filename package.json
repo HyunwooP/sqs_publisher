@@ -4,7 +4,9 @@
   "description": "study message queue, sqs & publisher / subscribe pattern",
   "scripts": {
     "test": "",
-    "start": "export port=5000 && nodemon src/index.ts"
+    "start": "ts-node ./src/index.ts",
+    "localStart": "export port=5000 && nodemon src/index.ts",
+    "dockerStart": "ts-node ./src/index.ts"
   },
   "repository": {
     "type": "git",
