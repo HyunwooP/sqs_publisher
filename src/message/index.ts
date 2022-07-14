@@ -2,7 +2,7 @@ import {
   deleteCacheObjectItem,
   getCacheObjectItem,
   isCacheObjectItem,
-  setCacheObjectItem
+  setCacheObjectItem,
 } from "@/common/cache";
 import CommonConstant from "@/common/constant";
 import { CacheKeys } from "@/enum/cache";
@@ -10,7 +10,7 @@ import _ from "lodash";
 import {
   MessageEntity,
   QueueMessages,
-  QueueMessagesItems
+  QueueMessagesItems,
 } from "../common/type";
 import config from "../config";
 import { ErrorStatus } from "../enum/error";
@@ -22,14 +22,14 @@ import {
   BatchResultErrorEntryList,
   DeleteMessageBatchResult,
   DeleteMessageBatchResultEntry,
-  DeleteMessageBatchResultEntryList
+  DeleteMessageBatchResultEntryList,
 } from "../sqs/type";
 import {
   createDeleteEntry,
   createSubScribeMessageItem,
   getMaximumDeleteCountOverMessages,
   getMultipleMessageQueueMessages,
-  getSingleMessageQueueMessages
+  getSingleMessageQueueMessages,
 } from "./preprocessor";
 import { startMessageScheduler } from "./scheduler";
 
@@ -85,7 +85,7 @@ export const deleteMessage = async ({
 };
 
 const getMessageQueueInMessages = async (
-  queueUrls: string[],
+  queueUrls: string[]
 ): Promise<QueueMessagesItems> => {
   let queueMessages = {} as QueueMessagesItems;
 
@@ -100,7 +100,7 @@ const getMessageQueueInMessages = async (
 };
 
 export const getMessageToDeleteWorker = async (
-  queueUrls: string[],
+  queueUrls: string[]
 ): Promise<QueueMessages> => {
   const multipleQueueMessages: QueueMessagesItems =
     await getMessageQueueInMessages(queueUrls);
@@ -133,7 +133,7 @@ export const getMessageToDeleteWorker = async (
 
 export const sendMessage = async (
   queueUrl: string,
-  message: string,
+  message: string
 ): Promise<void> => {
   await MessageQueue.sendMessage({
     QueueUrl: queueUrl,
@@ -143,7 +143,7 @@ export const sendMessage = async (
 
 export const sendMessageToSubscriber = async (
   queueUrl: string,
-  message: string,
+  message: string
 ): Promise<void> => {
   const { endPoint, params }: MessageEntity =
     createSubScribeMessageItem(message);
@@ -160,7 +160,7 @@ export const sendMessageToSubscriber = async (
   } catch (error: unknown) {
     // * 전송에 대한 에러 대응으로, Message Queue에 이미 삭제된 해당 Message를 다시 삽입한다.
     console.log(
-      `Message Queue Insert Failed Message message: ${message} / queueUrl: ${queueUrl}`,
+      `Message Queue Insert Failed Message message: ${message} / queueUrl: ${queueUrl}`
     );
     sendMessage(queueUrl, message);
   }
@@ -175,7 +175,7 @@ export const showMaximumDeleteCountOverMessages = (): void => {
 
   if (!_.isEmpty(messageIds)) {
     console.log(
-      `${CommonConstant.MAXIMUM_DELETE_COUNT}회 삭제 실패한 메세지가 있습니다.`,
+      `${CommonConstant.MAXIMUM_DELETE_COUNT}회 삭제 실패한 메세지가 있습니다.`
     );
 
     _.forEach(messageIds, (messageId: string) => {
@@ -268,7 +268,7 @@ export const successDeleteMessage = ({
     ) {
       deleteCacheObjectItem(
         CacheKeys.DELETE_MESSAGE_FAILED_COUNT_GROUP,
-        messageId,
+        messageId
       );
     }
   });

@@ -15,7 +15,7 @@ const errorController = (error: AWSError | any): void => {
     console.error(
       `errorController Error =========> ${errorMessage} / next call = ${
         _.isNull(action) ? "없음" : action
-      }`,
+      }`
     );
 
     if (_.isFunction(action)) {

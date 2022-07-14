@@ -9,7 +9,7 @@ import { MessageItemObject, MessageResponse } from "../enum/message";
 import { Message, MessageList, ReceiveMessageResult } from "../sqs/type";
 
 export const getMessageItems = async (
-  queueUrl: string,
+  queueUrl: string
 ): Promise<MessageList> => {
   const messages: ReceiveMessageResult = await MessageQueue.getMessage({
     QueueUrl: queueUrl,
@@ -20,7 +20,7 @@ export const getMessageItems = async (
 };
 
 export const getMultipleMessageQueueMessages = async (
-  queueUrls: string[],
+  queueUrls: string[]
 ): Promise<QueueMessagesItems> => {
   const queueMessages = {} as QueueMessagesItems;
 
@@ -33,7 +33,7 @@ export const getMultipleMessageQueueMessages = async (
 };
 
 export const getSingleMessageQueueMessages = async (
-  queueUrl: string,
+  queueUrl: string
 ): Promise<QueueMessagesItems> => {
   const queueMessages = {} as QueueMessagesItems;
   queueMessages[queueUrl] = await getMessageItems(queueUrl);
@@ -44,7 +44,7 @@ export const createDeleteEntry = (queueMessage: Message): DeleteEntry => {
   const receiptHandle: string = _.get(
     queueMessage,
     MessageItemObject.RECEIPT_HANDLE,
-    "",
+    ""
   );
   const body: string = _.get(queueMessage, MessageItemObject.BODY, "");
   const id: string = _.get(queueMessage, MessageItemObject.MESSAGE_ID, "");
@@ -68,7 +68,7 @@ export const getMaximumDeleteCountOverMessages = (): string[] => {
         deleteMessageFailedIdCountGroup[messageId] >=
         CommonConstant.MAXIMUM_DELETE_COUNT
       );
-    },
+    }
   );
 
   return messageIds;

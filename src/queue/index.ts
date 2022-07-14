@@ -99,7 +99,7 @@ const createDeadLetterQueue = async ({
 };
 
 const getQueueArn = async (
-  queueUrl: string,
+  queueUrl: string
 ): Promise<GetQueueAttributesResult> => {
   return await MessageQueue.getQueueAttributes({
     QueueUrl: queueUrl,

@@ -7,7 +7,7 @@ import { ErrorStatus } from "../enum/error";
 import queueController from "../queue";
 
 export const startMessageScheduler = async (
-  queueUrls: string[],
+  queueUrls: string[]
 ): Promise<void> => {
   try {
     await broker(queueUrls);

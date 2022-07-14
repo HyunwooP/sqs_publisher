@@ -19,19 +19,19 @@ export const getQueueUrls = async (): Promise<string[]> => {
 };
 
 export const createQueueUrls = (
-  queues: ListQueuesResult | CreateQueueResult,
+  queues: ListQueuesResult | CreateQueueResult
 ): string[] => {
   return _.get(queues, QueueResponseItem.QUEUE_URLS, []);
 };
 
 export const createQueueUrl = (
-  queues: ListQueuesResult | CreateQueueResult,
+  queues: ListQueuesResult | CreateQueueResult
 ): string => {
   return _.get(queues, QueueResponseItem.QUEUE_URL, "");
 };
 
 export const createQueueArn = (
-  attributesResult: GetQueueAttributesResult,
+  attributesResult: GetQueueAttributesResult
 ): string => {
   return _.get(attributesResult.Attributes, QueueResponseItem.QUEUE_ARN, "");
 };

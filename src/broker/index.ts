@@ -10,10 +10,10 @@ const broker = async (queueUrls: string[]): Promise<void> => {
 
   if (_.isEmpty(messages)) {
     const delaySeconds = convertMsToSeconds(
-      CommonConstant.DELAY_START_INTERVAL_TIME,
+      CommonConstant.DELAY_START_INTERVAL_TIME
     );
     console.log(
-      `Message Queue has Non Message So, Set Delay ${delaySeconds} second`,
+      `Message Queue has Non Message So, Set Delay ${delaySeconds} second`
     );
 
     delayStartMessageScheduler();

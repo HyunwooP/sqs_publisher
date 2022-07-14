@@ -64,19 +64,19 @@ export const isCacheItem = (key: CacheKeys): boolean => {
   return !_.isEmpty(
     getCacheItem({
       key,
-    }),
+    })
   );
 };
 
 export const isCacheObjectItem = (
   objectName: CacheObjectName,
-  objectKey: string,
+  objectKey: string
 ): boolean => {
   return !_.isEmpty(
     getCacheObjectItem({
       objectName,
       objectKey,
-    }),
+    })
   );
 };
 
@@ -86,7 +86,7 @@ export const deleteCacheItem = (key: CacheKeys): void => {
 
 export const deleteCacheObjectItem = (
   objectName: CacheObjectName,
-  objectKey: string,
+  objectKey: string
 ): void => {
   delete cacheItem[objectName][objectKey];
 };
