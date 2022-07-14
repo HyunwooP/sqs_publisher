@@ -2,7 +2,7 @@ import {
   deleteCacheObjectItem,
   getCacheObjectItem,
   isCacheObjectItem,
-  setCacheObjectItem,
+  setCacheObjectItem
 } from "@/common/cache";
 import CommonConstant from "@/common/constant";
 import { CacheKeys } from "@/enum/cache";
@@ -10,7 +10,7 @@ import _ from "lodash";
 import {
   MessageEntity,
   QueueMessages,
-  QueueMessagesItems,
+  QueueMessagesItems
 } from "../common/type";
 import config from "../config";
 import { ErrorStatus } from "../enum/error";
@@ -22,14 +22,14 @@ import {
   BatchResultErrorEntryList,
   DeleteMessageBatchResult,
   DeleteMessageBatchResultEntry,
-  DeleteMessageBatchResultEntryList,
+  DeleteMessageBatchResultEntryList
 } from "../sqs/type";
 import {
   createDeleteEntry,
   createSubScribeMessageItem,
   getMaximumDeleteCountOverMessages,
   getMultipleMessageQueueMessages,
-  getSingleMessageQueueMessages,
+  getSingleMessageQueueMessages
 } from "./preprocessor";
 import { startMessageScheduler } from "./scheduler";
 
