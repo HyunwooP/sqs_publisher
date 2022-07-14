@@ -1,0 +1,7 @@
+version: "3.7"
+services:
+  elasticmq:
+    build:
+      context: ./
+      target: elasticmq
+      dockerfile: Dockerfile.elasticmq

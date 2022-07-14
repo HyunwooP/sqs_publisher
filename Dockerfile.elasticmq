@@ -1,2 +1,2 @@
-FROM s12v/elasticmq
+FROM s12v/elasticmq as elasticmq
 COPY elasticmq.conf /etc/elasticmq/elasticmq.conf

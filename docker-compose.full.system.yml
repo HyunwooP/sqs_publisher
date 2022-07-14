@@ -1,0 +1,39 @@
+version: "3.7"
+services:
+  elasticmq:
+    build:
+      context: ./
+      target: elasticmq
+      dockerfile: Dockerfile.elasticmq
+    networks:
+      - elasticmq_network
+  app:
+    build:
+      context: ./
+      # select docker base (localhost, development, production) - default localhost
+      target: ${NODE_ENV:-localhost}
+      dockerfile: Dockerfile.app
+    ports: 
+      - "5000:5000"
+    volumes:
+      - .:/app
+    command: npm run dockerStart
+    environment:
+      SQS_END_POINT: ${SQS_END_POINT} # default "http://localhost:9324"
+      SQS_REGION: ${SQS_REGION} # default "us-east-1"
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+      IS_CHECK_FAILED_MESSAGE_CLEAR_CACHE: ${IS_CHECK_FAILED_MESSAGE_CLEAR_CACHE} # default false
+      IS_SETUP_QUEUE_DEFAULT_ATTRIBUTES: ${IS_SETUP_QUEUE_DEFAULT_ATTRIBUTES} # default false
+      IS_SEND_TO_SOCKET_SUBSCRIBE: ${IS_SEND_TO_SOCKET_SUBSCRIBE} # default false
+      IS_PULLING_MESSAGE: ${IS_PULLING_MESSAGE} # default false
+      SUB_SCRIBE_A_SERVER_ORIGIN: ${SUB_SCRIBE_A_SERVER_ORIGIN} # default "http://localhost:3001"
+      PUBLISHER_SERVER_ORIGIN: ${PUBLISHER_SERVER_ORIGIN} # default "http://localhost:3002"
+      PARAMS_SPLIT_TYPE: ${PARAMS_SPLIT_TYPE} # default "/"
+    depends_on:
+      - elasticmq
+    networks:
+      - elasticmq_network
+networks:
+  elasticmq_network:
+    driver: bridge
