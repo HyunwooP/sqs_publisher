@@ -2,8 +2,8 @@ import _ from "lodash";
 import broker from "../broker";
 import { getCacheItem, setCacheItem } from "../common/cache";
 import CommonConstant from "../common/constant";
-import { CacheKeys } from "../enum/cache";
-import { ErrorStatus } from "../enum/error";
+import { CacheKeys } from "../common/enum/cache";
+import { ErrorStatus } from "../common/enum/error";
 import queueController from "../queue";
 
 export const startMessageScheduler = async (

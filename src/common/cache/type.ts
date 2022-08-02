@@ -1,4 +1,4 @@
-import { CacheKeys } from "@/enum/cache";
+import { CacheKeys } from "@/common/enum/cache";
 
 export type CacheItem = {
   deleteMessageFailedIdCountGroup: {

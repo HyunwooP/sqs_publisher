@@ -1,11 +1,11 @@
 import _ from "lodash";
 import { getQueues } from ".";
+import { QueueResponseItem } from "../common/enum/queue";
 import { QueueAttributes } from "../common/type";
-import { QueueResponseItem } from "../enum/queue";
 import {
   CreateQueueResult,
   GetQueueAttributesResult,
-  ListQueuesResult,
+  ListQueuesResult
 } from "../sqs/type";
 
 export const defaultQueueAttributes: QueueAttributes = {

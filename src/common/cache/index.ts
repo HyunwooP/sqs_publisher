@@ -1,10 +1,10 @@
-import { CacheKeys } from "@/enum/cache";
+import { CacheKeys } from "@/common/enum/cache";
 import _ from "lodash";
 import {
   CacheItem,
   CacheObjectName,
   CacheValue,
-  ReturnDefaultValue,
+  ReturnDefaultValue
 } from "./type";
 
 const defaultCacheItem: CacheItem = {

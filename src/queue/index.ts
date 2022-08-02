@@ -1,5 +1,5 @@
 import CommonConstant from "@/common/constant";
-import { QueueResponseItem } from "@/enum/queue";
+import { QueueResponseItem } from "@/common/enum/queue";
 import _ from "lodash";
 import { CreateDeadLetterQueueResult, QueueController } from "../common/type";
 import config from "../config";
@@ -8,13 +8,13 @@ import {
   CreateQueueRequest,
   CreateQueueResult,
   GetQueueAttributesResult,
-  ListQueuesResult,
+  ListQueuesResult
 } from "../sqs/type";
 import {
   createQueueArn,
   createQueueUrl,
   defaultQueueAttributes,
-  getQueueUrls,
+  getQueueUrls
 } from "./preprocessor";
 
 const queueController = async (): Promise<QueueController> => {

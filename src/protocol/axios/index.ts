@@ -1,12 +1,12 @@
+import { ErrorStatus } from "@/common/enum/error";
 import errorController from "@/common/error";
 import { UnknownObject } from "@/common/type";
 import config from "@/config";
-import { ErrorStatus } from "@/enum/error";
 import axios, {
   AxiosError,
   AxiosInstance,
   AxiosRequestConfig,
-  AxiosResponse,
+  AxiosResponse
 } from "axios";
 import * as _ from "lodash";
 

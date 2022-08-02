@@ -1,8 +1,8 @@
 import { processReStart } from "@/index";
 import _ from "lodash";
-import { AWSErrorStatus, ErrorStatus } from "../enum/error";
 import { delayStartMessageScheduler } from "../message/scheduler";
 import { AWSError } from "../sqs/type";
+import { AWSErrorStatus, ErrorStatus } from "./enum/error";
 
 const errorController = (error: AWSError | any): void => {
   try {

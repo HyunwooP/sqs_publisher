@@ -1,7 +1,7 @@
 import * as AWS from "aws-sdk";
 import _ from "lodash";
+import { ErrorStatus } from "../common/enum/error";
 import config from "../config";
-import { ErrorStatus } from "../enum/error";
 
 class SQSInstance {
   private readonly sqs: AWS.SQS;
