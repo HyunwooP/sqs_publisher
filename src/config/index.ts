@@ -15,10 +15,11 @@ type Config = {
   PARAMS_SPLIT_TYPE: string;
 };
 
+// * Because variables are injected even in the Docker environment, || is used because it is an empty string rather than undefined.
 const config: Config = {
   PORT: process.env.port ? Number(process.env.port) : 5000,
-  SQS_END_POINT: process.env.SQS_END_POINT ?? "http://localhost:9324",
-  SQS_REGION: process.env.SQS_REGION ?? "us-east-1",
+  SQS_END_POINT: process.env.SQS_END_POINT || "http://localhost:9324",
+  SQS_REGION: process.env.SQS_REGION || "us-east-1",
   AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
   AWS_SECRET_KEY: process.env.AWS_SECRET_KEY,
   IS_CHECK_FAILED_MESSAGE_CLEAR_CACHE:
@@ -40,7 +41,7 @@ const config: Config = {
     process.env.publisherDomain && process.env.publisherPort
       ? `http://${process.env.publisherDomain}:${process.env.publisherPort}`
       : "http://localhost:3002",
-  PARAMS_SPLIT_TYPE: process.env.PARAMS_SPLIT_TYPE ?? "/",
+  PARAMS_SPLIT_TYPE: process.env.PARAMS_SPLIT_TYPE || "/",
 };
 
 export default config;

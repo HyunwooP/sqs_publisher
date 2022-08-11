@@ -5,8 +5,6 @@ services:
       context: ./
       target: elasticmq
       dockerfile: Dockerfile.elasticmq
-    networks:
-      - elasticmq_network
   app:
     build:
       context: ./
@@ -32,8 +30,3 @@ services:
       PARAMS_SPLIT_TYPE: ${PARAMS_SPLIT_TYPE} # default "/"
     depends_on:
       - elasticmq
-    networks:
-      - elasticmq_network
-networks:
-  elasticmq_network:
-    driver: bridge
